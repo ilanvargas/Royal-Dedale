@@ -11,16 +11,16 @@ all: compile
 compile: project
 	@echo "Compile the code and the tests"
 
-project: main.o
-	$(CC) -o $@ $<	
+project: main.o location.o dir.o
+	$(CC) -o $@ src/$<	
 
-main.o: src/main.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: src/%.c
+	$(CC) $(CFLAGS) -c $< -o src/$@
 
 test: 
 	@echo "Run the tests"
 
 clean:
-	rm -f $$(find . -name \*~) $$(find . -name \*.o) 
+	@rm -f $$(find . -name \*~) $$(find . -name \*.o) 
 
 .PHONY: all clean compile test
