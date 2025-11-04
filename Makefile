@@ -8,10 +8,13 @@ CFLAGS ?= -Wall -Wextra -g -I./src $(DEDALE_FLAGS)
 
 all: compile
 
-compile: 
+compile: project
 	@echo "Compile the code and the tests"
 
-%.o:
+project: main.o
+	$(CC) -o $@ $<	
+
+main.o: src/main.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 test: 
