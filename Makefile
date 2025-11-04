@@ -11,7 +11,6 @@ all: compile
 compile: project
 	@echo "Compile the code and the tests"
 
-
 project: location.o main.o
 	$(CC) $(CFLAGS) location.o main.o -o project
 
