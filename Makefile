@@ -17,8 +17,9 @@ project: main.o location.o dir.o
 %.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o src/$@
 
-test: 
+test:
 	@echo "Run the tests"
+	@./project
 
 clean:
 	@rm -f $$(find . -name \*~) $$(find . -name \*.o) 
