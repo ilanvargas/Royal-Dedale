@@ -12,11 +12,11 @@ compile: project
 	@echo "Compile the code and the tests"
 
 
-project: main.o location.o dir.o
-	$(CC) -o $@ src/$<	
+project: main.o location.o
+	@$(CC) $(CFLAGS) -o $@ $^	
 
 %.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o src/$@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 test: all
 	@echo "Run the tests"
