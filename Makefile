@@ -12,16 +12,16 @@ compile: project
 	@echo "Compile the code and the tests"
 
 project: location.o main.o
-	$(CC) $(CFLAGS) location.o main.o -o project
+	@$(CC) $(CFLAGS) location.o main.o -o project
 
 main.o: src/main.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "main.o"
 location.o: src/location.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "location.o"
 
-test:
+test: all
 	@echo "Run the tests"
 	@./project
 
