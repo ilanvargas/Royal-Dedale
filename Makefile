@@ -11,7 +11,7 @@ all: compile
 compile: project tester
 	@echo "Compile the code and the tests"
 
-project: src/main.o src/dir.o
+project: src/main.o src/dir.o src/location.o src/ressource.o
 	@echo "Compile code"
 	@$(CC) $(CFLAGS) -o $@ $^	
 
