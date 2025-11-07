@@ -8,19 +8,19 @@ CFLAGS ?= -Wall -Wextra -g -I./src $(DEDALE_FLAGS)
 
 all: compile
 
-compile: project
+compile: project tester
 	@echo "Compile the code and the tests"
 
-
-project: main.o location.o
+project: src/main.o src/dir.o
+	@echo "Compile code"
 	@$(CC) $(CFLAGS) -o $@ $^	
 
-%.o: src/%.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+tester: src/dir.o test/dir.o
+	@echo "Compile test"
+	@$(CC) $(CFLAGS) -o $@ $^
 
-test: all
-	@echo "Run the tests"
-	@./project
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $$(find . -name \*~) $$(find . -name \*.o) 

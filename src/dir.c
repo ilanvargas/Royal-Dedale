@@ -3,13 +3,13 @@
 const char* dir_to_string(enum dir_t d)
 {
   switch (d) {
-  case 0:
+  case NORTH:
     return "NORTH";
-  case 1:
+  case EAST:
     return "EAST";
-  case 2:
+  case SOUTH:
     return "SOUTH";
-  case 3:
+  case WEST:
     return "WEST";
   default:
     return "";
@@ -19,13 +19,13 @@ const char* dir_to_string(enum dir_t d)
 const char* dir_to_short_string(enum dir_t d)
 {
   switch (d) {
-  case 0:
+  case NORTH:
     return "N";
-  case 1:
+  case EAST:
     return "E";
-  case 2:
+  case SOUTH:
     return "S";
-  case 3:
+  case WEST:
     return "W";
   default:
     return "";
@@ -35,13 +35,13 @@ const char* dir_to_short_string(enum dir_t d)
 enum dir_t dir_opposite(enum dir_t d)
 {
   switch (d) {
-  case 0:
+  case NORTH:
     return SOUTH;
-  case 1:
+  case EAST:
     return WEST;
-  case 2:
+  case SOUTH:
     return NORTH;
-  case 3:
+  case WEST:
     return EAST;
   default:
     return INVALID_DIR;

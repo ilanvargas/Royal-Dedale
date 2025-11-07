@@ -1,4 +1,4 @@
-#include "../src/dir.c"
+#include "../src/dir.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
