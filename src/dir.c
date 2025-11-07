@@ -1,3 +1,5 @@
+#include "dir.h"
+
 const char* dir_to_string(enum dir_t d)
 {
   switch (d) {
@@ -14,7 +16,7 @@ const char* dir_to_string(enum dir_t d)
   }
 }
 
-const char* dir_to_short_string(enum dir_t d);const char* dir_to_string(enum dir_t d)
+const char* dir_to_short_string(enum dir_t d)
 {
   switch (d) {
   case 0:
@@ -34,14 +36,14 @@ enum dir_t dir_opposite(enum dir_t d)
 {
   switch (d) {
   case 0:
-    return "SOUTH";
+    return SOUTH;
   case 1:
-    return "WEST";
+    return WEST;
   case 2:
-    return "NORTH";
+    return NORTH;
   case 3:
-    return "EAST";
+    return EAST;
   default:
-    return "";
+    return INVALID_DIR;
   }
 }
