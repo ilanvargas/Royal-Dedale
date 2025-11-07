@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "location.h"
+#include "dir.h"
 
-#define BOARD_WIDTH 10
-#define BOARD_HEIGHT 10
 
 int main()
 {
@@ -18,3 +17,4 @@ int main()
     printf("location a is b ? : %d\n", is_equal);
     return 0;
 }
+
