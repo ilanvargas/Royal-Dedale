@@ -1,7 +1,44 @@
 #include <stdio.h>
+#include <string.h>
 #include "../src/dir.h"
-#include "test.h"
 
+//Test fonctions
+int test_t_to_string(enum dir_t input, const char *output, char *solution)
+{
+  if (!strcmp(output, solution)) {
+    printf("\e[1;32mPASSED\e[0m input: %d\t output: %s\n", input, output);
+    return 1;
+  } else {
+    printf("\e[1;31mFAILED\e[0m input: %d\t output: %s\t solution: %s\n", input, output, solution);
+    return 0;
+  }
+}
+
+int test_t_to_string_formated(enum dir_t input, const char *output, char *solution)
+{
+  //we assume that the tests of dir_to_str passed
+  if (!strcmp(output, solution)) {
+    printf("\e[1;32mPASSED\e[0m input: %s\t output: %s\n", dir_to_string(input), output);
+    return 1;
+  } else {
+    printf("\e[1;31mFAILED\e[0m input: %s\t output: %s\t solution: %s\n", dir_to_string(input), output, solution);
+    return 0;
+  }
+}
+
+int test_t_to_t_formated(enum dir_t input, enum dir_t output, enum dir_t solution)
+{
+  //we assume that the tests of dir_to_str passed
+  if (output == solution) {
+    printf("\e[1;32mPASSED\e[0m input: %s\t output: %s\n", dir_to_string(input), dir_to_string(output));
+    return 1;
+  } else {
+    printf("\e[1;31mFAILED\e[0m input: %s\t output: %s\t solution: %s\n", dir_to_string(input), dir_to_string(output), dir_to_string(solution));
+    return 0;
+  }
+}
+
+//Tests
 void tests_dir()
 {
   printf("TESTS ON DIR.C\n");
@@ -11,21 +48,19 @@ void tests_dir()
   enum dir_t input[] = {NORTH, EAST, SOUTH, WEST, INVALID_DIR};
   char *solution[] = {"NORTH", "EAST", "SOUTH", "WEST", ""};
   for (int i = 0; i < nb_tests; i++) {
-    test_X_to_str(&input[i], dir_to_string(input[i]), solution[i]);
+    test_t_to_string(input[i], dir_to_string(input[i]), solution[i]);
   }
 
   printf("Tests on dir_to_short_string\n");
   char *solution1[] = {"N", "E", "S", "W", ""};
   for (int i = 0; i < nb_tests; i++) {
-    test_X_to_str(&input[i], dir_to_short_string(input[i]), solution1[i]);
+    test_t_to_string_formated(input[i], dir_to_short_string(input[i]), solution1[i]);
   }
 
   printf("Tests on dir_opposite\n");
   enum dir_t solution2[] = {SOUTH, WEST, NORTH, EAST, INVALID_DIR};
   for (int i = 0; i < nb_tests; i++) {
-    const enum dir_t o = dir_opposite(input[i]);
-    test_X_to_X(&input[i], &o, &solution2[i]);
+    test_t_to_t_formated(input[i], dir_opposite(input[i]), solution2[i]);
   }
-
 }
 
