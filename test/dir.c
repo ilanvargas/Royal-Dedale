@@ -1,26 +1,31 @@
-#include "../src/dir.h"
 #include <stdio.h>
+#include "../src/dir.h"
+#include "test.h"
 
-int main(int argc, char *argv[])
+void tests_dir()
 {
-  printf("TEST SUR dir.c\n");
-  printf("TEST SUR dir_to_tring\n");
-  printf("%s\n", dir_to_string(NORTH));
-  printf("%s\n", dir_to_string(EAST));
-  printf("%s\n", dir_to_string(SOUTH));
-  printf("%s\n", dir_to_string(INVALID_DIR));
-  printf("%s\n", dir_to_string(MAX_DIRS));
+  printf("TESTS ON DIR.C\n");
 
-  printf("TEST SUR dir_to_short_string\n");
-  printf("%s\n", dir_to_short_string(NORTH));
-  printf("%s\n", dir_to_short_string(EAST));
-  printf("%s\n", dir_to_short_string(SOUTH));
-  printf("%s\n", dir_to_short_string(INVALID_DIR));
-  printf("%s\n", dir_to_short_string(MAX_DIRS));
-  
-  printf("TEST SUR dir_opposite\n");
-  printf("%d\n", dir_opposite(NORTH));
-  printf("%d\n", dir_opposite(EAST));
-  printf("%d\n", dir_opposite(SOUTH));
-  printf("%d\n", dir_opposite(MAX_DIRS));
+  printf("Tests on dir_to_string\n");
+  int nb_tests = 5;
+  enum dir_t input[] = {NORTH, EAST, SOUTH, WEST, INVALID_DIR};
+  char *solution[] = {"NORTH", "EAST", "SOUTH", "WEST", ""};
+  for (int i = 0; i < nb_tests; i++) {
+    test_X_to_str(&input[i], dir_to_string(input[i]), solution[i]);
+  }
+
+  printf("Tests on dir_to_short_string\n");
+  char *solution1[] = {"N", "E", "S", "W", ""};
+  for (int i = 0; i < nb_tests; i++) {
+    test_X_to_str(&input[i], dir_to_short_string(input[i]), solution1[i]);
+  }
+
+  printf("Tests on dir_opposite\n");
+  enum dir_t solution2[] = {SOUTH, WEST, NORTH, EAST, INVALID_DIR};
+  for (int i = 0; i < nb_tests; i++) {
+    const enum dir_t o = dir_opposite(input[i]);
+    test_X_to_X(&input[i], &o, &solution2[i]);
+  }
+
 }
+
