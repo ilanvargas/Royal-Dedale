@@ -12,7 +12,7 @@ compile: project
 	@echo "Compile the code and the tests"
 
 
-project: main.o location.o resource.o
+project: main.o resource.o
 	@$(CC) $(CFLAGS) -o $@ $^	
 
 %.o: src/%.c
