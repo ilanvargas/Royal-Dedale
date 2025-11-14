@@ -1,5 +1,4 @@
-#include "dir.h"
-#include "stash.h"
+#include "tile.h"
 
 struct tile_t
 {
