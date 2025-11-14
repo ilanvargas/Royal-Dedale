@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "location.h"
+#include "../src/location.h"
 
 int main()
 {
