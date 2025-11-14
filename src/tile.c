@@ -9,11 +9,7 @@ struct tile_t
 {
     char *name;
     struct stash_t traversal_cost;
-    struct stash_t opening_cost_north;
-    struct stash_t opening_cost_south;
-    struct stash_t opening_cost_east;
-    struct stash_t opening_cost_west;
-
+    struct stash_t opening_cost[MAX_DIRS];
 };
 
 /** Initializes the tiles depending on an integer `tile_seed`. Can be
@@ -39,11 +35,8 @@ struct stash_t tile_traversal_cost(const struct tile_t* tile)
  * must be paid only the first time the player places the tile in the game. */
 struct stash_t tile_opening_cost(const struct tile_t* tile, enum dir_t d)
 {
-    if (dir_to_short_string == "N") return tile->opening_cost_north;
-    else if (dir_to_short_string == "S") return tile->opening_cost_south;
-    else if (dir_to_short_string == "E") return tile->opening_cost_east;
-    else if (dir_to_short_string == "W") return tile->opening_cost_west;
-    else return INFINITE_STEP_STASH;
+  if (d >= MAX_DIRS) return INFINITE_STEP_STASH;
+  return tile->opening_cost[d];
 }
 
 /** Creates an empty tile. These tiles are placeholders for the real tiles
