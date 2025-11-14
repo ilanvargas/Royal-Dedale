@@ -39,13 +39,14 @@ void stash_to_string(const struct stash_t* stash, char* buffer)
 {
   int j = 0;
   for (int i = 0; i < NUM_RESOURCES+1; i++) {
-    /*
     const char *resource_name = resource_to_short_string((enum resource_t)i);
     while (*resource_name) {
       if (j == MAX_STASH_STRING_LENGTH-1) break;
       buffer[j++] = *resource_name++;
     }
-    */
+    if (j == MAX_STASH_STRING_LENGTH-1) break;
+    buffer[j++] = ':';
+
     char str_nb_resource[10]; 
     int_to_str(stash->r[i], str_nb_resource);
     char *p = str_nb_resource;
@@ -67,21 +68,20 @@ struct stash_t stash_add(const struct stash_t* a, const struct stash_t* b)
   }
   return c;
 }
-/*
-struct stash_t stash_sub(const struct stash_t* a, const struct stash_t* b)
-{
-  struct stash_t c;
-  for (int i = 0; i < NUM_RESOURCES+1; i++) {
-    c.r[i] = (a->r[i] - b->r[i] > 0) ? a->r[i] - b->r[i] : 0;
-  }
-  return c;
-}
 
 struct stash_t stash_sub(const struct stash_t* a, const struct stash_t* b)
 {
   struct stash_t c;
   for (int i = 0; i < NUM_RESOURCES+1; i++) {
-    if (a->r[i] - b->r[i] < 0) return 0;
+    c.r[i] = (a->r[i] >= b->r[i]) ? (a->r[i] - b->r[i]) : 0;
+  }
+  return c;
+}
+
+int stash_contains(const struct stash_t* a, const struct stash_t* b)
+{
+  for (int i = 0; i < NUM_RESOURCES+1; i++) {
+    if (a->r[i] < b->r[i]) return 0;
   }
   return 1;
-}*/
+}
