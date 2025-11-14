@@ -1,7 +1,6 @@
 #include "dir.h"
 #include "stash.h"
 
-
 /** Abstract struct representing a tile. A tile is identified by its name,
     its traversal cost, and its opening costs in each direction.
  */
