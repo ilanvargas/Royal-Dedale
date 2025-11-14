@@ -61,7 +61,7 @@ int tile_is_empty(const struct tile_t* tile)
   while (*p && *str_empty) {
     if (*p++ != *str_empty++) return 0; 
   }
-  if (!*p || !*str_empty) return 0;
+  if (*p || *str_empty) return 0;
   return 1;
 }
 
