@@ -59,14 +59,7 @@ struct tile_t* tile_generate_by_name(const char* name);
 unsigned int tile_draft(enum dir_t d, struct tile_t** results);
 
 /** Returns 1 if the tile is empty, 0 otherwise. */
-int tile_is_empty(const struct tile_t* tile)
-{
-  char* str_empty = "empty";
-  while (*tile->name && *str_empty) {
-    if (*tile->name++ != *str_empty++) return 0; 
-  }
-  return 1;
-}
+int tile_is_empty(const struct tile_t* tile);
 
 /** Returns 1 if the tile can be opened in the specified direction, 0
  * otherwise. A tile can be opened in direction `d` if it has a finite
