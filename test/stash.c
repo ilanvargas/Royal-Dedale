@@ -63,7 +63,7 @@ void tests_stash()
   printf("Tests on stash_add\n");
   int nb_tests1 = 2;
   struct stash_t inputA[] = {{{0,2,3,4,5}},
-                             {{20,99,0,7,51}}
+                             {{0,99,0,7,51}}
                             };
   struct stash_t inputB[] = {{{0,2,3,4,5}},
                              {{0,3,0,345,54}}
