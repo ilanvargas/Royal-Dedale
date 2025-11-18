@@ -1,16 +1,7 @@
 #include "tile.h"
+#include "tiles_in_game.h"
 #include <stdlib.h>
-
-struct tile_t
-{
-    char *name;
-    struct stash_t traversal_cost;
-    struct stash_t opening_cost[MAX_DIRS];
-};
-
-//Tiles game
-struct tile_t CLOISTER = {.name = "cloister,
-                            
+#include <string.h>
 
 void init_tiles(unsigned int tile_seed)
 {
@@ -35,38 +26,30 @@ struct stash_t tile_opening_cost(const struct tile_t* tile, enum dir_t d)
 
 struct tile_t* tile_generate_empty()
 {
-  struct tile_t tile = {.name = ""};
-  for (int i = 0; i < MAX_DIRS; i++)
-    tile.opening_cost[i] = INFINITE_STEP_STASH;
-
-  return tile
+  return &EMPTY_TILE
 }
 
 struct tile_t* tile_generate_start();
 {
-  struct tile_t tile = {
-    .name = "start",      
-    .traversal_cost = ONE_STEP_STASH,
-    };
-  for (int i = 0; i < MAX_DIRS; i++)
-    tile.opening_cost[i] = ONE_STEP_STASH;
-
-  return tile
+  return &START_TILE
 }
 
 struct tile_t* tile_generate_exit();
 {
-  struct tile_t tile = {
-    .name = "exit",      
-    .traversal_cost = ONE_STEP_STASH,
-    };
-  for (int i = 0; i < MAX_DIRS; i++)
-    tile.opening_cost[i] = ONE_STEP_STASH;
-
-  return tile
+  return &EXIT_TILE
 }
 
-struct tile_t* tile_generate_by_name(const char* name);
+struct tile_t* tile_generate_by_name(const char* name)
+{
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "start") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER;
+}
 
 unsigned int tile_draft(enum dir_t d, struct tile_t** results);
 

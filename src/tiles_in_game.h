@@ -9,7 +9,7 @@ struct tile_t
 };
 
 //Basic tiles
-struct tiles_t EMPTY = {
+struct tiles_t EMPTY_TILE = {
   .name = "",
   .travel_cost = INFINITE_STEP_STASH,
   .opening_cost = {
@@ -20,7 +20,7 @@ struct tiles_t EMPTY = {
   }
 }
 
-struct tiles_t START = {
+struct tiles_t START_TILE  = {
   .name = "start",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -31,7 +31,7 @@ struct tiles_t START = {
   }
 }
 
-struct tiles_t EXIT = {
+struct tiles_t EXIT_TILE = {
   .name = "exit",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -44,7 +44,7 @@ struct tiles_t EXIT = {
 
 //Game tiles
 
-struct tile_t CLOISTER = {
+struct tile_t CLOISTER_TILE = {
   .name = "cloister",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -55,7 +55,7 @@ struct tile_t CLOISTER = {
     }
 };
 
-struct tile_t N_TERRACE = {
+struct tile_t N_TERRACE_TILE = {
   .name = "n terrace",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -66,7 +66,7 @@ struct tile_t N_TERRACE = {
     }
 };
 
-struct tile_t E_TERRACE = {
+struct tile_t E_TERRACE_TILE = {
   .name = "e terrace",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -77,7 +77,7 @@ struct tile_t E_TERRACE = {
     }
 };
 
-struct tile_t W_TERRACE = {
+struct tile_t W_TERRACE_TILE = {
   .name = "w terrace",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -88,7 +88,7 @@ struct tile_t W_TERRACE = {
     }
 };
 
-struct tile_t S_TERRACE = {
+struct tile_t S_TERRACE_TILE = {
   .name = "s terrace",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -100,7 +100,7 @@ struct tile_t S_TERRACE = {
 };
 
 
-struct tile_t E-W_CORRIDOR = {
+struct tile_t E-W_CORRIDOR_TILE = {
   .name = "e-w corridos",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -111,7 +111,7 @@ struct tile_t E-W_CORRIDOR = {
     }
 };
 
-struct tile_t N-S_CORRIDOR = {
+struct tile_t N-S_CORRIDOR_TILE = {
   .name = "n-s corridor",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
