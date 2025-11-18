@@ -3,8 +3,8 @@
 
 void tests_location()
 {
-    struct location_t res2 = location(2,5);
-    struct location_t res = location(1,4);
+    struct location_t res2 = location(1,2);
+    struct location_t res = location(1,3);
     int is_valid = location_is_valid(res);
     int is_valid2 = location_is_valid(res2);
     int is_equal = location_equal(res,res2);
