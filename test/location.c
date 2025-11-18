@@ -3,17 +3,23 @@
 
 void tests_location()
 {
+    printf("\n");
+    printf("\e[1mTESTS ON location.c\e[0m\n");
     struct location_t res2 = location(1,2);
     struct location_t res = location(1,3);
     int is_valid = location_is_valid(res);
     int is_valid2 = location_is_valid(res2);
     int is_equal = location_equal(res,res2);
     int is_adjacent = location_is_adjacent(res, res2);
+    printf("Tests on location \n");
     printf("location a is : x = %d, y = %d\n",res.x ,res.y);
     printf("location b is : x = %d, y = %d\n",res2.x ,res2.y);
+    printf("Tests on location is valid\n");
     printf("location a is valid ? : %d\n", is_valid);
     printf("location b is valid ? : %d\n", is_valid2);
+    printf("Tests on location_equal\n");
     printf("location a is b ? : %d\n", is_equal);
+    printf("Tests on location_is_adjacent\n");
     printf("locations a and b are adjacent ? : %d\n", is_adjacent);
 }
 
