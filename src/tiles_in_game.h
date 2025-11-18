@@ -127,7 +127,8 @@ struct tile_t NS_CORRIDOR_TILE = {
 };
 
 #define TILES_NUMBER 10
-struct tile_t* tiles_adress = {
+/*
+struct tile_t* tiles_adress[] = {
   &EMPTY_TILE,
   &START_TILE,
   &EXIT_TILE,
@@ -138,8 +139,8 @@ struct tile_t* tiles_adress = {
   &S_TERRACE_TILE
   &EW_CORRIDOR_TILE
   &NS_CORRIDOR_TILE
-};
-char* tiles_name = {
+};*/
+char* tiles_name[] = {
   "empty",
   "start",
   "exit",

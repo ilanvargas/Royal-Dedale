@@ -49,6 +49,7 @@ struct tile_t* tile_generate_by_name(const char* name)
   if (strcmp(name, "w terrace")) return &W_TERRACE_TILE;
   if (strcmp(name, "ew corridor")) return &EW_CORRIDOR_TILE;
   if (strcmp(name, "ns corridor")) return &NS_CORRIDOR_TILE;
+  return &EMPTY_TILE;
 }
 /*
 unsigned int tile_draft(enum dir_t d, struct tile_t** results)
