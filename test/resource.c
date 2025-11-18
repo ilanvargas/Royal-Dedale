@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "resource.h"
+#include "../src/resource.h"
 
 
 int main()
