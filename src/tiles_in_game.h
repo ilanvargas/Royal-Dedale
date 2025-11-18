@@ -125,3 +125,29 @@ struct tile_t NS_CORRIDOR_TILE = {
     ONE_STEP_STASH
     }
 };
+
+#define TILES_NUMBER 10
+struct tile_t* tiles_adress = {
+  &EMPTY_TILE,
+  &START_TILE,
+  &EXIT_TILE,
+  &CLOISTER_TILE
+  &N_TERRACE_TILE
+  &E_TERRACE_TILE
+  &W_TERRACE_TILE
+  &S_TERRACE_TILE
+  &EW_CORRIDOR_TILE
+  &NS_CORRIDOR_TILE
+};
+char* tiles_name = {
+  "empty",
+  "start",
+  "exit",
+  "cloister",
+  "n terrace",
+  "e terrace",
+  "w terrace",
+  "s terrace",
+  "ew corridor",
+  "ns corridor"
+};
