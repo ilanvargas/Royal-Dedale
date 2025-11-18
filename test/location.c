@@ -18,7 +18,7 @@ int main()
     return 0;
 }
 
-int test_location_is_valid(const int output, const int solution)
+/*int test_location_is_valid(const int output, const int solution)
 {
     if (output == solution) {
     printf("\e[1;32mPASSED\e[0m output: %d\n", output);
@@ -40,3 +40,19 @@ int test_location_equal(const int output, const int solution)
   }
 }
 
+int test_location_is_adjacent(const int output, const int solution)
+{
+    if (output == solution) {
+    printf("\e[1;32mPASSED\e[0m output: %s\n", output);
+    return 1;
+  } else {
+    printf("\e[1;31mFAILED\e[0m output: %s\t solution: %s\n", output, solution);
+    return 0;
+  }
+}
+
+void tests_location()
+{
+    
+}
+*/
