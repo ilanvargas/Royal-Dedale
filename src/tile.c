@@ -1,7 +1,7 @@
 #include "tiles_in_game.h"
 #include <stdlib.h>
 #include <string.h>
-
+/*
 void init_tiles(unsigned int tile_seed)
 {
   srand(tile_seed);
@@ -63,4 +63,4 @@ int tile_can_open(const struct tile_t* tile, enum dir_t d)
 {
   if (tile->opening_cost[d].r[STEP] == UINT_MAX) return 0;
   return 1;
-}
+}*/

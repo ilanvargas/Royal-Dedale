@@ -2,18 +2,19 @@
 
 #define MAX_TILE_NAME_LENGTH 40
 
-/** Implementation of the type of tiles 
+/** Implementation of the type of tile 
  */
 
 struct tile_t
 {
-    char name[MAX_TILE_NAME_LENGTH];
-    struct stash_t traversal_cost;
-    struct stash_t opening_cost[MAX_DIRS];
+  char name[MAX_TILE_NAME_LENGTH];
+  struct stash_t traversal_cost;
+  struct stash_t opening_cost[MAX_DIRS];
 };
 
-//Basic tiles
-struct tiles_t EMPTY_TILE = {
+//Basic tile
+
+struct tile_t EMPTY_TILE = {
   .name = "empty",
   .traversal_cost = INFINITE_STEP_STASH,
   .opening_cost = {
@@ -23,8 +24,8 @@ struct tiles_t EMPTY_TILE = {
     INFINITE_STEP_STASH
   }
 };
-/*
-struct tiles_t START_TILE  = {
+
+struct tile_t START_TILE  = {
   .name = "start",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -35,7 +36,7 @@ struct tiles_t START_TILE  = {
   }
 };
 
-struct tiles_t EXIT_TILE = {
+struct tile_t EXIT_TILE = {
   .name = "exit",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -46,7 +47,7 @@ struct tiles_t EXIT_TILE = {
   }
 };
 
-//Game tiles
+//Game tile
 
 struct tile_t CLOISTER_TILE = {
   .name = "cloister",
@@ -103,7 +104,6 @@ struct tile_t S_TERRACE_TILE = {
     }
 };
 
-
 struct tile_t EW_CORRIDOR_TILE = {
   .name = "ew corridor",
   .traversal_cost = ONE_STEP_STASH,
@@ -124,4 +124,4 @@ struct tile_t NS_CORRIDOR_TILE = {
     INFINITE_STEP_STASH,
     ONE_STEP_STASH
     }
-};*/
+};
