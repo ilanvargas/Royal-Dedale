@@ -60,7 +60,7 @@ unsigned int tile_draft(enum dir_t d, struct tile_t** results)
   {
     int r = rand() % TILES_NUMBER;
     struct tile_t* random_tile = tile_generate_by_name(tiles_name[r]);
-    if (tile_can_open(random_tile, d) /**/)
+    if (tile_can_open(random_tile, d) )
     {
       results[i] = &random_tile;
       c++;
