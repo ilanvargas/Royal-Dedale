@@ -18,7 +18,7 @@ struct tiles_t EMPTY_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
   }
-}
+};
 
 struct tiles_t START_TILE  = {
   .name = "start",
@@ -100,8 +100,8 @@ struct tile_t S_TERRACE_TILE = {
 };
 
 
-struct tile_t E-W_CORRIDOR_TILE = {
-  .name = "e-w corridos",
+struct tile_t EW_CORRIDOR_TILE = {
+  .name = "ew corridos",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
     INFINITE_STEP_STASH,
@@ -111,8 +111,8 @@ struct tile_t E-W_CORRIDOR_TILE = {
     }
 };
 
-struct tile_t N-S_CORRIDOR_TILE = {
-  .name = "n-s corridor",
+struct tile_t NS_CORRIDOR_TILE = {
+  .name = "ns corridor",
   .travel_cost = ONE_STEP_STASH,
   .opening_cost = {
     ONE_STEP_STASH,
