@@ -1,3 +1,6 @@
+#ifndef __DEDALE_TILES_IN_GAME_H__
+#define __DEDALE_TILES_IN_GAME_H__
+
 #include "tile.h"
 
 #define MAX_TILE_NAME_LENGTH 40
@@ -32,7 +35,7 @@ struct tile_t START_TILE  = {
     ONE_STEP_STASH,
     ONE_STEP_STASH,
     ONE_STEP_STASH,
-    ONE_STEP_STASH
+ONE_STEP_STASH
   }
 };
 
@@ -127,19 +130,19 @@ struct tile_t NS_CORRIDOR_TILE = {
 };
 
 #define TILES_NUMBER 10
-/*
+
 struct tile_t* tiles_adress[] = {
   &EMPTY_TILE,
   &START_TILE,
   &EXIT_TILE,
-  &CLOISTER_TILE
-  &N_TERRACE_TILE
-  &E_TERRACE_TILE
-  &W_TERRACE_TILE
-  &S_TERRACE_TILE
-  &EW_CORRIDOR_TILE
+  &CLOISTER_TILE,
+  &N_TERRACE_TILE,
+  &E_TERRACE_TILE,
+  &W_TERRACE_TILE,
+  &S_TERRACE_TILE,
+  &EW_CORRIDOR_TILE,
   &NS_CORRIDOR_TILE
-};*/
+};
 char* tiles_name[] = {
   "empty",
   "start",
@@ -152,3 +155,5 @@ char* tiles_name[] = {
   "ew corridor",
   "ns corridor"
 };
+
+#endif // __DEDALE_TILES_IN_GAME_H__
