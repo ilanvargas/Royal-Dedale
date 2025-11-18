@@ -40,7 +40,7 @@ struct tile_t* tile_generate_exit()
 
 struct tile_t* tile_generate_by_name(const char* name)
 {
-  if (str_cmp(name, "start")) return &START_TILE_;
+  if (str_cmp(name, "start")) return &START_TILE;
   if (str_cmp(name, "exit")) return &EXIT_TILE;
   if (str_cmp(name, "cloister")) return &CLOISTER_TILE;
   if (str_cmp(name, "n terrace")) return &N_TERRACE_TILE;
@@ -51,7 +51,11 @@ struct tile_t* tile_generate_by_name(const char* name)
   if (str_cmp(name, "ns corridor")) return &NS_CORRIDOR_TILE;
 }
 
-unsigned int tile_draft(enum dir_t d, struct tile_t** results);
+unsigned int tile_draft(enum dir_t d, struct tile_t** results)
+{
+  unsigned int c = 0;
+  
+}
 
 int tile_is_empty(const struct tile_t* tile)
 {
