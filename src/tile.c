@@ -40,17 +40,18 @@ struct tile_t* tile_generate_exit()
 
 struct tile_t* tile_generate_by_name(const char* name)
 {
-  if (str_cmp(name, "start")) return &START_TILE;
-  if (str_cmp(name, "exit")) return &EXIT_TILE;
-  if (str_cmp(name, "cloister")) return &CLOISTER_TILE;
-  if (str_cmp(name, "n terrace")) return &N_TERRACE_TILE;
-  if (str_cmp(name, "s terrace")) return &S_TERRACE_TILE;
-  if (str_cmp(name, "e terrace")) return &E_TERRACE_TILE;
-  if (str_cmp(name, "w terrace")) return &W_TERRACE_TILE;
-  if (str_cmp(name, "ew corridor")) return &EW_CORRIDOR_TILE;
-  if (str_cmp(name, "ns corridor")) return &NS_CORRIDOR_TILE;
+  if (strcmp(name, "start")) return &START_TILE;
+  if (strcmp(name, "exit")) return &EXIT_TILE;
+  if (strcmp(name, "cloister")) return &CLOISTER_TILE;
+  if (strcmp(name, "n terrace")) return &N_TERRACE_TILE;
+  if (strcmp(name, "s terrace")) return &S_TERRACE_TILE;
+  if (strcmp(name, "e terrace")) return &E_TERRACE_TILE;
+  if (strcmp(name, "w terrace")) return &W_TERRACE_TILE;
+  if (strcmp(name, "ew corridor")) return &EW_CORRIDOR_TILE;
+  if (strcmp(name, "ns corridor")) return &NS_CORRIDOR_TILE;
+  return &EMPTY_TILE;
 }
-
+/*
 unsigned int tile_draft(enum dir_t d, struct tile_t** results)
 {
   unsigned int c = 0;
@@ -69,7 +70,7 @@ unsigned int tile_draft(enum dir_t d, struct tile_t** results)
   }
   return c;
 }
-
+*/
 int tile_is_empty(const struct tile_t* tile)
 {
   if (strcmp(tile->name, "empty")) return 1;
