@@ -1,8 +1,7 @@
-#include "tile.h"
 #include "tiles_in_game.h"
 #include <stdlib.h>
 #include <string.h>
-
+/*
 void init_tiles(unsigned int tile_seed)
 {
   srand(tile_seed);
@@ -38,12 +37,12 @@ struct tile_t* tile_generate_exit();
 {
   return &EXIT_TILE
 }
-
+/*
 struct tile_t* tile_generate_by_name(const char* name)
 {
-  if str_cmp(name, "cloister") return &CLOISTER;
-  if str_cmp(name, "start") return &CLOISTER;
-  if str_cmp(name, "cloister") return &CLOISTER;
+  if str_cmp(name, "cloister") return &CLOISTER_TILE;
+  if str_cmp(name, "n terrace") return &N_TERRACE_TILE;
+  if str_cmp(name, "e terrace") return &E_TERRACE;
   if str_cmp(name, "cloister") return &CLOISTER;
   if str_cmp(name, "cloister") return &CLOISTER;
   if str_cmp(name, "cloister") return &CLOISTER;
@@ -63,4 +62,4 @@ int tile_can_open(const struct tile_t* tile, enum dir_t d)
 {
   if (tile->opening_cost[d].r[STEP] == UINT_MAX) return 0;
   return 1;
-}
+}*/
