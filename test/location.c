@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../src/location.h"
 
-int main()
+void tests_location()
 {
     struct location_t res2 = location(2,5);
     struct location_t res = location(1,4);
@@ -15,7 +15,6 @@ int main()
     printf("location b is valid ? : %d\n", is_valid2);
     printf("location a is b ? : %d\n", is_equal);
     printf("locations a and b are adjacent ? : %d\n", is_adjacent);
-    return 0;
 }
 
 /*int test_location_is_valid(const int output, const int solution)
