@@ -29,12 +29,12 @@ struct tile_t* tile_generate_empty()
   return &EMPTY_TILE;
 }
 
-struct tile_t* tile_generate_start();
+struct tile_t* tile_generate_start()
 {
   return &START_TILE;
 }
 
-struct tile_t* tile_generate_exit();
+struct tile_t* tile_generate_exit()
 {
   return &EXIT_TILE;
 }
@@ -48,15 +48,15 @@ struct tile_t* tile_generate_by_name(const char* name)
   if (str_cmp(name, "s terrace")) return &S_TERRACE_TILE;
   if (str_cmp(name, "e terrace")) return &E_TERRACE_TILE;
   if (str_cmp(name, "w terrace")) return &W_TERRACE_TILE;
-  if (str_cmp(name, "e-w corridor")) return &EW_CORRIDOR_TILE;
-  if (str_cmp(name, "n-s corridor")) return &NS_CORRIDOR_TILE;
+  if (str_cmp(name, "ew corridor")) return &EW_CORRIDOR_TILE;
+  if (str_cmp(name, "ns corridor")) return &NS_CORRIDOR_TILE;
 }
 
 unsigned int tile_draft(enum dir_t d, struct tile_t** results);
 
 int tile_is_empty(const struct tile_t* tile)
 {
-  if (!name[0]) return 1;
+  if (strcmp(tile->name, "empty")) return 1;
   return 0;
 }
 
