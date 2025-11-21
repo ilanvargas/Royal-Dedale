@@ -12,6 +12,7 @@ compile: project tester
 	@echo "Compile the code and the tests"
 
 test: tester
+	@echo "Compile and run tests"
 	./tester
 
 project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o 
@@ -19,7 +20,7 @@ project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o
 	$(CC) $(CFLAGS) -o $@ $^	
 
 tester: src/dir.o src/location.o src/resource.o src/stash.o src/tile.o test/main.o test/dir.o test/location.o test/resource.o test/stash.o
-	@echo "Compile test"
+	@echo "Compile tests"
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
