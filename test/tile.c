@@ -1,5 +1,5 @@
-#include "../src/tile.h"
-#include "../src/tiles_in_game.h"
+#include "tile.h"
+#include "tiles_in_game.h"
 #include <stdio.h>
 #include <string.h>
 
