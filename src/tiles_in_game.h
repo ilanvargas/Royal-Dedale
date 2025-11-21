@@ -131,7 +131,7 @@ struct tile_t NS_CORRIDOR_TILE = {
 
 #define TILES_NUMBER 10
 
-struct tile_t* tiles_adress[] = {
+struct tile_t* p_tiles[] = {
   &EMPTY_TILE,
   &START_TILE,
   &EXIT_TILE,
@@ -142,18 +142,6 @@ struct tile_t* tiles_adress[] = {
   &S_TERRACE_TILE,
   &EW_CORRIDOR_TILE,
   &NS_CORRIDOR_TILE
-};
-char* tiles_name[] = {
-  "empty",
-  "start",
-  "exit",
-  "cloister",
-  "n terrace",
-  "e terrace",
-  "w terrace",
-  "s terrace",
-  "ew corridor",
-  "ns corridor"
 };
 
 #endif // __DEDALE_TILES_IN_GAME_H__

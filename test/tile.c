@@ -1,6 +1,7 @@
 #include "../src/tile.h"
 #include "../src/tiles_in_game.h"
 #include <stdio.h>
+#include <string.h>
 
 void print_stash(struct stash_t* stash)
 {
