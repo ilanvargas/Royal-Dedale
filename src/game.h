@@ -2,12 +2,13 @@
 #define __DEDALE_GAME_H__
 
 #include "tile.h"
+#include "tiles_in_game.h"
 #include "location.h"
 
 #define MAX_TURNS 100
 
 struct game_state_t {
-  int steps;
+  struct stash_t steps;
   struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
 };
@@ -54,7 +55,7 @@ int generate_some_tiles(struct location_t location, struct tile_t** available_ti
  * 
  * Returns the selected location
  */
-struct location select_location(struct location_t* possible_locations, int length);
+struct location_t select_location(struct location_t* possible_locations, int length);
 
 /** Asks the player to select a tile of the array 'tiles' of size 'length'
  * 
