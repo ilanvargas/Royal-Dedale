@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../src/stash.h"
+#include "stash.h"
 
 //Test fonctions
 int test_stasht_formated(struct stash_t *output, struct stash_t *solution)
