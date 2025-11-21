@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../src/location.h"
+#include "location.h"
 
 int test_location(unsigned int input1, unsigned int input2, struct location_t output, struct location_t solution)
 {

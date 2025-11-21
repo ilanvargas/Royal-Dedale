@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "../src/dir.h"
+#include "dir.h"
 
 //Test fonctions
 int test_dirt_to_string(enum dir_t input, const char *output, char *solution)

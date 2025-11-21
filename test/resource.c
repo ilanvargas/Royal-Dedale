@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../src/resource.h"
+#include "resource.h"
 #include <string.h>
 
 int test_resource(enum resource_t input, const char* output, const char* solution)
