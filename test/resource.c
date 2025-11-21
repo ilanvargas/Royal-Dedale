@@ -32,7 +32,7 @@ void tests_resource()
     printf("Tests on resource_to_short_string \n");
     int nb_tests2 = 4;
     enum resource_t input2[] = {NOTHING, STEP, GOLD, CRYSTAL};
-    const char* solution2[] = {"N", "ST", "GD", "C"};
+    const char* solution2[] = {"N", "St", "Gd", "C"};
     for (int i = 0; i < nb_tests2; i++)
     {
         const char *output2 = resource_to_short_string(input2[i]);
