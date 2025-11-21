@@ -8,7 +8,7 @@
 
 struct game_state_t {
   int steps;
-  struct tile_t* board[BOARD_HEIGHT][BOARD_WIDTH];
+  struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
 };
 /** The current state of the mansion & player
@@ -48,7 +48,7 @@ int decide_to_place_tile();
  *
  * Returns the length of 'available_tiles'
  */
-int generate_some_tiles(struct location_t location, struct tile_t** available_tiles, struct game_state_t* game_state)
+int generate_some_tiles(struct location_t location, struct tile_t** available_tiles, struct game_state_t* game_state);
 
 /** Asks the player to select a location of the array 'possible_locations' of size 'length'
  * 
