@@ -1,6 +1,7 @@
 #include "../src/tile.h"
 #include "../src/tiles_in_game.h"
 #include <stdio.h>
+#include <string.h>
 
 int test_tile_name(char* output, char* solution)
 {
