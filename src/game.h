@@ -2,7 +2,6 @@
 #define __DEDALE_GAME_H__
 
 #include "tile.h"
-#include "tiles_in_game.h"
 #include "location.h"
 
 #define MAX_TURNS 100

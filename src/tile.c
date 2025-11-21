@@ -1,9 +1,152 @@
-#include "tiles_in_game.h"
+#include "tile.h"
 #include <stdlib.h>
 #include <string.h>
 
-//Array of arrays of tiles that can open for each direction
-// Will be useful for the draft
+#define MAX_TILE_NAME_LENGTH 40
+
+/** Implementation of the type of tile 
+ */
+
+struct tile_t
+{
+  char name[MAX_TILE_NAME_LENGTH];
+  struct stash_t traversal_cost;
+  struct stash_t opening_cost[MAX_DIRS];
+};
+
+//Basic tile
+
+struct tile_t EMPTY_TILE = {
+  .name = "empty",
+  .traversal_cost = INFINITE_STEP_STASH,
+  .opening_cost = {
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH
+  }
+};
+
+struct tile_t START_TILE  = {
+  .name = "start",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH
+  }
+};
+
+struct tile_t EXIT_TILE = {
+  .name = "exit",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH
+  }
+};
+
+//Game tile
+
+struct tile_t CLOISTER_TILE = {
+  .name = "cloister",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH
+    }
+};
+
+struct tile_t N_TERRACE_TILE = {
+  .name = "n terrace",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH
+    }
+};
+
+struct tile_t E_TERRACE_TILE = {
+  .name = "e terrace",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH
+    }
+};
+
+struct tile_t W_TERRACE_TILE = {
+  .name = "w terrace",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH
+    }
+};
+
+struct tile_t S_TERRACE_TILE = {
+  .name = "s terrace",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH
+    }
+};
+
+struct tile_t EW_CORRIDOR_TILE = {
+  .name = "ew corridor",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH
+    }
+};
+
+struct tile_t NS_CORRIDOR_TILE = {
+  .name = "ns corridor",
+  .traversal_cost = ONE_STEP_STASH,
+  .opening_cost = {
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH
+    }
+};
+
+#define TILES_NUMBER 10
+
+struct tile_t* p_tiles[] = {
+  &EMPTY_TILE,
+  &START_TILE,
+  &EXIT_TILE,
+  &CLOISTER_TILE,
+  &N_TERRACE_TILE,
+  &E_TERRACE_TILE,
+  &W_TERRACE_TILE,
+  &S_TERRACE_TILE,
+  &EW_CORRIDOR_TILE,
+  &NS_CORRIDOR_TILE
+};
+
+/** Tiles fonctions
+ */
+
+//Array of arrays of tiles that can open for each direction, will be useful for the draft
 int p_tiles_direction_length[MAX_DIRS] = {0};
 struct tile_t* p_tiles_direction[MAX_DIRS][TILES_NUMBER];
 
@@ -90,7 +233,7 @@ unsigned int tile_draft(enum dir_t d, struct tile_t** results)
 
 int tile_is_empty(const struct tile_t* tile)
 {
-  if (!strcmp(tile->name, "empty")) return 1;
+  if (tile == &EMPTY_TILE) return 1;
   return 0;
 }
 
