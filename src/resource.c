@@ -1,8 +1,5 @@
 #include "resource.h"
 
-
-
-/** Returns the string representation of the resource `r`. */
 const char* resource_to_string(enum resource_t r)
 {
     switch(r)
@@ -34,8 +31,6 @@ const char* resource_to_string(enum resource_t r)
     }
 }
 
-/** Returns the short string representation of the resource `r`, usually
- * only one character long. */
 const char* resource_to_short_string(enum resource_t r)
 {
     switch(r)
@@ -43,15 +38,15 @@ const char* resource_to_short_string(enum resource_t r)
         case NOTHING: 
             return "N";
         case STEP:
-            return "ST";
+            return "St";
         case KEY:
             return "K";
         case GEM:
-            return "GM";
+            return "Gm";
         case GOLD:
-            return "GD";
+            return "Gd";
         case SILK:
-            return "SK";
+            return "Sk";
         case FUR:
             return "F";
         case INCENSE:
