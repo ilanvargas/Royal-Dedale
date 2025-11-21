@@ -2,7 +2,7 @@
 #include "../src/resource.h"
 #include <string.h>
 
-int test_resource(enum resource_t input, char* output, char* solution)
+int test_resource(enum resource_t input, const char* output, const char* solution)
 {
     if (!strcmp(output, solution))
     {
@@ -22,20 +22,20 @@ void tests_resource()
     printf("Tests on resource_to_string \n");
     int nb_tests = 5;
     enum resource_t input[] = {NOTHING, STEP, SILK, OIL, CRYSTAL};
-    char* solution[] = {"NOTHING", "STEP", "SILK", "OIL", "CRYSTAL"};
+    const char* solution[] = {"NOTHING", "STEP", "SILK", "OIL", "CRYSTAL"};
     for (int i = 0; i < nb_tests; i++)
     {
-        char* output = resource_to_string(input[i]);
+        const char* output = resource_to_string(input[i]);
         test_resource(input[i], output, solution[i]);
     }
 
     printf("Tests on resource_to_short_string \n");
     int nb_tests2 = 4;
     enum resource_t input2[] = {NOTHING, STEP, GOLD, CRYSTAL};
-    char* solution2[] = {"N", "ST", "GD", "C"};
+    const char* solution2[] = {"N", "ST", "GD", "C"};
     for (int i = 0; i < nb_tests2; i++)
     {
-        char *output2 = resource_to_short_string(input2[i]);
+        const char *output2 = resource_to_short_string(input2[i]);
         test_resource(input2[i], output2, solution2[i]);
     }
 }
