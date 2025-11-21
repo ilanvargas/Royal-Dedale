@@ -6,7 +6,7 @@ int main()
     init_tiles(0);
     init_state(&game_state);
     int current_turn = 1;
-    struct location_t* possible_locations; 
+    struct location_t possible_locations[BOARD_SIZE]; 
     while (current_turn <= MAX_TURNS && !exit_reached(&game_state))
     {
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
