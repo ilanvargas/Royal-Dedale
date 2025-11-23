@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "game.h"
 
+struct game_state_t game_state;
+
 int main()
 {
     init_tiles(0);
