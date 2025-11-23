@@ -6,14 +6,13 @@
 
 #define MAX_TURNS 100
 
+/** The current state of the mansion & player
+ */
 struct game_state_t {
   struct stash_t steps;
   struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
 };
-/** The current state of the mansion & player
- */
-struct game_state_t game_state;
 
 /* Initializes game_state
  */
