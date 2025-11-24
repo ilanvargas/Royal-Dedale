@@ -19,22 +19,20 @@ int equal_stash(const struct stash_t* a, const struct stash_t* b)
 
 void print_tile(const struct tile_t* tile)
 {
-  printf("tile: %s, ", tile_name(tile));
+  printf("%s\n", tile_name(tile));
   char ch[MAX_STASH_STRING_LENGTH];
   struct stash_t tr = tile_traversal_cost(tile);
   stash_to_string(&tr, ch);
-  printf("traversal cost: %s, ", ch);
-  printf("opening cost in: ");
+  printf("traversal cost: %s, \n", ch);
+  printf("opening cost in:\n");
   for (int i = 0; i < MAX_DIRS; i++)
   {
     printf("%s: ", dir_to_short_string(i));
     char sh[MAX_STASH_STRING_LENGTH];
     struct stash_t op = tile_opening_cost(tile, i);
     stash_to_string(&op, sh);
-    printf("%s", sh);
-    printf("  ");
+    printf("%s\n", sh);
   }
-  printf("\n");
 }
 
 int test_tile_name(const struct tile_t* input, const char* output, const char* solution)
@@ -106,5 +104,17 @@ int test_tile_generate(struct tile_t* output, struct tile_t* solution)
 
 void tests_tile()
 {
-  printf("HAHAHA");
+  printf("\n");
+  printf("\e[1mTESTS ON tile.c\e[0m\n");
+
+  printf("Tests on tile_name\n");
+  int nb_tests = 5;
+  const struct tile_t* input[] = { &EMPTY_TILE, &START_TILE, &CLOISTER_TILE, &E_TERRACE_TILE, &EW_CORRIDOR_TILE };
+  const char* solution[] = {"empty", "start", "cloister", "e terrace", "ew corridor"};
+  for (int i = 0; i < nb_tests; i++)
+  {
+    const char* output = tile_name(input[i]);
+    test_tile_name(input[i], output, solution[i]);
+  }
+  
 }
