@@ -112,8 +112,8 @@ struct tile_t EW_CORRIDOR_TILE = {
   .opening_cost = {
     INFINITE_STEP_STASH,
     ONE_STEP_STASH,
-    ONE_STEP_STASH,
-    INFINITE_STEP_STASH
+    INFINITE_STEP_STASH,
+    ONE_STEP_STASH
     }
 };
 
@@ -123,8 +123,8 @@ struct tile_t NS_CORRIDOR_TILE = {
   .opening_cost = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH,
-    INFINITE_STEP_STASH,
-    ONE_STEP_STASH
+    ONE_STEP_STASH,
+    INFINITE_STEP_STASH
     }
 };
 
