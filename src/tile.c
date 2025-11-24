@@ -128,8 +128,6 @@ struct tile_t NS_CORRIDOR_TILE = {
     }
 };
 
-#define TILES_NUMBER 10
-
 struct tile_t* p_tiles[] = {
   &EMPTY_TILE,
   &START_TILE,
