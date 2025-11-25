@@ -134,6 +134,36 @@ int test_tile_generate_by_name(const char* input, struct tile_t* output, struct 
   }
 }
 
+int test_tile_draft(enum dir_t input, unsigned int output, unsigned int solution)
+{
+  if (output == solution) {
+    printf("\e[1;32mPASSED\e[0m input: %s\t output: %d\n", dir_to_short_string(input), output);
+    return 1;
+  } else {
+    printf("\e[1;31mFAILED\e[0m input: %s\t output: %d\t solution: %d\n", dir_to_short_string(input), output, solution);
+    return 0;
+  }
+}
+
+int test_tile_can_open(const struct tile_t* input, enum dir_t d, int output, int solution)
+{
+  if (output == solution)
+  {
+    printf("\e[1;32mPASSED\e[0m input: ");
+    print_tile(input);
+    printf("direction: %s\n", dir_to_short_string(d));
+    printf("output: %d\n", output);
+    return 1;
+  }
+  else {
+    printf("\e[1;31mFAILED\e[0m input: ");
+    print_tile(input);
+    printf("direction: %s\n", dir_to_short_string(d));
+    printf("output: %d\t solution: %d\n", output, solution);
+    return 0;
+  }
+}
+
 void tests_tile()
 {
   printf("\n");
@@ -149,7 +179,7 @@ void tests_tile()
     test_tile_name(input[i], output, solution[i]);
   }
   
-  printf("Tests on tile_traversal_cost\n");
+  printf("\nTests on tile_traversal_cost\n");
   int nb_tests1 = 3;
   const struct tile_t* input1[] = { &EMPTY_TILE, &START_TILE, &E_TERRACE_TILE };
   struct stash_t solution1[] = { INFINITE_STEP_STASH, ONE_STEP_STASH, ONE_STEP_STASH };
@@ -159,7 +189,7 @@ void tests_tile()
     test_tile_traversal_cost(input1[i], output1, solution1[i]);
   }
 
-  printf("Tests on tile_opening_cost\n");
+  printf("\nTests on tile_opening_cost\n");
   int nb_tests2 = 5;
   const struct tile_t* input2[] = { &EMPTY_TILE, &START_TILE, &E_TERRACE_TILE, &E_TERRACE_TILE, &NS_CORRIDOR_TILE };
   enum dir_t d2[] = {NORTH, EAST, EAST, WEST, SOUTH};
@@ -170,7 +200,7 @@ void tests_tile()
     test_tile_opening_cost(input2[i], d2[i], output2, solution2[i]);
   }
 
-  printf("Test on tile_generate_empty\n");
+  printf("\nTest on tile_generate_empty\n");
   struct tile_t* solutiona = &EMPTY_TILE;
   struct tile_t* outputa = tile_generate_empty();
   test_tile_generate(outputa, solutiona);
@@ -183,7 +213,7 @@ void tests_tile()
   struct tile_t* outputc = tile_generate_exit();
   test_tile_generate(outputc, solutionc);
 
-  printf("Tests on tile_generate_by_name\n");
+  printf("\nTests on tile_generate_by_name\n");
   int nb_tests3 = 4;
   const char* input3[] = { "empty", "start", "ew corridor", "s terrace" };
   struct tile_t* solution3[] =  { &EMPTY_TILE, &START_TILE, &EW_CORRIDOR_TILE, &S_TERRACE_TILE };
@@ -192,4 +222,19 @@ void tests_tile()
     struct tile_t* output3 = tile_generate_by_name(input3[i]);
     test_tile_generate_by_name(input3[i], output3, solution3[i]);
   }
+
+  /*printf("\nTests on tile_draft\n");
+  struct tile_t results1[NUM_TILES_PER_TURN];
+  int */
+
+  printf("\nTests on tile_can_open\n");
+  int nb_tests5 = 6;
+  const struct tile_t* input5[] = { &EMPTY_TILE, &START_TILE, &EW_CORRIDOR_TILE, &EW_CORRIDOR_TILE, &N_TERRACE_TILE, &N_TERRACE_TILE  };
+  enum dir_t d5[] = {SOUTH, WEST, EAST, NORTH, NORTH, SOUTH};
+  int solution5[] = {0, 1, 1, 0, 1, 0};
+  for (int i = 0; i < nb_tests5; i++)
+  {
+    int output5 = tile_can_open(input5[i], d5[i]);
+    test_tile_can_open(input5[i], d5[i], output5, solution5[i]);
+  } 
 }
