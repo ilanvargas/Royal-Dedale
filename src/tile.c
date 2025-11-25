@@ -129,9 +129,6 @@ struct tile_t NS_CORRIDOR_TILE = {
 };
 
 struct tile_t* p_tiles[] = {
-  &EMPTY_TILE,
-  &START_TILE,
-  &EXIT_TILE,
   &CLOISTER_TILE,
   &N_TERRACE_TILE,
   &E_TERRACE_TILE,
@@ -140,6 +137,8 @@ struct tile_t* p_tiles[] = {
   &EW_CORRIDOR_TILE,
   &NS_CORRIDOR_TILE
 };
+
+#define TILES_NUMBER 7
 
 /** Tiles fonctions
  */

@@ -15,26 +15,6 @@
  */
 struct tile_t;
 
-#ifndef MAX_TILE_NAME_LENGTH
-#define MAX_TILE_NAME_LENGTH 40
-#endif // MAX_TILE_NAME_LENGTH
-
-extern struct tile_t EMPTY_TILE;
-extern struct tile_t START_TILE;
-extern struct tile_t EXIT_TILE;
-extern struct tile_t CLOISTER_TILE;
-extern struct tile_t N_TERRACE_TILE;
-extern struct tile_t E_TERRACE_TILE;
-extern struct tile_t W_TERRACE_TILE;
-extern struct tile_t S_TERRACE_TILE;
-extern struct tile_t EW_CORRIDOR_TILE;
-extern struct tile_t NS_CORRIDOR_TILE;
-extern struct tile_t* p_tiles[];
-
-#ifndef TILES_NUMBER
-#define TILES_NUMBER 10
-#endif // TILES_NUMBER
-
 /** Initializes the tiles depending on an integer `tile_seed`. Can be
     called multiple times. Can prepare the tiles depending on the integer
     `tile_seed`. Can also do nothing.
