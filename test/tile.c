@@ -36,6 +36,12 @@ void print_tile(const struct tile_t* tile)
   }
 }
 
+int is_tile(struct tile_t* a, struct tile_t* b)
+{
+  if (!strcmp(tile_name(a), tile_name(b))) return 1;
+  else return 0;
+}
+
 int test_tile_name(const struct tile_t* input, const char* output, const char* solution)
 {
   if (!strcmp(output, solution)) {
@@ -93,11 +99,40 @@ int test_tile_opening_cost(const struct tile_t* input, enum dir_t d, struct stas
     return 1;
   }
 }
-/*
+
 int test_tile_generate(struct tile_t* output, struct tile_t* solution)
 {
+  if (is_tile(output, solution))
+  {
+    printf("\e[1;32mPASSED\e[0m output: ");
+    print_tile(output);
+    return 1;
+  }
+  else {
+    printf("\e[1;31mFAILED\e[0m output: ");
+    print_tile(output);
+    printf("solution: ");
+    print_tile(solution);
+    return 0;
+  }
+}
 
-}*/
+int test_tile_generate_by_name(const char* input, struct tile_t* output, struct tile_t* solution)
+{
+  if (is_tile(output, solution))
+  {
+    printf("\e[1;32mPASSED\e[0m input: %s\noutput: ", input);
+    print_tile(output);
+    return 1;
+  }
+  else {
+    printf("\e[1;31mFAILED\e[0m input: %s\noutput: ", input);
+    print_tile(output);
+    printf("solution: ");
+    print_tile(solution);
+    return 0;
+  }
+}
 
 void tests_tile()
 {
@@ -135,4 +170,26 @@ void tests_tile()
     test_tile_opening_cost(input2[i], d2[i], output2, solution2[i]);
   }
 
+  printf("Test on tile_generate_empty\n");
+  struct tile_t* solutiona = &EMPTY_TILE;
+  struct tile_t* outputa = tile_generate_empty();
+  test_tile_generate(outputa, solutiona);
+  printf("Test on tile_generate_start\n");
+  struct tile_t* solutionb = &START_TILE;
+  struct tile_t* outputb = tile_generate_start();
+  test_tile_generate(outputb, solutionb);
+  printf("Test on tile_generate_exit\n");
+  struct tile_t* solutionc = &EXIT_TILE;
+  struct tile_t* outputc = tile_generate_exit();
+  test_tile_generate(outputc, solutionc);
+
+  printf("Tests on tile_generate_by_name\n");
+  int nb_tests3 = 4;
+  const char* input3[] = { "empty", "start", "ew corridor", "s terrace" };
+  struct tile_t* solution3[] =  { &EMPTY_TILE, &START_TILE, &EW_CORRIDOR_TILE, &S_TERRACE_TILE };
+  for (int i = 0; i < nb_tests3; i++)
+  {
+    struct tile_t* output3 = tile_generate_by_name(input3[i]);
+    test_tile_generate_by_name(input3[i], output3, solution3[i]);
+  }
 }

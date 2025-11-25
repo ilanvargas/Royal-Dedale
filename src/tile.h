@@ -29,6 +29,7 @@ extern struct tile_t W_TERRACE_TILE;
 extern struct tile_t S_TERRACE_TILE;
 extern struct tile_t EW_CORRIDOR_TILE;
 extern struct tile_t NS_CORRIDOR_TILE;
+extern struct tile_t* p_tiles[];
 
 #ifndef TILES_NUMBER
 #define TILES_NUMBER 10
