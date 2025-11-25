@@ -3,7 +3,7 @@
 #include <string.h>
 #include "tile.h"
 
-
+// EXAM ?
 void print_stash(const struct stash_t* stash)
 {
   for (int i = 0; i <= NUM_RESOURCES; i++)
