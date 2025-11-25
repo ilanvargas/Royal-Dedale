@@ -7,7 +7,7 @@
 void print_stash(const struct stash_t* stash)
 {
   for (int i = 0; i <= NUM_RESOURCES; i++)
-    printf("%s:%d ", resource_to_short_string(i), stash->r[i]);
+    printf("%s:%d ", resource_to_short_string(i), (unsigned int)stash->r[i]);
   printf("\n");
 }
 
