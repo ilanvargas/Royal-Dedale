@@ -10,7 +10,7 @@ struct tile_t* location_to_tile(struct location_t l, struct game_state_t* game_s
 
 void init_state(struct game_state_t* game_state)
 {
-  game_state->steps = INFINITE_STEP_STASH;
+  game_state->steps.r[STEP] = 4 * BOARD_SIZE / 3;
   
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
