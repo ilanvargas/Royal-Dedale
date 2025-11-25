@@ -25,9 +25,7 @@ void init_state(struct game_state_t* game_state)
 
 int exit_reached(struct game_state_t* game_state)
 {
-  if (tile_generate_exit() == location_to_tile(game_state->current_location, game_state))
-    return 1;
-  return 0;
+  return tile_generate_exit() == location_to_tile(game_state->current_location, game_state);
 }
 
 unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* possible_locations, struct game_state_t* game_state)
@@ -100,7 +98,7 @@ struct location_t select_location(struct location_t* possible_locations, int len
   }
   
   int i;
-  printf("Choose the location (1/%d)\n", length);
+  printf("Choose the location (1-%d)\n", length);
   scanf("%d", &i);
   return possible_locations[i-1];
 }
@@ -114,7 +112,7 @@ struct tile_t* select_tile(struct tile_t** available_tiles, int length)
   }
   
   int i;
-  printf("Choose the tile (1/%d)\n", length);
+  printf("Choose the tile (1-%d)\n", length);
   scanf("%d", &i);
   return available_tiles[i-1]; 
 }
