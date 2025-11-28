@@ -8,7 +8,7 @@ struct tile_t* location_to_tile(struct location_t l, struct game_state_t* game_s
   return game_state->board[l.x][l.y];
 }
 
-void init_state(struct game_state_t* game_state)
+void init_state(unsigned int game_seed, struct game_state_t* game_state)
 {
   game_state->steps.r[STEP] = 4 * BOARD_SIZE / 3;
   
