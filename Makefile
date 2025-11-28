@@ -19,7 +19,7 @@ project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile
 	@echo "Compile code"
 	$(CC) $(CFLAGS) -o $@ $^	
 
-tester: src/dir.o src/location.o src/resource.o src/stash.o src/tile.o test/main.o test/dir.o test/location.o test/resource.o test/stash.o 
+tester: src/dir.o src/location.o src/resource.o src/stash.o src/tile.o test/main.o test/dir.o test/location.o test/resource.o test/stash.o test/tile.o
 	@echo "Compile tests"
 	$(CC) $(CFLAGS) -o $@ $^
 
