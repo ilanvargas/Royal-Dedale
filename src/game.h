@@ -14,9 +14,7 @@ struct game_state_t {
   struct location_t current_location;
 };
 
-/* Initializes game_state
- */
-void init_state(struct game_state_t* game_state);
+void init_state(unsigned int game_seed, struct game_state_t* game_state);
 
 /** Verifies if the player reached the exit
  */

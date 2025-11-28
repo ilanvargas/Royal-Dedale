@@ -1,5 +1,6 @@
 #include "game.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /** Returns adress of tile in location in the board
  */
@@ -8,7 +9,7 @@ struct tile_t* location_to_tile(struct location_t l, struct game_state_t* game_s
   return game_state->board[l.x][l.y];
 }
 
-void init_state(struct game_state_t* game_state)
+void init_state(unsigned int game_seed, struct game_state_t* game_state)
 {
   game_state->steps.r[STEP] = 4 * BOARD_SIZE / 3;
   
@@ -21,6 +22,8 @@ void init_state(struct game_state_t* game_state)
   game_state->board[BOARD_WIDTH-1][BOARD_HEIGHT-1] = tile_generate_exit();
 
   game_state->current_location = location(0, 0);
+
+  srand(game_seed);
 }
 
 int exit_reached(struct game_state_t* game_state)
@@ -53,19 +56,14 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
 
 int decide_to_place_tile()
 {
-  char choice;
-  while (1) {
-    printf("Do you want to place or move? (p/m)\n");
-    scanf("%c", &choice);
-    switch (choice) {
-      case 'p':
-        return 1;
-      case 'm':
-        return 0;
-      default:
-        break;
-    }
+  printf("Do you want to place or move?\n");
+  int choice = rand()%2;
+  if (choice) {
+    printf(">> Place\n");
+    return 1;
   }
+  printf(">> Move\n");
+  return 0;
 }
 
 unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_tiles, struct game_state_t* game_state)
@@ -74,10 +72,10 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
   if (!location_is_adjacent(l, current_location)) return -1;
 
   struct location_t adj_tiles[MAX_DIRS] = {
-    [NORTH] = location(current_location.x, current_location.y+1),
-    [SOUTH] = location(current_location.x, current_location.y-1),
-    [EAST] = location(current_location.x+1, current_location.y),
-    [WEST] = location(current_location.x-1, current_location.y)
+    [SOUTH] = location(current_location.x, current_location.y+1),
+    [NORTH] = location(current_location.x, current_location.y-1),
+    [WEST] = location(current_location.x+1, current_location.y),
+    [EAST] = location(current_location.x-1, current_location.y)
   };
   enum dir_t d;
   for (int i = 0; i < MAX_DIRS; i++) {
@@ -96,11 +94,12 @@ struct location_t select_location(struct location_t* possible_locations, int len
     printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
     if ((i+1)%5 == 0 || i == length-1) printf("\n");
   }
-  
-  int i;
+    
   printf("Choose the location (1-%d)\n", length);
-  scanf("%d", &i);
-  return possible_locations[i-1];
+  int choice = rand()%length;
+  printf(">> I choose %d:(%d,%d)\n", choice+1,  possible_locations[choice].x, possible_locations[choice].y);
+  
+  return possible_locations[choice];
 }
 
 struct tile_t* select_tile(struct tile_t** available_tiles, int length)
@@ -110,11 +109,12 @@ struct tile_t* select_tile(struct tile_t** available_tiles, int length)
     printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
     if ((i+1)%5 == 0 || i == length-1) printf("\n");
   }
-  
-  int i;
+      
   printf("Choose the tile (1-%d)\n", length);
-  scanf("%d", &i);
-  return available_tiles[i-1]; 
+  int choice = rand()%length;
+  printf(">> I choose %d: %s\n", choice+1, tile_name(available_tiles[choice]));
+  
+  return available_tiles[choice];
 }
 
 void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state)
