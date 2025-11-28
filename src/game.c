@@ -42,7 +42,6 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
     [EAST] = location(current_location.x+1, current_location.y),
     [WEST] = location(current_location.x-1, current_location.y)
   };
-
   for (int d = 0; d < MAX_DIRS; d++) {
     if (tile_can_open(location_to_tile(current_location, game_state), d)) {
       if (location_is_valid(adj_tiles[d]) && tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
@@ -72,10 +71,10 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
   if (!location_is_adjacent(l, current_location)) return -1;
 
   struct location_t adj_tiles[MAX_DIRS] = {
-    [SOUTH] = location(current_location.x, current_location.y+1),
-    [NORTH] = location(current_location.x, current_location.y-1),
-    [WEST] = location(current_location.x+1, current_location.y),
-    [EAST] = location(current_location.x-1, current_location.y)
+    [NORTH] = location(current_location.x, current_location.y+1),
+    [SOUTH] = location(current_location.x, current_location.y-1),
+    [EAST] = location(current_location.x+1, current_location.y),
+    [WEST] = location(current_location.x-1, current_location.y)
   };
   enum dir_t d;
   for (int i = 0; i < MAX_DIRS; i++) {
@@ -84,6 +83,7 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
       break;
     }
   }
+  d = dir_opposite(d);
   return tile_draft(d, available_tiles);
 }
 
@@ -133,12 +133,13 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
     [EAST] = location(current_location.x+1, current_location.y),
     [WEST] = location(current_location.x-1, current_location.y)
   };
-
   for (int d = 0; d < MAX_DIRS; d++) {
     if (tile_can_open(location_to_tile(current_location, game_state), d)) {
       if (location_is_valid(adj_tiles[d]) && !tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
-        possible_locations[i] = adj_tiles[d];
-        i ++;
+        if (tile_can_open(location_to_tile(adj_tiles[d], game_state), dir_opposite(d))) {
+          possible_locations[i] = adj_tiles[d];
+          i ++;
+        }
       }
     }
   }
