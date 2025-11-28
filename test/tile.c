@@ -121,14 +121,15 @@ void tests_tile()
   {
     tiles[i] = tile_generate_by_name(tile_names[i]);
   }
-  /*
+  
   printf("\nTests on tile_draft\n");
+  init_tiles(2);
   struct tile_t* results[NUM_TILES_PER_TURN];
   enum dir_t d_raft = NORTH;
   unsigned int solution = 3;
   unsigned int output = tile_draft(d_raft, results);
   test_tile_draft(d_raft, output, solution);
-  print_tile_array(NUM_TILES_PER_TURN, results);*/
+  print_tile_array(output, results);
 
   printf("\nTests on tile_can_open\n");
   int nb_tests5 = 7;
