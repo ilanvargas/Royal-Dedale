@@ -53,16 +53,35 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
   return i;
 }
 
-int decide_to_place_tile()
+int decide_to_place_tile(int is_iterative)
 {
-  printf("Do you want to place or move?\n");
-  int choice = rand()%2;
-  if (choice) {
-    printf(">> Place\n");
-    return 1;
+  if (!is_iterative)
+  {
+    printf("Do you want to place or move?\n");
+    int choice = rand()%2;
+    if (choice) {
+      printf(">> Place\n");
+      return 1;
+    }
+    printf(">> Move\n");
+    return 0;
   }
-  printf(">> Move\n");
-  return 0;
+  else
+  {
+    char choice;
+    while (1) {
+      printf("Do you want to place or move? (p/m)\n");
+      scanf("%c", &choice);
+      switch (choice) {
+        case 'p':
+          return 1;
+        case 'm':
+          return 0;
+        default:
+          break;
+      }
+    }
+  }
 }
 
 unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_tiles, struct game_state_t* game_state)
@@ -87,34 +106,66 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
   return tile_draft(d, available_tiles);
 }
 
-struct location_t select_location(struct location_t* possible_locations, int length)
+struct location_t select_location(int is_iterative, struct location_t* possible_locations, int length)
 {
-  printf("Between:\n");
-  for (int i = 0; i < length; i++) {
-    printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
-    if ((i+1)%5 == 0 || i == length-1) printf("\n");
-  }
+  if (!is_iterative)
+  {
+    printf("Between:\n");
+    for (int i = 0; i < length; i++) {
+      printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
+      if ((i+1)%5 == 0 || i == length-1) printf("\n");
+    }
+      
+    printf("Choose the location (1-%d)\n", length);
+    int choice = rand()%length;
+    printf(">> I choose %d:(%d,%d)\n", choice+1,  possible_locations[choice].x, possible_locations[choice].y);
     
-  printf("Choose the location (1-%d)\n", length);
-  int choice = rand()%length;
-  printf(">> I choose %d:(%d,%d)\n", choice+1,  possible_locations[choice].x, possible_locations[choice].y);
+    return possible_locations[choice];
+  }
+  else
+  {
+    printf("Between:\n");
+    for (int i = 0; i < length; i++) {
+      printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
+      if ((i+1)%5 == 0 || i == length-1) printf("\n");
+    }
   
-  return possible_locations[choice];
+    int i;
+    printf("Choose the location (1-%d)\n", length);
+    scanf("%d", &i);
+    return possible_locations[i-1];
+  }
 }
 
-struct tile_t* select_tile(struct tile_t** available_tiles, int length)
+struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, int length)
 {
-  printf("Between:\n");
-  for (int i = 0; i < length; i++) {
-    printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
-    if ((i+1)%5 == 0 || i == length-1) printf("\n");
+  if (!is_iterative)
+  {
+    printf("Between:\n");
+    for (int i = 0; i < length; i++) {
+      printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
+      if ((i+1)%5 == 0 || i == length-1) printf("\n");
+    }
+
+    printf("Choose the tile (1-%d)\n", length);
+    int choice = rand()%length;
+    printf(">> I choose %d: %s\n", choice+1, tile_name(available_tiles[choice]));
+
+    return available_tiles[choice];
   }
-      
-  printf("Choose the tile (1-%d)\n", length);
-  int choice = rand()%length;
-  printf(">> I choose %d: %s\n", choice+1, tile_name(available_tiles[choice]));
+  else
+  {
+    printf("Between:\n");
+    for (int i = 0; i < length; i++) {
+      printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
+      if ((i+1)%5 == 0 || i == length-1) printf("\n");
+    }
   
-  return available_tiles[choice];
+    int i;
+    printf("Choose the tile (1-%d)\n", length);
+    scanf("%d", &i);
+    return available_tiles[i-1]; 
+  }
 }
 
 void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state)

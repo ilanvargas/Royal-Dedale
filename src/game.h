@@ -34,7 +34,7 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
  *
  * Returns bool value
  */
-int decide_to_place_tile();
+int decide_to_place_tile(int is_iterative);
 
 /** Randomly generates multiple tiles with tile_draft in tile.c 
  *
@@ -49,13 +49,13 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
  * 
  * Returns the selected location
  */
-struct location_t select_location(struct location_t* possible_locations, int length);
+struct location_t select_location(int is_iterative, struct location_t* possible_locations, int length);
 
 /** Asks the player to select a tile of the array 'tiles' of size 'length'
  * 
  * Returns the selected tile's pointer
  */
-struct tile_t* select_tile(struct tile_t** available_tiles, int length);
+struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, int length);
 
 /** Place a tile 'tile' in 'location' in the board of game_state
  */
