@@ -108,6 +108,7 @@ void tests_tile()
   {
     const struct tile_t* by_name = tile_generate_by_name(input4[i]);
     printf("input tile name to be generated : %s\n", input4[i]);
+    printf("output tile:\n");
     print_tile(by_name);
   }
 

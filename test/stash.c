@@ -3,44 +3,7 @@
 #include <stdlib.h>
 #include "stash.h"
 
-//Test fonctions
-/* int test_stasht_formated(struct stash_t *output, struct stash_t *solution)
-{
-  //assuming that stash_to_string passed the tests, we use it only for aesthetics purposes
-  int passed = 1;
-  for (int i = 0; i < NUM_RESOURCES+1; i++) 
-    if (output->r[i] != solution->r[i]) {
-      passed = 0;
-      break;
-    }
-  char o[MAX_STASH_STRING_LENGTH];
-  stash_to_string(output, o);
-  if (passed) {
-    printf("\e[1;32mPASSED\e[0m output: %s\n", o);
-    return 1;
-  } else {
-    char s[MAX_STASH_STRING_LENGTH];
-    stash_to_string(solution, s);
-    printf("\e[1;31mFAILED\e[0m output: %s\t solution: %s\n", o, s);
-    return 0;
-  }
-}
 
-int test_stasht_to_int_formated(struct stash_t *input1, struct stash_t *input2, int output, int solution)
-{
-  char i1[MAX_STASH_STRING_LENGTH];
-  char i2[MAX_STASH_STRING_LENGTH];
-  stash_to_string(input1, i1);
-  stash_to_string(input2, i2);
-  if (output == solution) {
-    printf("\e[1;32mPASSED\e[0m {%s}, {%s}\t output: %d\n", i1, i2, output);
-    return 1;
-  } else {
-    printf("\e[1;31mFAILED\e[0m {%s}, {%s}\t output: %d\t solution: %d\n", i1, i2, output, solution);
-    return 0;
-  }
-}
-*/
 void print_stash_n(const struct stash_t stash)
 {
   for (int i = 0; i <= NUM_RESOURCES; i++)
