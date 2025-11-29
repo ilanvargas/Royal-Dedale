@@ -11,7 +11,7 @@ all: compile
 compile: project tester
 	@echo "Compile the code and the tests"
 
-test: tester
+test:
 	@echo "Compile and run tests"
 	./tester
 
