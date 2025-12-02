@@ -19,8 +19,10 @@ void tui_opened_horizontal(struct location_t l)
   int y = Y_TUI(l.y);
 
   board_tui[y][x] = '+';
-  for (int i = 1; i < CELL_WIDTH; i++) {
-    board_tui[y][x + i] = ' ';
+  if (board_tui[y][x + 1] == '~') {
+    for (int i = 1; i < CELL_WIDTH; i++) {
+      board_tui[y][x + i] = ' ';
+    }
   }
   board_tui[y][x + CELL_WIDTH] = '+';
 }
@@ -43,8 +45,10 @@ void tui_opened_vertical(struct location_t l)
   int y = Y_TUI(l.y);
 
   board_tui[y - CELL_HEIGHT][x] = '+';  
-  for (int i = 1; i < CELL_HEIGHT; i++) {
-    board_tui[y - CELL_HEIGHT + i][x] = ' ';
+  if (board_tui[y - CELL_HEIGHT + 1][x] == '~') {
+    for (int i = 1; i < CELL_HEIGHT; i++) {
+      board_tui[y - CELL_HEIGHT + i][x] = ' ';
+    }
   }
   board_tui[y][x] = '+'; 
 }
@@ -67,7 +71,7 @@ void init_tui()
 {
   for (int r = 0; r < BOARD_HEIGHT_TUI; r++) {
     for (int c = 0; c < BOARD_WIDTH_TUI; c++) {
-        board_tui[r][c] = '*';
+        board_tui[r][c] = '~';
     }
   }
 

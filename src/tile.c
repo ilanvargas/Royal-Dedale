@@ -12,6 +12,7 @@ struct tile_t
   char name[MAX_TILE_NAME_LENGTH];
   struct stash_t traversal_cost;
   struct stash_t opening_cost[MAX_DIRS];
+  int weight;
 };
 
 //Basic tile
@@ -24,7 +25,8 @@ struct tile_t EMPTY_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
-  }
+  },
+  .weight = 0
 };
 
 struct tile_t START_TILE  = {
@@ -35,7 +37,8 @@ struct tile_t START_TILE  = {
     ONE_STEP_STASH,
     ONE_STEP_STASH,
     ONE_STEP_STASH
-  }
+  },
+  .weight = 0
 };
 
 struct tile_t EXIT_TILE = {
@@ -46,7 +49,8 @@ struct tile_t EXIT_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH,
     ONE_STEP_STASH
-  }
+  },
+  .weight = 0
 };
 
 //Game tile
@@ -59,7 +63,8 @@ struct tile_t CLOISTER_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH,
     ONE_STEP_STASH
-    }
+  },
+  .weight = 2
 };
 
 struct tile_t N_TERRACE_TILE = {
@@ -70,7 +75,8 @@ struct tile_t N_TERRACE_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t E_TERRACE_TILE = {
@@ -81,7 +87,8 @@ struct tile_t E_TERRACE_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t W_TERRACE_TILE = {
@@ -92,7 +99,8 @@ struct tile_t W_TERRACE_TILE = {
     INFINITE_STEP_STASH,
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t S_TERRACE_TILE = {
@@ -103,7 +111,8 @@ struct tile_t S_TERRACE_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH,
     ONE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t EW_CORRIDOR_TILE = {
@@ -114,7 +123,8 @@ struct tile_t EW_CORRIDOR_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH,
     ONE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t NS_CORRIDOR_TILE = {
@@ -125,7 +135,8 @@ struct tile_t NS_CORRIDOR_TILE = {
     INFINITE_STEP_STASH,
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
-    }
+  },
+  .weight = 1
 };
 
 struct tile_t* p_tiles[] = {
@@ -145,15 +156,17 @@ struct tile_t* p_tiles[] = {
 
 //Array of arrays of tiles that can open for each direction, will be useful for the draft
 int p_tiles_direction_length[MAX_DIRS] = {0};
-struct tile_t* p_tiles_direction[MAX_DIRS][TILES_NUMBER];
+struct tile_t* p_tiles_direction[MAX_DIRS][TILES_NUMBER*2];
 
 void init_p_tiles_direction()
 {
   for (int d = 0; d < MAX_DIRS; d++) {
     for (int i = 0; i < TILES_NUMBER; i++) {
       if (tile_can_open(p_tiles[i], d)) {
-        p_tiles_direction[d][p_tiles_direction_length[d]] = p_tiles[i];
-        p_tiles_direction_length[d]++;
+        for (int j = 0; j < p_tiles[i]->weight; j++) {
+          p_tiles_direction[d][p_tiles_direction_length[d]] = p_tiles[i];
+          p_tiles_direction_length[d]++;
+        }
       }
     }
   }
