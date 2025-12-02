@@ -4,8 +4,6 @@
 #include "tile.h"
 #include "location.h"
 
-#define MAX_TURNS 100
-
 /** The current state of the mansion & player
  */
 struct game_state_t {

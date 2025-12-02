@@ -236,6 +236,6 @@ int tile_is_empty(const struct tile_t* tile)
 
 int tile_can_open(const struct tile_t* tile, enum dir_t d)
 {
-  if (tile->opening_cost[d].r[STEP] == UINT_MAX) return 0;
+  if (tile_opening_cost(tile, d).r[STEP] == UINT_MAX) return 0;
   return 1;
 }

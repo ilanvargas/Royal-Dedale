@@ -113,8 +113,8 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
     printf("Between:\n");
     for (int i = 0; i < length; i++) {
       printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
-      if ((i+1)%5 == 0 || i == length-1) printf("\n");
     }
+    printf("\n");
       
     printf("Choose the location (1-%d)\n", length);
     int choice = rand()%length;
@@ -127,8 +127,8 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
     printf("Between:\n");
     for (int i = 0; i < length; i++) {
       printf("%d:(%d,%d)\t", i+1,  possible_locations[i].x, possible_locations[i].y);
-      if ((i+1)%5 == 0 || i == length-1) printf("\n");
     }
+    printf("\n");
   
     int i;
     printf("Choose the location (1-%d)\n", length);

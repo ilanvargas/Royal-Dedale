@@ -1,4 +1,4 @@
-CC ?= gcc
+Cergma ?= gcc
 NUM_RESOURCES ?= 4
 BOARD_HEIGHT ?= 5
 BOARD_WIDTH ?= 3
@@ -15,7 +15,7 @@ test: tester
 	@echo "Compile and run tests"
 	./tester
 
-project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/game.o
+project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/game.o src/tui.o
 	@echo "Compile code"
 	$(CC) $(CFLAGS) -o $@ $^	
 
