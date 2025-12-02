@@ -1,102 +1,89 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "stash.h"
 
-//Test fonctions
-int test_stasht_formated(struct stash_t *output, struct stash_t *solution)
+
+void print_stash_n(const struct stash_t stash)
 {
-  //assuming that stash_to_string passed the tests, we use it only for aesthetics purposes
-  int passed = 1;
-  for (int i = 0; i < NUM_RESOURCES+1; i++) 
-    if (output->r[i] != solution->r[i]) {
-      passed = 0;
-      break;
-    }
-  char o[MAX_STASH_STRING_LENGTH];
-  stash_to_string(output, o);
-  if (passed) {
-    printf("\e[1;32mPASSED\e[0m output: %s\n", o);
-    return 1;
-  } else {
-    char s[MAX_STASH_STRING_LENGTH];
-    stash_to_string(solution, s);
-    printf("\e[1;31mFAILED\e[0m output: %s\t solution: %s\n", o, s);
-    return 0;
-  }
+  for (int i = 0; i <= NUM_RESOURCES; i++)
+    printf("%s:%d ", resource_to_short_string(i), (unsigned int)stash.r[i]);
+  printf("\n");
+}
+void print_stash_p(const struct stash_t* stash)
+{
+  for (int i = 0; i <= NUM_RESOURCES; i++)
+    printf("%s:%d ", resource_to_short_string(i), (unsigned int)stash->r[i]);
+  printf("\n");
 }
 
-int test_stasht_to_int_formated(struct stash_t *input1, struct stash_t *input2, int output, int solution)
+struct stash_t generate_stash()
 {
-  char i1[MAX_STASH_STRING_LENGTH];
-  char i2[MAX_STASH_STRING_LENGTH];
-  stash_to_string(input1, i1);
-  stash_to_string(input2, i2);
-  if (output == solution) {
-    printf("\e[1;32mPASSED\e[0m {%s}, {%s}\t output: %d\n", i1, i2, output);
-    return 1;
-  } else {
-    printf("\e[1;31mFAILED\e[0m {%s}, {%s}\t output: %d\t solution: %d\n", i1, i2, output, solution);
-    return 0;
+  struct stash_t stash;
+  stash.r[0] = 0;
+  for (int i = 1; i <= NUM_RESOURCES; i++)
+  {
+    stash.r[i] = rand()%10; 
   }
+  return stash;
 }
-
 
 //Tests
 void tests_stash()
 {
+  srand(8);
   printf("\n");
   printf("\e[1mTESTS ON stash.c\e[0m\n");
-
-  printf("Tests on stash_to_string\n");
+  const struct stash_t s1 = generate_stash();
+  const struct stash_t s2 = generate_stash();
+  const struct stash_t s3 = generate_stash();
+  const struct stash_t s4 = generate_stash();
+  printf("\nTests on stash_to_string\n");
   int nb_tests = 4;
-  struct stash_t input[] = {{{0,0,4,3,5}},
-                            {{0,10,300,400,9999}},
-                            EMPTY_STASH,
-                            INFINITE_STEP_STASH
+  const struct stash_t* input[] = {&s1,
+                            &s2,
+                            &EMPTY_STASH,
+                            &INFINITE_STEP_STASH
                             };
   for (int i = 0; i < nb_tests; i++) {
     char buffer[MAX_STASH_STRING_LENGTH];
-    stash_to_string(&input[i], buffer);
+    stash_to_string(input[i], buffer);
+    printf("input stash: \n");
+    print_stash_p(input[i]);
     printf("string stash_t representation: %s\n", buffer);
   }
 
-  printf("Tests on stash_add\n");
+  printf("\nTests on stash_add\n");
   int nb_tests1 = 2;
-  struct stash_t inputA[] = {{{0,2,3,4,5}},
-                             {{0,99,0,7,51}}
-                            };
-  struct stash_t inputB[] = {{{0,2,3,4,5}},
-                             {{0,3,0,345,54}}
-                            };
-  struct stash_t solution1[] = {{{0,4,6,8,10}},
-                                {{0,102,0,352,105}}
-                                };
+  const struct stash_t* inputA[] = {&s2,&s4};
+  const struct stash_t* inputB[] = {&s1,&s3};
   for (int i = 0; i < nb_tests1; i++) {
-    struct stash_t output = stash_add(&inputA[i], &inputB[i]);
-    test_stasht_formated(&output, &solution1[i]);
+    struct stash_t output = stash_add(inputA[i], inputB[i]);
+    printf("input stashes:\n");
+    print_stash_p(inputA[i]);
+    print_stash_p(inputB[i]);
+    printf("output stash:\n");
+    print_stash_n(output);
+    
   }
 
-  printf("Tests on stash_sub\n");
-  struct stash_t solution2[] = {{{0,0,0,0,0}},
-                                {{0,96,0,0,0}}
-                               };
+  printf("\nTests on stash_sub\n");
   for (int i = 0; i < nb_tests1; i++) {
-    struct stash_t output = stash_sub(&inputA[i], &inputB[i]);
-    test_stasht_formated(&output, &solution2[i]);
+    struct stash_t output = stash_sub(inputA[i], inputB[i]);
+    printf("input stashes:\n");
+    print_stash_p(inputA[i]);
+    print_stash_p(inputB[i]);
+    printf("output stash:\n");
+    print_stash_n(output);
   }
 
-  printf("Tests on stash_contain\n");
-  int nb_tests3 = 3;
-  struct stash_t inputA3[] = {{{0,2,3,4,5}},
-                             {{0,2,3,4,5}},
-                             {{0,2,3,4,5}}
-                            };
-  struct stash_t inputB3[] = {{{0,2,3,4,5}},
-                             {{0,1,3,3,4}},
-                             {{0,3,4,6,5}}
-                            };
-  int solution3[] = {1,1,0};
-  for (int i = 0; i < nb_tests3; i++) {
-    test_stasht_to_int_formated(&inputA3[i], &inputB3[i], stash_contains(&inputA3[i], &inputB3[i]), solution3[i]);
-  }
+  printf("\nTests on stash_contains\n");
+  const struct stash_t* inputA3 = &s1;
+  const struct stash_t* inputB3 = &s2;
+  
+  int output3 = stash_contains(inputA3, inputB3);
+  printf("input stashes:\n");
+  print_stash_p(inputA3);
+  print_stash_p(inputB3);
+  printf("output : %d\n", output3);
 }
