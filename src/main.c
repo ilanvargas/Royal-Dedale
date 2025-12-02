@@ -42,7 +42,9 @@ int main(int argc, char* argv[])
     struct tile_t* available_tiles[NUM_TILES_PER_TURN];
 
     int is_player_won = exit_reached(&game_state);
-    while (current_turn <= n && !is_player_won)
+    unsigned int current_resources = game_state.steps.r[STEP];
+    printf("current resources: %d\n", current_resources);
+    while (current_turn <= n && !is_player_won && game_state.steps.r[STEP]> 0)
     {
         printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
@@ -66,12 +68,14 @@ int main(int argc, char* argv[])
         current_turn++;
         tui_print(is_iterative);
         is_player_won = exit_reached(&game_state);
+        current_resources = game_state.steps.r[STEP];
+        printf("current resources: %d\n", current_resources);
+        
     }
 
     if (is_player_won)
       printf("Congratulations!!! You found the exit\n");
     else
       printf("You lost :(\n");
-
     return 0;
 }
