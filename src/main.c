@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     }
     init_tiles(t);
     init_state(s, &game_state);
-    init_tui();
+    init_tui(is_iterative);
     unsigned int current_turn = 1;
 
     struct location_t possible_locations[BOARD_SIZE]; 
@@ -53,18 +53,18 @@ int main(int argc, char* argv[])
             int num_available_tiles = generate_some_tiles(selected_location, available_tiles, &game_state);
             struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, num_available_tiles);
             place_tile(selected_location, selected_tile, &game_state);
-            tui_place_tile(selected_location, selected_tile);
+            tui_place_tile(is_iterative, selected_location, selected_tile);
         }
         else
         {
             printf("Move the player\n");
             int num_possible_locations = list_open_location(possible_locations, &game_state);
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
-            tui_move_player(selected_location, &game_state);
+            tui_move_player(is_iterative, selected_location, &game_state);
             move_player(selected_location, &game_state);
         }
         current_turn++;
-        tui_print();
+        tui_print(is_iterative);
         is_player_won = exit_reached(&game_state);
     }
 

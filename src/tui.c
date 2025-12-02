@@ -63,96 +63,108 @@ void tui_closed_vertical(struct location_t l)
 
 // Fonctions public
 
-void init_tui()
+void init_tui(int is_iterative)
 {
-  for (int r = 0; r < BOARD_HEIGHT_TUI; r++) {
-    for (int c = 0; c < BOARD_WIDTH_TUI; c++) {
-        board_tui[r][c] = '*';
+  if (is_iterative)
+  {
+    for (int r = 0; r < BOARD_HEIGHT_TUI; r++) {
+      for (int c = 0; c < BOARD_WIDTH_TUI; c++) {
+          board_tui[r][c] = '*';
+      }
     }
-  }
 
-  tui_opened_horizontal(location(0, 0)); 
-  tui_opened_horizontal(location(0, 1)); 
-  tui_opened_vertical(location(0, 0)); 
-  tui_opened_vertical(location(1, 0)); 
+    tui_opened_horizontal(location(0, 0)); 
+    tui_opened_horizontal(location(0, 1)); 
+    tui_opened_vertical(location(0, 0)); 
+    tui_opened_vertical(location(1, 0)); 
 
-  int x0 = X_TUI(0);
-  int y0 = Y_TUI(0) - CELL_HEIGHT;
-  for(int i = 1; i < CELL_HEIGHT; i++){
-    for(int j = 1; j < CELL_WIDTH; j++){
-        board_tui[y0 + i][x0 + j] = ' ';
+    int x0 = X_TUI(0);
+    int y0 = Y_TUI(0) - CELL_HEIGHT;
+    for(int i = 1; i < CELL_HEIGHT; i++){
+      for(int j = 1; j < CELL_WIDTH; j++){
+          board_tui[y0 + i][x0 + j] = ' ';
+      }
     }
-  }
 
-  int x = BOARD_WIDTH - 1;
-  int y = BOARD_HEIGHT - 1;
-  tui_opened_horizontal(location(x, y)); 
-  tui_opened_horizontal(location(x, y + 1));
-  tui_opened_vertical(location(x, y)); 
-  tui_opened_vertical(location(x + 1, y)); 
+    int x = BOARD_WIDTH - 1;
+    int y = BOARD_HEIGHT - 1;
+    tui_opened_horizontal(location(x, y)); 
+    tui_opened_horizontal(location(x, y + 1));
+    tui_opened_vertical(location(x, y)); 
+    tui_opened_vertical(location(x + 1, y)); 
 
-  int x1 = X_TUI(x);
-  int y1 = Y_TUI(y) - CELL_HEIGHT;
-  for(int i = 1; i < CELL_HEIGHT; i++){
-    for(int j = 1; j < CELL_WIDTH; j++){
-        board_tui[y1 + i][x1 + j] = ' ';
+    int x1 = X_TUI(x);
+    int y1 = Y_TUI(y) - CELL_HEIGHT;
+    for(int i = 1; i < CELL_HEIGHT; i++){
+      for(int j = 1; j < CELL_WIDTH; j++){
+          board_tui[y1 + i][x1 + j] = ' ';
+      }
     }
-  }
 
-  int px = X_TUI(0) + CELL_WIDTH / 2;
-  int py = Y_TUI(0) - CELL_HEIGHT / 2;
-  board_tui[py][px] = 'o';
+    int px = X_TUI(0) + CELL_WIDTH / 2;
+    int py = Y_TUI(0) - CELL_HEIGHT / 2;
+    board_tui[py][px] = 'o';
+  }
 }
 
-void tui_place_tile(struct location_t l, struct tile_t* tile)
+void tui_place_tile(int is_iterative, struct location_t l, struct tile_t* tile)
 {
-  int x0 = X_TUI(l.x);
-  int y0 = Y_TUI(l.y) - CELL_HEIGHT;
+  if (is_iterative)
+  {
+    int x0 = X_TUI(l.x);
+    int y0 = Y_TUI(l.y) - CELL_HEIGHT;
 
-  for(int i = 1; i < CELL_HEIGHT; i++){
-    for(int j = 1; j < CELL_WIDTH; j++){
-        board_tui[y0 + i][x0 + j] = ' ';
+    for(int i = 1; i < CELL_HEIGHT; i++){
+      for(int j = 1; j < CELL_WIDTH; j++){
+          board_tui[y0 + i][x0 + j] = ' ';
+      }
     }
+
+    if (tile_can_open(tile, NORTH))
+      tui_opened_horizontal(location(l.x, l.y + 1));
+    else
+        tui_closed_horizontal(location(l.x, l.y + 1));
+
+    if (tile_can_open(tile, EAST))
+      tui_opened_vertical(location(l.x + 1, l.y));
+    else
+        tui_closed_vertical(location(l.x + 1, l.y));
+
+    if (tile_can_open(tile, SOUTH))
+      tui_opened_horizontal(location(l.x, l.y));
+    else
+        tui_closed_horizontal(location(l.x, l.y));
+
+    if (tile_can_open(tile, WEST))
+      tui_opened_vertical(location(l.x, l.y));
+    else
+      tui_closed_vertical(location(l.x, l.y));
   }
-
-  if (tile_can_open(tile, NORTH))
-    tui_opened_horizontal(location(l.x, l.y + 1));
-  else
-      tui_closed_horizontal(location(l.x, l.y + 1));
-
-  if (tile_can_open(tile, EAST))
-    tui_opened_vertical(location(l.x + 1, l.y));
-  else
-      tui_closed_vertical(location(l.x + 1, l.y));
-
-  if (tile_can_open(tile, SOUTH))
-    tui_opened_horizontal(location(l.x, l.y));
-  else
-      tui_closed_horizontal(location(l.x, l.y));
-
-  if (tile_can_open(tile, WEST))
-    tui_opened_vertical(location(l.x, l.y));
-  else
-    tui_closed_vertical(location(l.x, l.y));
 }
 
-void tui_move_player(struct location_t l, struct game_state_t* game_state)
+void tui_move_player(int is_iterative, struct location_t l, struct game_state_t* game_state)
 {
-  int old_px = X_TUI(game_state->current_location.x) + CELL_WIDTH / 2;
-  int old_py = Y_TUI(game_state->current_location.y) - CELL_HEIGHT / 2;  // CHANGÉ: - au lieu de +
-  board_tui[old_py][old_px] = ' ';
+  if (is_iterative)
+  {
+    int old_px = X_TUI(game_state->current_location.x) + CELL_WIDTH / 2;
+    int old_py = Y_TUI(game_state->current_location.y) - CELL_HEIGHT / 2;  // CHANGÉ: - au lieu de +
+    board_tui[old_py][old_px] = ' ';
 
-  int new_px = X_TUI(l.x) + CELL_WIDTH / 2;
-  int new_py = Y_TUI(l.y) - CELL_HEIGHT / 2; 
-  board_tui[new_py][new_px] = 'o';
+    int new_px = X_TUI(l.x) + CELL_WIDTH / 2;
+    int new_py = Y_TUI(l.y) - CELL_HEIGHT / 2; 
+    board_tui[new_py][new_px] = 'o';
+  }
 }
 
-void tui_print()
+void tui_print(int is_iterative)
 {
-  for (int i = 0; i < BOARD_HEIGHT_TUI; i++) {
-    for (int j = 0; j < BOARD_WIDTH_TUI; j++) {
-        putchar(board_tui[i][j]);
+  if (is_iterative) 
+  {
+    for (int i = 0; i < BOARD_HEIGHT_TUI; i++) {
+      for (int j = 0; j < BOARD_WIDTH_TUI; j++) {
+          putchar(board_tui[i][j]);
+      }
+      putchar('\n');
     }
-    putchar('\n');
   }
 }
