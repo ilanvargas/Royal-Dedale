@@ -144,9 +144,8 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, in
     printf("Between:\n");
     for (int i = 0; i < length; i++) {
       printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
-      if ((i+1)%5 == 0 || i == length-1) printf("\n");
     }
-
+    printf("\n");
     printf("Choose the tile (1-%d)\n", length);
     int choice = rand()%length;
     printf(">> I choose %d: %s\n", choice+1, tile_name(available_tiles[choice]));
