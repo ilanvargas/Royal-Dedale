@@ -55,6 +55,15 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
  */
 struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, int length);
 
+/** pays the opening cost of a placed tile in the location l, changes the game_state
+ */
+void pay_opening_cost(struct location_t l, struct game_state_t* game_state);
+
+/** pays the traversal cost of a tile in the location l when the player decides to move
+ *  changes the game_state
+ */
+void pay_traversal_cost(struct game_state_t* game_state);
+
 /** Place a tile 'tile' in 'location' in the board of game_state
  */
 void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state);

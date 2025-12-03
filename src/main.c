@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     int is_graphic = 0;
 
     int opt;
-    while ((opt = getopt(argc, argv, "s:t:n:i:g")) != -1)
+    while ((opt = getopt(argc, argv, "s:t:n:ig")) != -1)
     {
       switch (opt)
       {
@@ -44,9 +44,8 @@ int main(int argc, char* argv[])
 
     struct location_t possible_locations[BOARD_SIZE]; 
     struct tile_t* available_tiles[NUM_TILES_PER_TURN];
-
     int is_player_won = exit_reached(&game_state);
-    while (current_turn <= n && !is_player_won && game_state.steps.r[STEP]> 0)
+    while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     {
         printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
@@ -71,7 +70,8 @@ int main(int argc, char* argv[])
         tui_print(is_graphic);
         is_player_won = exit_reached(&game_state);
     }
-
+    if (!game_state.steps.r[STEP])
+      printf("No more resources xD\n");
     if (is_player_won)
       printf("Congratulations!!! You found the exit\n");
     else

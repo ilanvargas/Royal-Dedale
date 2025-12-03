@@ -137,6 +137,37 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
   }
 }
 
+void pay_opening_cost(struct location_t l, struct game_state_t* game_state)
+{
+  struct location_t curr_location = game_state->current_location;
+  struct location_t adj_tiles[MAX_DIRS] = {
+    [NORTH] = location(curr_location.x, curr_location.y+1),
+    [SOUTH] = location(curr_location.x, curr_location.y-1),
+    [EAST] = location(curr_location.x+1, curr_location.y),
+    [WEST] = location(curr_location.x-1, curr_location.y)
+  };
+  enum dir_t d;
+  for (int i = 0; i < MAX_DIRS; i++) {
+    if (location_equal(adj_tiles[i], l)) {
+      d = i;
+      break;
+    }
+  }
+  struct stash_t a = game_state->steps;
+  struct stash_t b = tile_opening_cost(location_to_tile(l, game_state),d);
+  struct stash_t res = stash_sub(&a, &b);
+  game_state->steps = res;
+}
+
+void pay_traversal_cost(struct game_state_t* game_state)
+{
+  struct location_t l = game_state->current_location;
+  struct stash_t a = game_state->steps;
+  struct stash_t b = tile_traversal_cost(location_to_tile(l, game_state));
+  struct stash_t result = stash_sub(&a, &b);
+  game_state->steps = result;
+}
+
 struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, int length)
 {
   if (!is_iterative)
@@ -170,24 +201,7 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, in
 void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state)
 {
   game_state->board[l.x][l.y] = tile;
-
-  struct location_t current_location = game_state->current_location;
-  struct location_t adj_tiles[MAX_DIRS] = {
-    [NORTH] = location(current_location.x, current_location.y+1),
-    [SOUTH] = location(current_location.x, current_location.y-1),
-    [EAST] = location(current_location.x+1, current_location.y),
-    [WEST] = location(current_location.x-1, current_location.y)
-  };
-  enum dir_t d;
-  for (int i = 0; i < MAX_DIRS; i++) {
-    if (location_equal(adj_tiles[i], l)) {
-      d = i;
-      break;
-    }
-  }
-  struct stash_t b = tile_opening_cost(location_to_tile(l, game_state),d);
-  struct stash_t a = game_state->steps;
-  game_state->steps = stash_sub(&a, &b);
+  pay_opening_cost(l, game_state);
 }
 
 int list_open_location(struct location_t* possible_locations, struct game_state_t* game_state)
@@ -217,7 +231,5 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
 void move_player(struct location_t l, struct game_state_t* game_state)
 {
   game_state->current_location = l;
-  struct stash_t a = game_state->steps;
-  struct stash_t b = tile_traversal_cost(location_to_tile(l, game_state));
-  game_state->steps = stash_sub(&a, &b);
+  pay_traversal_cost(game_state);
 }
