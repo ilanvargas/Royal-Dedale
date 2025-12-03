@@ -13,9 +13,10 @@ int main(int argc, char* argv[])
     unsigned int t = 0;
     unsigned int n = 100;
     int is_iterative = 0;
+    int is_graphic = 0;
 
     int opt;
-    while ((opt = getopt(argc, argv, "s:t:n:i")) != -1)
+    while ((opt = getopt(argc, argv, "s:t:n:i:g")) != -1)
     {
       switch (opt)
       {
@@ -31,18 +32,21 @@ int main(int argc, char* argv[])
         case 'i':
           is_iterative = 1;
           break;
+        case 'g':
+          is_graphic = 1;
+          break;
       }
     }
     init_tiles(t);
     init_state(s, &game_state);
-    init_tui();
+    init_tui(is_graphic);
     unsigned int current_turn = 1;
 
     struct location_t possible_locations[BOARD_SIZE]; 
     struct tile_t* available_tiles[NUM_TILES_PER_TURN];
 
     int is_player_won = exit_reached(&game_state);
-    while (current_turn <= n && !is_player_won)
+    while (current_turn <= n && !is_player_won && game_state.steps.r[STEP]> 0)
     {
         printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
@@ -53,18 +57,18 @@ int main(int argc, char* argv[])
             int num_available_tiles = generate_some_tiles(selected_location, available_tiles, &game_state);
             struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, num_available_tiles);
             place_tile(selected_location, selected_tile, &game_state);
-            tui_place_tile(selected_location, selected_tile);
+            tui_place_tile(is_graphic, selected_location, selected_tile);
         }
         else
         {
             printf("Move the player\n");
             int num_possible_locations = list_open_location(possible_locations, &game_state);
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
-            tui_move_player(selected_location, &game_state);
+            tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
         }
         current_turn++;
-        tui_print();
+        tui_print(is_graphic);
         is_player_won = exit_reached(&game_state);
     }
 
@@ -72,6 +76,5 @@ int main(int argc, char* argv[])
       printf("Congratulations!!! You found the exit\n");
     else
       printf("You lost :(\n");
-
     return 0;
 }
