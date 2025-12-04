@@ -92,7 +92,7 @@ struct tile_t E_TERRACE_TILE = {
 };
 
 struct tile_t W_TERRACE_TILE = {
-  .name = "w terrace",
+  .name = "s terrace",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
     INFINITE_STEP_STASH,
@@ -104,7 +104,7 @@ struct tile_t W_TERRACE_TILE = {
 };
 
 struct tile_t S_TERRACE_TILE = {
-  .name = "s terrace",
+  .name = "w terrace",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
     INFINITE_STEP_STASH,
