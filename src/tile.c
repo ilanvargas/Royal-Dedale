@@ -28,7 +28,8 @@ struct tile_t EMPTY_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 0
+  .weight = 0,
+  .rot = d0
 };
 
 struct tile_t START_TILE  = {
@@ -40,7 +41,8 @@ struct tile_t START_TILE  = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0
+  .weight = 0,
+  .rot = d0
 };
 
 struct tile_t EXIT_TILE = {
@@ -52,7 +54,8 @@ struct tile_t EXIT_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0
+  .weight = 0,
+  .rot = d0
 };
 
 //Game tile
@@ -66,7 +69,8 @@ struct tile_t CLOISTER_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 2
+  .weight = 2,
+  .rot = d0
 };
 
 struct tile_t TERRACE_TILE = {
@@ -78,7 +82,8 @@ struct tile_t TERRACE_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1
+  .weight = 1,
+  .rot = d0
 };
 
 struct tile_t CORRIDOR_TILE = {
@@ -90,7 +95,8 @@ struct tile_t CORRIDOR_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1
+  .weight = 1,
+  .rot = d0
 };
 
 struct tile_t* p_tiles[] = {

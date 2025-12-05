@@ -222,3 +222,47 @@ void move_player(struct location_t l, struct game_state_t* game_state)
   game_state->current_location = l;
   pay_traversal_cost(game_state);
 }
+
+
+void random_tile_rotation(int is_interactive, struct tile_t* tile, enum dir_t d, int* num_rotations)
+{
+  if (!is_interactive) {
+    printf("Do you want rotate your tile\n");
+    int choice = rand()%3;
+    if (choice) {
+      printf(">> No\n");
+      return ;
+    }
+    printf(">> Yes\n");
+  }
+  else {
+    char choice;
+    printf("Do you want to place or move? (y/n)\n");
+    scanf("%c", &choice);
+    switch (choice) {
+      case 'y':
+        break;
+      default:
+        return;
+    }
+  }
+
+  enum rot_t rots[NB_ROT-1];
+  int rots_len = 0;
+  for (int i = 0; i < NB_ROT-1; i++) {
+    enum rot_t r = (tile_rot(tile)+1)%NB_ROT;
+    change_tile_rot(tile, r);
+    if (tile_can_open(tile, d)) {
+      rots[rots_len] = r;
+      rots_len ++;
+    }
+  }
+  if (!rots_len) {
+    change_tile_rot(tile, (tile_rot(tile)+1)%NB_ROT);
+    return;
+  }
+  change_tile_rot(tile, rots[rand()%rots_len]);
+  *num_rotations -= 1;
+  return;
+}
+

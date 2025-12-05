@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     unsigned int s = 0;
     unsigned int t = 0;
     unsigned int n = 100;
-    int is_iterative = 0;
+    int is_interactive = 0;
     int is_graphic = 0;
 
     int opt;
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
           n = atoi(optarg);
           break;
         case 'i':
-          is_iterative = 1;
+          is_interactive = 1;
           break;
         case 'g':
           is_graphic = 1;
@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
     init_state(s, &game_state);
     init_tui(is_graphic);
     unsigned int current_turn = 1;
+    int num_rotations = BOARD_WIDTH * BOARD_HEIGHT / 10;
 
     struct location_t possible_locations[BOARD_SIZE]; 
     struct tile_t* available_tiles[NUM_TILES_PER_TURN*2];
@@ -50,16 +51,17 @@ int main(int argc, char* argv[])
     {
         printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
-        if (current_turn == 1 || (num_possible_locations && decide_to_place_tile(is_iterative)))
+        if (current_turn == 1 || (num_possible_locations && decide_to_place_tile(is_interactive)))
         {
             printf("Place your tile\n");
-            struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
+            struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
             
             enum dir_t d = location_to_dir(selected_location, &game_state);
             int num_available_tiles = tile_draft_bis(dir_opposite(d), available_tiles, available_tiles_rot);
-            struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, available_tiles_rot, num_available_tiles);
+            struct tile_t* selected_tile = select_tile(is_interactive, available_tiles, available_tiles_rot, num_available_tiles);
+            random_tile_rotation(is_interactive, selected_tile, d, &num_rotations);
+
             place_tile(selected_location, d, selected_tile, &game_state);
-            
             tui_place_tile(is_graphic, selected_location, selected_tile);
         }
         else
@@ -67,7 +69,7 @@ int main(int argc, char* argv[])
             printf("Move the player\n");
             int num_possible_locations = list_open_location(possible_locations, &game_state);
             
-            struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
+            struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
             tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
         }

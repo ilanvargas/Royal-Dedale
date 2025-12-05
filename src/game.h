@@ -85,4 +85,10 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
  */
 void move_player(struct location_t l, struct game_state_t* game_state);
 
+/** Rotate the tile randomly if the player want it
+ *
+ * Consumes num_rotations
+ */
+void random_tile_rotation(int is_interactive, struct tile_t* tile, enum dir_t d, int* num_rotations);
+
 #endif //__DEDALE_GAME_H__
