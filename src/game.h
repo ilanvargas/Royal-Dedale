@@ -5,6 +5,8 @@
 #include "tile_bis.h"
 #include "location.h"
 
+#define NUM_INITIAL_ROTATIONS BOARD_WIDTH * BOARD_HEIGHT / 10 
+
 /** The current state of the mansion & player
  */
 struct game_state_t {
