@@ -219,13 +219,13 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
     [EAST] = location(current_location.x+1, current_location.y),
     [WEST] = location(current_location.x-1, current_location.y)
   };
+
   for (int d = 0; d < MAX_DIRS; d++) {
     change_tile_rot(current_tile, game_state->board_rot[current_location.x][current_location.y]);
     if (tile_can_open(current_tile, d)) {
-      struct tile_t* adj_tile_d = location_to_tile(adj_tiles[d], game_state);
-      if (location_is_valid(adj_tiles[d]) && !tile_is_empty(adj_tile_d)) {
-        change_tile_rot(adj_tile_d, game_state->board_rot[current_location.x][current_location.y]);
-        if (tile_can_open(adj_tile_d, dir_opposite(d))) {
+      if (location_is_valid(adj_tiles[d]) && !tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
+        change_tile_rot(location_to_tile(adj_tiles[d], game_state), game_state->board_rot[current_location.x][current_location.y]);
+        if (tile_can_open(location_to_tile(adj_tiles[d], game_state), dir_opposite(d))) {
           possible_locations[i] = adj_tiles[d];
           i ++;
         }

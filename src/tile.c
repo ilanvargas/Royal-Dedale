@@ -214,25 +214,16 @@ unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* r
     results_rot[i] = d0;
   }
   struct tile_t* results_rand[NUM_TILES_PER_TURN];
-  unsigned int c_rand = tile_draft(INVALID_DIR, results);
+  unsigned int c_rand = tile_draft(INVALID_DIR, results_rand);
 
   for (unsigned int i = 0; i < c_rand; i++) {
     enum rot_t rot_rand = rand()%NB_ROT;
-
+ 
     results_rand[i]->rot = rot_rand;
     if (tile_can_open(results_rand[i], d)) {
-      int is_repeted = 0;
-      for (unsigned int j = 0; j < c; j++) {
-        if ((struct tile_t *)results_rand[i] == (struct tile_t *)results[j] && rot_rand == results_rot[j]) {
-          is_repeted = 1;
-          break;
-        }
-      }
-      if (!is_repeted) {
-        results[c] = results_rand[i];
-        results_rot[c] = rot_rand;
-        c++;
-      }
+      results[c] = results_rand[i];
+      results_rot[c] = rot_rand;
+      c++;
     }
   } 
   return c;
