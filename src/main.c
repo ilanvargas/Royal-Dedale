@@ -63,7 +63,6 @@ int main(int argc, char* argv[])
         {
             printf("Move the player\n");
             int num_possible_locations = list_open_location(possible_locations, &game_state);
-            printf("yo\n");
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
             tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
