@@ -58,6 +58,12 @@ struct tile_t* tile_generate_by_name(const char* name);
  */
 unsigned int tile_draft(enum dir_t d, struct tile_t** results);
 
+/** The same function as `tile_draft`, but takes a `resources`
+    parameter, and ensures that the opening cost for the each tiles
+    stored in the `results` array does not exceed `resources`. */
+unsigned int tile_draft_with_resources(enum dir_t d, struct stash_t resources,
+                                       struct tile_t** results);
+
 /** Returns 1 if the tile is empty, 0 otherwise. */
 int tile_is_empty(const struct tile_t* tile);
 
