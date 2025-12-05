@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/** Returns adress of tile in location in the board
- */
 struct tile_t* location_to_tile(struct location_t l, struct game_state_t* game_state)
 {
   return game_state->board[l.x][l.y];
@@ -34,6 +32,7 @@ int exit_reached(struct game_state_t* game_state)
 unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* possible_locations, struct game_state_t* game_state)
 {
   struct location_t current_location = game_state->current_location;
+  struct tile_t* current_tile = location_to_tile(current_location, game_state);
   int i = 0;    
 
   struct location_t adj_tiles[MAX_DIRS] = {
@@ -43,7 +42,8 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
     [WEST] = location(current_location.x-1, current_location.y)
   };
   for (int d = 0; d < MAX_DIRS; d++) {
-    if (tile_can_open(location_to_tile(current_location, game_state), d)) {
+    change_tile_rot(current_tile, game_state->board_rot[current_location.x][current_location.y]);
+    if (tile_can_open(current_tile, d)) {
       if (location_is_valid(adj_tiles[d]) && tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
         possible_locations[i] = adj_tiles[d];
         i ++;
@@ -84,7 +84,8 @@ int decide_to_place_tile(int is_iterative)
   }
 }
 
-unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_tiles, struct game_state_t* game_state)
+
+unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_tiles, enum rot_t* available_tiles_rot, struct game_state_t* game_state)
 {
   struct location_t current_location = game_state->current_location;
   if (!location_is_adjacent(l, current_location)) return 0;
@@ -103,7 +104,7 @@ unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_
     }
   }
   d = dir_opposite(d);
-  return tile_draft(d, available_tiles);
+  return tile_draft_bis(d, available_tiles, available_tiles_rot);
 }
 
 struct location_t select_location(int is_iterative, struct location_t* possible_locations, int length)
@@ -168,7 +169,7 @@ void pay_traversal_cost(struct game_state_t* game_state)
   game_state->steps = result;
 }
 
-struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, int length)
+struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, enum rot_t* available_tiles_rot, int length)
 {
   if (!is_iterative)
   {
@@ -181,6 +182,7 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, in
     int choice = rand()%length;
     printf(">> I choose %d: %s\n", choice+1, tile_name(available_tiles[choice]));
 
+    change_tile_rot(available_tiles[choice], available_tiles_rot[choice]);
     return available_tiles[choice];
   }
   else
@@ -190,10 +192,10 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, in
       printf("%d: %s\t", i+1, tile_name(available_tiles[i]));
       if ((i+1)%5 == 0 || i == length-1) printf("\n");
     }
-  
     int i;
     printf("Choose the tile (1-%d)\n", length);
     scanf("%d", &i);
+    change_tile_rot(available_tiles[i-1], available_tiles_rot[i-1]);
     return available_tiles[i-1]; 
   }
 }
@@ -201,12 +203,14 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, in
 void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state)
 {
   game_state->board[l.x][l.y] = tile;
+  game_state->board_rot[l.x][l.y] = tile_rot(tile);
   pay_opening_cost(l, game_state);
 }
 
 int list_open_location(struct location_t* possible_locations, struct game_state_t* game_state)
 {
   struct location_t current_location = game_state->current_location;
+  struct tile_t* current_tile = location_to_tile(current_location, game_state);
   int i = 0;    
 
   struct location_t adj_tiles[MAX_DIRS] = {
@@ -215,9 +219,12 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
     [EAST] = location(current_location.x+1, current_location.y),
     [WEST] = location(current_location.x-1, current_location.y)
   };
+
   for (int d = 0; d < MAX_DIRS; d++) {
-    if (tile_can_open(location_to_tile(current_location, game_state), d)) {
+    change_tile_rot(current_tile, game_state->board_rot[current_location.x][current_location.y]);
+    if (tile_can_open(current_tile, d)) {
       if (location_is_valid(adj_tiles[d]) && !tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
+        change_tile_rot(location_to_tile(adj_tiles[d], game_state), game_state->board_rot[current_location.x][current_location.y]);
         if (tile_can_open(location_to_tile(adj_tiles[d], game_state), dir_opposite(d))) {
           possible_locations[i] = adj_tiles[d];
           i ++;
