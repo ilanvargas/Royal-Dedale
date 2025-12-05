@@ -3,7 +3,9 @@
 
 /** Tile rotation
  */
-enum rot_t;
+enum rot_t {
+  d0, d90, d180, d270, NB_ROT
+};
 
 /** Tile draft with tile rotation
  *
@@ -12,5 +14,18 @@ enum rot_t;
  *
  */
 unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* results_rot);
+
+/** Change the rotation of a tile
+ *
+ * It's importaant to note that you are changing all tiles of type 'tile' and it will be probably
+ * changed again in the program
+ *
+ * Always call this function befora verifing if a tile can open in a direction
+ */
+void change_tile_rot(struct tile_t* tile, enum rot_t r);
+
+/** Gives tile rotation in the struct
+ */
+enum rot_t tile_rot(struct tile_t* tile);
 
 #endif  // __DEDALE_TILE_BIS_H__

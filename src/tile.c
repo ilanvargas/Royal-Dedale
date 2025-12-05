@@ -5,10 +5,6 @@
 
 #define MAX_TILE_NAME_LENGTH 40
 
-enum rot_t {
-  d0, d90, d180, d270, NB_ROT
-};
-
 /** Implementation of the type of tile 
  */
 
@@ -32,8 +28,7 @@ struct tile_t EMPTY_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 struct tile_t START_TILE  = {
@@ -45,8 +40,7 @@ struct tile_t START_TILE  = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 struct tile_t EXIT_TILE = {
@@ -58,8 +52,7 @@ struct tile_t EXIT_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 //Game tile
@@ -73,8 +66,7 @@ struct tile_t CLOISTER_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 2,
-  .rot = d0
+  .weight = 2
 };
 
 struct tile_t TERRACE_TILE = {
@@ -86,8 +78,7 @@ struct tile_t TERRACE_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1,
-  .rot = d0
+  .weight = 1
 };
 
 struct tile_t CORRIDOR_TILE = {
@@ -99,8 +90,7 @@ struct tile_t CORRIDOR_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1,
-  .rot = d0
+  .weight = 1
 };
 
 struct tile_t* p_tiles[] = {
@@ -215,6 +205,8 @@ int tile_can_open(const struct tile_t* tile, enum dir_t d)
   return 1;
 }
 
+// Manipulation with tile rotation
+
 unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* results_rot)
 {
   unsigned int c = tile_draft(d, results);
@@ -226,9 +218,9 @@ unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* r
 
   for (unsigned int i = 0; i < c_rand; i++) {
     enum rot_t rot_rand = rand()%NB_ROT;
+
     results_rand[i]->rot = rot_rand;
     if (tile_can_open(results_rand[i], d)) {
-
       int is_repeted = 0;
       for (unsigned int j = 0; j < c; j++) {
         if ((struct tile_t *)results_rand[i] == (struct tile_t *)results[j] && rot_rand == results_rot[j]) {
@@ -244,4 +236,14 @@ unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* r
     }
   } 
   return c;
+}
+
+void change_tile_rot(struct tile_t* tile, enum rot_t r)
+{
+  tile->rot = r;
+}
+
+enum rot_t tile_rot(struct tile_t* tile)
+{
+  return tile->rot;
 }

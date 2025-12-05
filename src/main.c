@@ -43,7 +43,8 @@ int main(int argc, char* argv[])
     unsigned int current_turn = 1;
 
     struct location_t possible_locations[BOARD_SIZE]; 
-    struct tile_t* available_tiles[NUM_TILES_PER_TURN];
+    struct tile_t* available_tiles[NUM_TILES_PER_TURN*2];
+    enum rot_t available_tiles_rot[NUM_TILES_PER_TURN*2];
     int is_player_won = exit_reached(&game_state);
     while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     {
@@ -53,8 +54,8 @@ int main(int argc, char* argv[])
         {
             printf("Place your tile\n");
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
-            int num_available_tiles = generate_some_tiles(selected_location, available_tiles, &game_state);
-            struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, num_available_tiles);
+            int num_available_tiles = generate_some_tiles(selected_location, available_tiles, available_tiles_rot, &game_state);
+            struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, available_tiles_rot, num_available_tiles);
             place_tile(selected_location, selected_tile, &game_state);
             tui_place_tile(is_graphic, selected_location, selected_tile);
         }
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
         is_player_won = exit_reached(&game_state);
     }
     if (!game_state.steps.r[STEP])
-      printf("No more resources xD\n");
+      printf("No more resources :(\n");
     if (is_player_won)
       printf("Congratulations!!! You found the exit\n");
     else
