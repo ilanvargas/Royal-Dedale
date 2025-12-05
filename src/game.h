@@ -42,14 +42,9 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
  */
 int decide_to_place_tile(int is_iterative);
 
-/** Randomly generates multiple tiles with tile_draft in tile.c 
- *
- * The 'available_tiles' array must be allocated before calling the function, and
- * able to contain at least `NUM_TILES_PER_TURN` elements.
- *
- * Returns the length of 'available_tiles'
+/** With a location adjacent to the player gives it direction to the player's location
  */
-unsigned int generate_some_tiles(struct location_t l, struct tile_t** available_tiles, enum rot_t* available_tiles_rot, struct game_state_t* game_state);
+enum dir_t location_to_dir(struct location_t l, struct game_state_t* game_state);
 
 /** Asks the player to select a location of the array 'possible_locations' of size 'length'
  * 
@@ -65,7 +60,7 @@ struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, en
 
 /** pays the opening cost of a placed tile in the location l, changes the game_state
  */
-void pay_opening_cost(struct location_t l, struct game_state_t* game_state);
+void pay_opening_cost(struct location_t l, enum dir_t d, struct game_state_t* game_state);
 
 /** pays the traversal cost of a tile in the location l when the player decides to move
  *  changes the game_state
@@ -74,7 +69,7 @@ void pay_traversal_cost(struct game_state_t* game_state);
 
 /** Place a tile 'tile' in 'location' in the board of game_state
  */
-void place_tile(struct location_t l, struct tile_t* tile, struct game_state_t* game_state);
+void place_tile(struct location_t l, enum dir_t d, struct tile_t* tile, struct game_state_t* game_state);
 
 /** Lists every open tile adjecent to the location of the player
  * 

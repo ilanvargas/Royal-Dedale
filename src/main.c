@@ -54,15 +54,19 @@ int main(int argc, char* argv[])
         {
             printf("Place your tile\n");
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
-            int num_available_tiles = generate_some_tiles(selected_location, available_tiles, available_tiles_rot, &game_state);
+            
+            enum dir_t d = location_to_dir(selected_location, &game_state);
+            int num_available_tiles = tile_draft_bis(dir_opposite(d), available_tiles, available_tiles_rot);
             struct tile_t* selected_tile = select_tile(is_iterative, available_tiles, available_tiles_rot, num_available_tiles);
-            place_tile(selected_location, selected_tile, &game_state);
+            place_tile(selected_location, d, selected_tile, &game_state);
+            
             tui_place_tile(is_graphic, selected_location, selected_tile);
         }
         else
         {
             printf("Move the player\n");
             int num_possible_locations = list_open_location(possible_locations, &game_state);
+            
             struct location_t selected_location = select_location(is_iterative, possible_locations, num_possible_locations);
             tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
