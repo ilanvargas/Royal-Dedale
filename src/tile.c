@@ -91,7 +91,7 @@ struct tile_t E_TERRACE_TILE = {
   .weight = 1
 };
 
-struct tile_t W_TERRACE_TILE = {
+struct tile_t S_TERRACE_TILE = {
   .name = "s terrace",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -103,7 +103,7 @@ struct tile_t W_TERRACE_TILE = {
   .weight = 1
 };
 
-struct tile_t S_TERRACE_TILE = {
+struct tile_t W_TERRACE_TILE = {
   .name = "w terrace",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
@@ -228,7 +228,7 @@ unsigned int tile_draft(enum dir_t d, struct tile_t** results)
     
     int is_repeted = 0;
     for (unsigned int j = 0; j < c; j++) {
-      if (!strcmp(p_tile_rand->name, results[j]->name)) {
+      if ((struct tile_t*)p_tile_rand == (struct tile_t*)results[j]) {
         is_repeted = 1;
         break;
       }
