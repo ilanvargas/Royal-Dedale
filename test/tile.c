@@ -73,7 +73,7 @@ void tests_tile()
 
   printf("\nTests on tile_generate_by_name\n");
   int nb_tests4 = 3;
-  const char* input4[] = {"cloister", "ew corridor", "s terrace" };
+  const char* input4[] = {"cloister", "corridor", "terrace" };
   for (int i = 0; i < nb_tests4; i++)
   {
     const struct tile_t* by_name = tile_generate_by_name(input4[i]);
@@ -107,6 +107,7 @@ void tests_tile()
     int output5 = tile_can_open(input5[i], d5[i]);
     printf("\ninput tile: ");
     print_tile(input5[i]);
+    printf("  direction: %s", dir_to_short_string(d5[i]));
     printf("\n output: %d\n", output5);
   }
 }
