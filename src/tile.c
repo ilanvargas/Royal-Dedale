@@ -248,12 +248,23 @@ unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_
 
   for (unsigned int i = 0; i < c_rand; i++) {
     enum rot_t rot_rand = rand()%NB_ROT;
- 
     results_rand[i]->rot = rot_rand;
+
     if (tile_can_open(results_rand[i], d)) {
+
+      int is_repeted = 0;
+      for (unsigned int j = 0; j < c; j++) {
+        if ((struct tile_t*)results_rand[i] == (struct tile_t*)results[j] && rot_rand == d0) {
+          is_repeted = 1;
+          break;
+        }
+      }
+      if (!is_repeted)
+      {
       results[c] = results_rand[i];
       results_rot[c] = rot_rand;
       c++;
+      }
     }
   } 
   return c;
