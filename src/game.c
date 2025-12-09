@@ -139,7 +139,7 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
 void pay_opening_cost(struct location_t l, enum dir_t d, struct game_state_t* game_state)
 {
   struct stash_t a = game_state->steps;
-  struct stash_t b = tile_opening_cost(location_to_tile(l, game_state),d);
+  struct stash_t b = tile_opening_cost(location_to_tile(l, game_state),dir_opposite(d));
   game_state->steps = stash_sub(&a, &b);
 }
 
