@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
             struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
             
             enum dir_t d = location_to_dir(selected_location, &game_state);
-            int num_available_tiles = tile_draft_bis(dir_opposite(d), available_tiles, available_tiles_rot);
+            int num_available_tiles = tile_draft_bis(dir_opposite(d), game_state.steps, available_tiles, available_tiles_rot);
             struct tile_t* selected_tile = select_tile(is_interactive, available_tiles, available_tiles_rot, num_available_tiles);
             random_tile_rotation(is_interactive, selected_tile, d, &num_rotations);
 

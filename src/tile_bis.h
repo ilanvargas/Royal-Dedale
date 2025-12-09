@@ -7,12 +7,12 @@ enum rot_t {
   d0, d90, d180, d270, NB_ROT
 };
 
-/** Tile draft with tile rotation
+/** Tile draft with resources and tile rotation
  *
  * The `results` and 'results_rot' array must be allocated before calling the function, and
  * able to contain at least `NUM_TILES_PER_TURN` elements.
  */
-unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* results_rot);
+unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_t** results, enum rot_t* results_rot);
 
 /** Change the rotation of a tile
  *
