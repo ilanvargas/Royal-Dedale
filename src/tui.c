@@ -89,21 +89,6 @@ void init_tui(int is_graphic)
       }
     }
 
-    int x = BOARD_WIDTH - 1;
-    int y = BOARD_HEIGHT - 1;
-    tui_opened_horizontal(location(x, y)); 
-    tui_opened_horizontal(location(x, y + 1));
-    tui_opened_vertical(location(x, y)); 
-    tui_opened_vertical(location(x + 1, y)); 
-
-    int x1 = X_TUI(x);
-    int y1 = Y_TUI(y) - CELL_HEIGHT;
-    for(int i = 1; i < CELL_HEIGHT; i++){
-      for(int j = 1; j < CELL_WIDTH; j++){
-          board_tui[y1 + i][x1 + j] = ' ';
-      }
-    }
-
     int px = X_TUI(0) + CELL_WIDTH / 2;
     int py = Y_TUI(0) - CELL_HEIGHT / 2;
     board_tui[py][px] = 'o';
