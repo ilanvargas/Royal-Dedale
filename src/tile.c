@@ -199,6 +199,30 @@ unsigned int tile_draft(enum dir_t d, struct tile_t** results)
   return c;
 }
 
+unsigned int tile_draft_with_resources(enum dir_t d, struct stash_t resources, struct tile_t** results)
+{
+  unsigned int c = 0;
+  for (int i = 0; i < NUM_TILES_PER_TURN; i++) {
+    struct tile_t* p_tile_rand = (d != INVALID_DIR) 
+      ? p_tiles_direction[d][rand()%p_tiles_direction_length[d]] 
+      : p_tiles[rand()%TILES_NUMBER];
+    if (stash_contains(&resources, &p_tile_rand->opening_cost[d])) {}
+    int is_repeted = 0;
+    for (unsigned int j = 0; j < c; j++) {
+      if ((struct tile_t*)p_tile_rand == (struct tile_t*)results[j]) {
+        is_repeted = 1;
+        break;
+      }
+    }
+    struct stash_t op = p_tile_rand->opening_cost[d];
+    if (!is_repeted && stash_contains(&resources, &op)) {
+      results[c] = p_tile_rand;
+      c++;
+    }
+  }
+  return c;
+}
+
 int tile_is_empty(const struct tile_t* tile)
 {
   if (tile == &EMPTY_TILE) return 1;
@@ -211,25 +235,36 @@ int tile_can_open(const struct tile_t* tile, enum dir_t d)
   return 1;
 }
 
-// Manipulation with tile rotation
+// Manipulation with tile rotation and resources
 
-unsigned int tile_draft_bis(enum dir_t d, struct tile_t** results, enum rot_t* results_rot)
+unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_t** results, enum rot_t* results_rot)
 {
-  unsigned int c = tile_draft(d, results);
+  unsigned int c = tile_draft_with_resources(d, resources, results);
   for (unsigned int i = 0; i < c; i++) {
     results_rot[i] = d0;
   }
   struct tile_t* results_rand[NUM_TILES_PER_TURN];
-  unsigned int c_rand = tile_draft(INVALID_DIR, results_rand);
+  unsigned int c_rand = tile_draft_with_resources(INVALID_DIR, resources, results_rand);
 
   for (unsigned int i = 0; i < c_rand; i++) {
     enum rot_t rot_rand = rand()%NB_ROT;
- 
     results_rand[i]->rot = rot_rand;
+
     if (tile_can_open(results_rand[i], d)) {
+
+      int is_repeted = 0;
+      for (unsigned int j = 0; j < c; j++) {
+        if ((struct tile_t*)results_rand[i] == (struct tile_t*)results[j] && rot_rand == d0) {
+          is_repeted = 1;
+          break;
+        }
+      }
+      if (!is_repeted)
+      {
       results[c] = results_rand[i];
       results_rot[c] = rot_rand;
       c++;
+      }
     }
   } 
   return c;

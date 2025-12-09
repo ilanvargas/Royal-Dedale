@@ -80,7 +80,7 @@ struct stash_t stash_sub(const struct stash_t* a, const struct stash_t* b)
 
 int stash_contains(const struct stash_t* a, const struct stash_t* b)
 {
-  for (int i = 0; i <= NUM_RESOURCES; i++) {
+  for (int i = 1; i <= NUM_RESOURCES; i++) {
     if (a->r[i] < b->r[i]) return 0;
   }
   return 1;
