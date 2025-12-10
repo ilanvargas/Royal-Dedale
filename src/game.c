@@ -42,8 +42,7 @@ unsigned int list_empty_locations_with_finite_opening_cost(struct location_t* po
     [WEST] = location(current_location.x-1, current_location.y)
   };
   for (int d = 0; d < MAX_DIRS; d++) {
-    change_tile_rot(current_tile, game_state->board_rot[current_location.x][current_location.y]);
-    if (tile_can_open(current_tile, d)) {
+    if (tile_can_open_bis(current_tile, d, game_state->board_rot[current_location.x][current_location.y])) {
       if (location_is_valid(adj_tiles[d]) && tile_is_empty(location_to_tile(adj_tiles[d], game_state))) {
         possible_locations[i] = adj_tiles[d];
         i ++;
@@ -251,8 +250,7 @@ void random_tile_rotation(int is_interactive, struct tile_t* tile, enum dir_t d,
   int rots_len = 0;
   for (int i = 0; i < NB_ROT-1; i++) {
     enum rot_t r = (tile_rot(tile)+1)%NB_ROT;
-    change_tile_rot(tile, r);
-    if (tile_can_open(tile, d)) {
+    if (tile_can_open_bis(tile, d, r)) {
       rots[rots_len] = r;
       rots_len ++;
     }

@@ -1,5 +1,4 @@
 #include "tile.h"
-#include "tile_bis.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,7 +13,6 @@ struct tile_t
   struct stash_t traversal_cost;
   struct stash_t opening_cost[MAX_DIRS];
   int weight;
-  enum rot_t rot;
 };
 
 //Basic tile
@@ -28,8 +26,7 @@ struct tile_t EMPTY_TILE = {
     INFINITE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 struct tile_t START_TILE  = {
@@ -41,8 +38,7 @@ struct tile_t START_TILE  = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 struct tile_t EXIT_TILE = {
@@ -54,8 +50,7 @@ struct tile_t EXIT_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 0,
-  .rot = d0
+  .weight = 0
 };
 
 //Game tile
@@ -69,8 +64,7 @@ struct tile_t CLOISTER_TILE = {
     ONE_STEP_STASH,
     ONE_STEP_STASH
   },
-  .weight = 2,
-  .rot = d0
+  .weight = 2
 };
 
 struct tile_t TERRACE_TILE = {
@@ -82,8 +76,7 @@ struct tile_t TERRACE_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1,
-  .rot = d0
+  .weight = 1
 };
 
 struct tile_t CORRIDOR_TILE = {
@@ -95,8 +88,7 @@ struct tile_t CORRIDOR_TILE = {
     ONE_STEP_STASH,
     INFINITE_STEP_STASH
   },
-  .weight = 1,
-  .rot = d0
+  .weight = 1
 };
 
 struct tile_t* p_tiles[] = {
@@ -148,9 +140,7 @@ struct stash_t tile_traversal_cost(const struct tile_t* tile)
 struct stash_t tile_opening_cost(const struct tile_t* tile, enum dir_t d)
 {
     if (d >= MAX_DIRS) return INFINITE_STEP_STASH;
-
-    enum dir_t d_rot = (d+tile->rot)%NB_ROT;
-    return tile->opening_cost[d_rot];
+    return tile->opening_cost[d];
 }
 
 struct tile_t* tile_generate_empty()
@@ -178,47 +168,16 @@ struct tile_t* tile_generate_by_name(const char* name)
 
 unsigned int tile_draft(enum dir_t d, struct tile_t** results)
 {
-  unsigned int c = 0;
-  for (int i = 0; i < NUM_TILES_PER_TURN; i++) {
-    struct tile_t* p_tile_rand = (d != INVALID_DIR) 
-      ? p_tiles_direction[d][rand()%p_tiles_direction_length[d]] 
-      : p_tiles[rand()%TILES_NUMBER];
-    
-    int is_repeted = 0;
-    for (unsigned int j = 0; j < c; j++) {
-      if ((struct tile_t*)p_tile_rand == (struct tile_t*)results[j]) {
-        is_repeted = 1;
-        break;
-      }
-    }
-    if (!is_repeted) {
-      results[c] = p_tile_rand;
-      c++;
-    }
-  }
-  return c;
-}
+  if (d > MAX_DIRS || p_tiles_direction_length[d] == 0) return 0;
 
-unsigned int tile_draft_with_resources(enum dir_t d, struct stash_t resources, struct tile_t** results)
-{
   unsigned int c = 0;
   for (int i = 0; i < NUM_TILES_PER_TURN; i++) {
     struct tile_t* p_tile_rand = (d != INVALID_DIR) 
       ? p_tiles_direction[d][rand()%p_tiles_direction_length[d]] 
       : p_tiles[rand()%TILES_NUMBER];
-    if (stash_contains(&resources, &p_tile_rand->opening_cost[d])) {}
-    int is_repeted = 0;
-    for (unsigned int j = 0; j < c; j++) {
-      if ((struct tile_t*)p_tile_rand == (struct tile_t*)results[j]) {
-        is_repeted = 1;
-        break;
-      }
-    }
-    struct stash_t op = p_tile_rand->opening_cost[d];
-    if (!is_repeted && stash_contains(&resources, &op)) {
-      results[c] = p_tile_rand;
-      c++;
-    }
+
+    results[c] = p_tile_rand;
+    c++;
   }
   return c;
 }
@@ -233,49 +192,4 @@ int tile_can_open(const struct tile_t* tile, enum dir_t d)
 {
   if (tile_opening_cost(tile, d).r[STEP] == UINT_MAX) return 0;
   return 1;
-}
-
-// Manipulation with tile rotation and resources
-
-unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_t** results, enum rot_t* results_rot)
-{
-  unsigned int c = tile_draft_with_resources(d, resources, results);
-  for (unsigned int i = 0; i < c; i++) {
-    results_rot[i] = d0;
-  }
-  struct tile_t* results_rand[NUM_TILES_PER_TURN];
-  unsigned int c_rand = tile_draft_with_resources(INVALID_DIR, resources, results_rand);
-
-  for (unsigned int i = 0; i < c_rand; i++) {
-    enum rot_t rot_rand = rand()%NB_ROT;
-    results_rand[i]->rot = rot_rand;
-
-    if (tile_can_open(results_rand[i], d)) {
-
-      int is_repeted = 0;
-      for (unsigned int j = 0; j < c; j++) {
-        if ((struct tile_t*)results_rand[i] == (struct tile_t*)results[j] && rot_rand == d0) {
-          is_repeted = 1;
-          break;
-        }
-      }
-      if (!is_repeted)
-      {
-      results[c] = results_rand[i];
-      results_rot[c] = rot_rand;
-      c++;
-      }
-    }
-  } 
-  return c;
-}
-
-void change_tile_rot(struct tile_t* tile, enum rot_t r)
-{
-  tile->rot = r;
-}
-
-enum rot_t tile_rot(struct tile_t* tile)
-{
-  return tile->rot;
 }

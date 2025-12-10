@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
       }
     }
     init_tiles(t);
+    init_tiles_bis(t);
     init_state(s, &game_state);
     init_tui(is_graphic);
     unsigned int current_turn = 1;
