@@ -37,16 +37,18 @@ int main(int argc, char* argv[])
           break;
       }
     }
+
     init_tiles(t);
     init_tiles_bis(t);
     init_state(s, &game_state);
     init_tui(is_graphic);
+
     unsigned int current_turn = 1;
     int num_rotations = BOARD_WIDTH * BOARD_HEIGHT / 10;
 
-    struct location_t possible_locations[BOARD_SIZE]; 
-    struct tile_t* available_tiles[NUM_TILES_PER_TURN*2];
-    enum rot_t available_tiles_rot[NUM_TILES_PER_TURN*2];
+    struct location_t possible_locations[4]; 
+    struct tile_bis_t available_tiles[NUM_TILES_PER_TURN*2];
+
     int is_player_won = exit_reached(&game_state);
     while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     {
@@ -58,8 +60,8 @@ int main(int argc, char* argv[])
             struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
             
             enum dir_t d = location_to_dir(selected_location, &game_state);
-            int num_available_tiles = tile_draft_bis(dir_opposite(d), game_state.steps, available_tiles, available_tiles_rot);
-            struct tile_t* selected_tile = select_tile(is_interactive, available_tiles, available_tiles_rot, num_available_tiles);
+            int num_available_tiles = tile_draft_bis(dir_opposite(d), game_state.steps, available_tiles);
+            struct tile_bis_t selected_tile = select_tile(is_interactive, available_tiles, num_available_tiles);
             random_tile_rotation(is_interactive, selected_tile, d, &num_rotations);
 
             place_tile(selected_location, d, selected_tile, &game_state);
@@ -83,5 +85,6 @@ int main(int argc, char* argv[])
       printf("Congratulations!!! You found the exit\n");
     else
       printf("You lost :(\n");
+
     return 0;
 }

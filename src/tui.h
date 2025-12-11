@@ -8,7 +8,7 @@ void init_tui(int is_iterative);
 
 /** Place a new tile on the tui
  */
-void tui_place_tile(int is_iterative, struct location_t l, struct tile_t* tile);
+void tui_place_tile(int is_iterative, struct location_t l, struct tile_bis_t tile);
 
 /** Move the player from he's old position to his new one on the tui
  *

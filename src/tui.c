@@ -95,7 +95,7 @@ void init_tui(int is_graphic)
   }
 }
 
-void tui_place_tile(int is_graphic, struct location_t l, struct tile_t* tile)
+void tui_place_tile(int is_graphic, struct location_t l, struct tile_bis_t tile)
 {
   if (is_graphic) {
     int x0 = X_TUI(l.x);
@@ -107,22 +107,22 @@ void tui_place_tile(int is_graphic, struct location_t l, struct tile_t* tile)
       }
     }
 
-    if (tile_can_open(tile, NORTH))
+    if (tile_can_open_bis(tile, NORTH))
       tui_opened_horizontal(location(l.x, l.y + 1));
     else
         tui_closed_horizontal(location(l.x, l.y + 1));
 
-    if (tile_can_open(tile, EAST))
+    if (tile_can_open_bis(tile, EAST))
       tui_opened_vertical(location(l.x + 1, l.y));
     else
         tui_closed_vertical(location(l.x + 1, l.y));
 
-    if (tile_can_open(tile, SOUTH))
+    if (tile_can_open_bis(tile, SOUTH))
       tui_opened_horizontal(location(l.x, l.y));
     else
         tui_closed_horizontal(location(l.x, l.y));
 
-    if (tile_can_open(tile, WEST))
+    if (tile_can_open_bis(tile, WEST))
       tui_opened_vertical(location(l.x, l.y));
     else
       tui_closed_vertical(location(l.x, l.y));

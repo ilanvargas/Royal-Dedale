@@ -1,7 +1,6 @@
 #ifndef __DEDALE_GAME_H__
 #define __DEDALE_GAME_H__
 
-#include "tile.h"
 #include "tile_bis.h"
 #include "location.h"
 
@@ -11,8 +10,7 @@
  */
 struct game_state_t {
   struct stash_t steps;
-  struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
-  enum rot_t board_rot[BOARD_WIDTH][BOARD_HEIGHT];
+  struct tile_bis_t board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
 };
 
@@ -20,7 +18,7 @@ void init_state(unsigned int game_seed, struct game_state_t* game_state);
 
 /** Returns adress of tile in location in the board
  */
-struct tile_t* location_to_tile(struct location_t l, struct game_state_t* game_state);
+struct tile_bis_t location_to_tile(struct location_t l, struct game_state_t* game_state);
 
 /** Verifies if the player reached the exit
  */
@@ -56,20 +54,11 @@ struct location_t select_location(int is_iterative, struct location_t* possible_
  * 
  * Returns the selected tile's pointer
  */
-struct tile_t* select_tile(int is_iterative, struct tile_t** available_tiles, enum rot_t* available_tiles_rot, int length);
-
-/** pays the opening cost of a placed tile in the location l, changes the game_state
- */
-void pay_opening_cost(struct location_t l, enum dir_t d, struct game_state_t* game_state);
-
-/** pays the traversal cost of a tile in the location l when the player decides to move
- *  changes the game_state
- */
-void pay_traversal_cost(struct game_state_t* game_state);
+struct tile_bis_t select_tile(int is_iterative, struct tile_bis_t* available_tiles, int length);
 
 /** Place a tile 'tile' in 'location' in the board of game_state
  */
-void place_tile(struct location_t l, enum dir_t d, struct tile_t* tile, struct game_state_t* game_state);
+void place_tile(struct location_t l, enum dir_t d, struct tile_bis_t tile, struct game_state_t* game_state);
 
 /** Lists every open tile adjecent to the location of the player
  * 
@@ -89,6 +78,6 @@ void move_player(struct location_t l, struct game_state_t* game_state);
  *
  * Consumes num_rotations
  */
-void random_tile_rotation(int is_interactive, struct tile_t* tile, enum dir_t d, int* num_rotations);
+void random_tile_rotation(int is_interactive, struct tile_bis_t tile, enum dir_t d, int* num_rotations);
 
 #endif //__DEDALE_GAME_H__
