@@ -1,7 +1,6 @@
 #ifndef __DEDALE_TUI_H__
 #define __DEDALE_TUI_H__
 
-#include "location.h"
 #include "game.h"
 
 void init_tui(int is_iterative);
