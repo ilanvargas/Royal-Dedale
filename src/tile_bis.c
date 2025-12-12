@@ -8,12 +8,12 @@ void init_tiles_bis(unsigned int tile_seed)
 
 struct stash_t tile_opening_cost_bis(const struct tile_bis_t tile, enum dir_t d)
 {
-  return tile_opening_cost(tile.tile, DIR_TO_ROT(d, tile.rot));
+  return tile_opening_cost(tile.tile, ROT_TO_DIR(d, tile.rot));
 }
 
 int tile_can_open_bis(const struct tile_bis_t tile, enum dir_t d)
 {
-  return tile_can_open(tile.tile, DIR_TO_ROT(d, tile.rot));
+  return tile_can_open(tile.tile, ROT_TO_DIR(d, tile.rot));
 }
 
 unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_bis_t* results)
@@ -46,8 +46,8 @@ unsigned int tile_draft_bis(enum dir_t d, struct stash_t resources, struct tile_
 
   for (unsigned int i = 0; i < c2; i++) {
     enum rot_t rot_rand = rand()%NB_ROT;
-    struct stash_t cost_to_open = tile_opening_cost(results2[i], DIR_TO_ROT(d, rot_rand));
-    if (tile_can_open(results2[i], DIR_TO_ROT(d, rot_rand)) && stash_contains(&resources, &cost_to_open)) {
+    struct stash_t cost_to_open = tile_opening_cost(results2[i], ROT_TO_DIR(d, rot_rand));
+    if (tile_can_open(results2[i], ROT_TO_DIR(d, rot_rand)) && stash_contains(&resources, &cost_to_open)) {
       int is_repeted = 0;
       for (unsigned int j = 0; j < c; j++) {
         if (results2[i] == results[j].tile && rot_rand == results[j].rot) {

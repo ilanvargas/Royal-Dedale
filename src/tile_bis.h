@@ -17,7 +17,7 @@ struct tile_bis_t
 
 /** be able to acces a direction from a direction with a rotation
  */
-#define DIR_TO_ROT(d, r)  (((d) + (r)) % NB_ROT)
+#define ROT_TO_DIR(d, r)  (((d) + (r)) % NB_ROT)
 
 void init_tiles_bis(unsigned int tile_seed);
 
