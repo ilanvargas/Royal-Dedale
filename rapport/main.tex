@@ -9,15 +9,50 @@
 \usepackage{amsmath, amssymb}
 \usepackage{url}
 
+\usepackage[margin=3cm,includefoot]{geometry}
+\usepackage{float} %controler les positions flottantes
+\usepackage[hidelinks]{hyperref} %cool clickable references
+
+
 \begin{document}
+
+\begin{titlepage}
+    \begin{center}
+
+        \includegraphics[width=7cm,height=2.5cm]{enseirb.png} \\
+        [1cm]
+        \begin{Huge}
+        \bfseries Rapport du project \\
+        [0.7cm]
+        \end{Huge}
+        \begin{Large}
+        \textsl{Groupe I1 P5 - Equipe n°8}\\
+        \textsc{Ilan Vargas \& Achraf Safi}\\
+        \end{Large}
+    \end{center}
+\end{titlepage}
+
+
 
 \section*{Introduction}
 
 \input{introduction.tex}
 
+\thispagestyle{empty}
+\addcontentsline{toc}{section}{\numberline{}Introduction}
+\cleardoublepage
+
+
+\tableofcontents
+
+\thispagestyle{empty}
+\cleardoublepage
+\setcounter{page}{1}
+
 \section*{Architecture du programme}
 
 \input{architecture.tex}
+\addcontentsline{toc}{section}{\numberline{}Architecture du programme}
 
 \section{Fondation}
 
@@ -38,5 +73,7 @@
 \section*{Conclusion}
 
 \input{conclusion.tex}
+
+\addcontentsline{toc}{section}{\numberline{}Conclusion}
 
 \end{document}
