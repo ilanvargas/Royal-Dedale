@@ -99,7 +99,7 @@ struct location_t next_target_position(unsigned int num_visited_positions, struc
 
 int target_position_reached(struct game_state_t *game_state, unsigned int num_visited_positions, struct location_t *target_positions)
 {
-    if (location_equal(game_state->current_location, target_positions[num_visited_positions]) || exit_reached(game_state))
+    if (location_equal(game_state->current_location, target_positions[num_visited_positions]))
     {
         switch(num_visited_positions){
             case 0:
@@ -111,15 +111,12 @@ int target_position_reached(struct game_state_t *game_state, unsigned int num_vi
             case 2:
                 struct stash_t res = game_state->steps;
                 game_state->steps = stash_add(&res,&FINAL_RESOURCE);
-            case 3:
-                if (exit_reached(game_state)) return 1;
-                return 0;
             default:
                 break;
-
         }
         return 1;
     }
+    else if (exit_reached(game_state) && num_visited_positions == 3) return 1;
     return 0;
 }
 
