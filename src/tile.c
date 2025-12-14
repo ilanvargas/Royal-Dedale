@@ -41,14 +41,19 @@ struct tile_t START_TILE  = {
   .weight = 0
 };
 
+#define FINAL_RESOURCE_STASH \
+  (struct stash_t) {   \
+    .r = {[NUM_RESOURCES] = 1, [NUM_RESOURCES-1] = 1, [NUM_RESOURCES-2] = 1}  \
+  }
+
 struct tile_t EXIT_TILE = {
   .name = "exit",
   .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
-    ONE_STEP_STASH,
-    ONE_STEP_STASH,
-    ONE_STEP_STASH,
-    ONE_STEP_STASH
+    FINAL_RESOURCE_STASH,
+    FINAL_RESOURCE_STASH,
+    FINAL_RESOURCE_STASH,
+    FINAL_RESOURCE_STASH
   },
   .weight = 0
 };
