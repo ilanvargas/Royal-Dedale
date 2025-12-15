@@ -18,10 +18,10 @@ int test_dirt_to_string_formated(enum dir_t input, const char *output, char *sol
 {
   //we assume that the tests of dir_to_str passed, we use it only for aesthetics purposes
   if (!strcmp(output, solution)) {
-    printf("\e[1;32mPASSED\e[0m input: %s\t output: %s\n", dir_to_string(input), output);
+    printf("\e[1;32mPASSED\e[0m input: %d\t output: %s\n", input, output);
     return 1;
   } else {
-    printf("\e[1;31mFAILED\e[0m input: %s\t output: %s\t solution: %s\n", dir_to_string(input), output, solution);
+    printf("\e[1;31mFAILED\e[0m input: %d\t output: %s\t solution: %s\n", input, output, solution);
     return 0;
   }
 }
