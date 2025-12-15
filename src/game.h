@@ -6,12 +6,17 @@
 
 #define NUM_INITIAL_ROTATIONS BOARD_WIDTH * BOARD_HEIGHT / 10 
 
+#define NUM_TARGET_LOCATIONS 3
+
 /** The current state of the mansion & player
  */
 struct game_state_t {
   struct stash_t steps;
   struct tile_bis_t board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
+
+  struct location_t target_locations[NUM_TARGET_LOCATIONS];
+  int is_target_locations_visited[NUM_TARGET_LOCATIONS];
 };
 
 void init_state(unsigned int game_seed, struct game_state_t* game_state);

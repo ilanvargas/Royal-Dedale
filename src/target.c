@@ -3,150 +3,90 @@
 
 unsigned int distance(struct location_t a, struct location_t b)
 {
-    return abs(b.x - a.x) + abs(b.y - a.y);
+  int x_dist = b.x - a.x;
+  x_dist = (x_dist > 0) ? x_dist : -x_dist;
+  int y_dist = b.y - a.y;
+  y_dist = (y_dist > 0) ? y_dist : -y_dist;
+
+  return x_dist + y_dist;
 }
 
-void select_target_positions(struct game_state_t* game_state, struct location_t target_positions[3])
+void sort_target_positions(struct location_t* target_locations_sorted, struct game_state_t* game_state)
 {
-
-    int c = 0;
-    while (c < 3)
-    {
-        unsigned int rand_x = rand()%BOARD_WIDTH;
-        unsigned int rand_y = rand()%BOARD_HEIGHT;
-        if ((rand_x != 0 || rand_y != 0) && (rand_x != BOARD_WIDTH || rand_y != BOARD_HEIGHT))
-        {
-            target_positions[c] = location(rand_x, rand_y);
-            c++;
-        }
-    }
-}
-
-void sort_target_positions(struct location_t current_location, struct location_t target_positions[3])
-{
-    unsigned int dist0 = distance(current_location, target_positions[0]);
-    unsigned int dist1 = distance(current_location, target_positions[1]);
-    unsigned int dist2 = distance(current_location, target_positions[2]);
-    if (dist0 > dist1)
-    {
-        struct location_t temp = target_positions[0];
-        target_positions[0] = target_positions[1];
-        target_positions[1] = temp;
-    }
-    if (dist1 > dist2)
-    {
-        struct location_t temp = target_positions[1];
-        target_positions[1] = target_positions[2];
-        target_positions[2] = temp;
-    }
-    if (dist0 > dist1)
-    {
-        struct location_t temp = target_positions[0];
-        target_positions[0] = target_positions[1];
-        target_positions[1] = temp;
-    }
-}
-
-void init_game_state(unsigned int game_seed, struct location_t *target_positions, struct game_state_t *game_state)
-{
-  game_state->steps.r[STEP] = 4 * BOARD_SIZE / 3;
+  for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
+    target_locations_sorted[i] = game_state->target_locations[i];
+  }
+  int dists[3];
+  for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
+    dists[i] = (game_state->is_target_locations_visited[i]) 
+      ? BOARD_WIDTH+BOARD_WIDTH
+      : distance(game_state->current_location, target_locations_sorted[i]);
+  }
   
-  for (int i = 0; i < BOARD_WIDTH; i++) {
-    for (int j = 0; j < BOARD_HEIGHT; j++) {
-      game_state->board[i][j].tile = tile_generate_empty();
+  for (int i = 0; i < NUM_TARGET_LOCATIONS - 1; i++) {
+    for (int j = 0; j < NUM_TARGET_LOCATIONS - 1 - i; j++) {
+      if (dists[j] > dists[j + 1]) {
+        struct location_t tmp = target_locations_sorted[j];
+        target_locations_sorted[j] = target_locations_sorted[j + 1];
+        target_locations_sorted[j + 1] = tmp;
+      }
     }
   }
-  game_state->board[0][0].tile = tile_generate_start();
-  game_state->board[BOARD_WIDTH-1][BOARD_HEIGHT-1].tile = tile_generate_exit();
-  select_target_positions(game_state, target_positions);
-  game_state->current_location = location(0, 0);
-  sort_target_positions(game_state->current_location, target_positions);
-
-  srand(game_seed);
 }
 
-struct location_t dir_to_location(enum dir_t d, struct location_t current_location)
+int target_position_reached(struct game_state_t *game_state)
+{
+  struct stash_t target_ressources[] = {TARGET_RESOURCE_1, TARGET_RESOURCE_2, TARGET_RESOURCE_3};
+  struct stash_t ressources = game_state->steps;
+  for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
+    if (location_equal(game_state->current_location, game_state->target_locations[i]) && game_state->is_target_locations_visited[i]) {
+      game_state->steps = stash_add(&ressources, &target_ressources[i]);
+      return 1;
+    }
+  }
+  return 0;
+}
+
+struct location_t dir_to_location(enum dir_t d, struct location_t position)
 {
     switch(d){
-        case 0:
-            return location(current_location.x, current_location.y + 1);
-        case 1:
-            return location(current_location.x - 1, current_location.y);
-        case 2:
-            return location(current_location.x, current_location.y - 1);
-        case 3:
-            return location(current_location.x + 1, current_location.y);
+        case NORTH:
+            return location(position.x, position.y + 1);
+        case EAST:
+            return location(position.x - 1, position.y);
+        case SOUTH:
+            return location(position.x, position.y - 1);
+        case WEST:
+            return location(position.x + 1, position.y);
         default:
             return location(BOARD_WIDTH,BOARD_HEIGHT);
     }
 }
 
-struct location_t next_target_position(unsigned int num_visited_positions, struct location_t *target_positions)
+void path_to_target(struct location_t position, struct location_t target_position, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, int *global_path_length, int *is_visited_position[])
 {
-    switch (num_visited_positions){ 
-        case 3:
-            return location(BOARD_WIDTH-1,BOARD_HEIGHT-1);
-        case 2:
-            return target_positions[2];
-        case 1:
-            return target_positions[1];
-        case 0:
-            return target_positions[0];
-        default:
-            return location(BOARD_WIDTH,BOARD_HEIGHT);
-    }
-}
+    is_visited_position[position.x][position.y] = 1;
 
-int target_position_reached(struct game_state_t *game_state, unsigned int num_visited_positions, struct location_t *target_positions)
-{
-    if (location_equal(game_state->current_location, target_positions[num_visited_positions]))
-    {
-        switch(num_visited_positions){
-            case 0:
-                struct stash_t res = game_state->steps;
-                game_state->steps = stash_add(&res,&BBFINAL_RESOURCE);
-            case 1:
-                struct stash_t res = game_state->steps;
-                game_state->steps = stash_add(&res,&BFINAL_RESOURCE);
-            case 2:
-                struct stash_t res = game_state->steps;
-                game_state->steps = stash_add(&res,&FINAL_RESOURCE);
-            default:
-                break;
-        }
-        return 1;
-    }
-    else if (exit_reached(game_state) && num_visited_positions == 3) return 1;
-    return 0;
-}
-
-
-void find_path(struct game_state_t* game_state, struct location_t first_position, struct location_t target_postion, struct location_t *return_empty_location, int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT], struct location_t path[BOARD_SIZE], int *path_length)
-{
-    is_visited_position[first_position.x][first_position.y] = 1;
-
-    struct location_t last_empty_location;
     for (int d = 0; d < MAX_DIRS; d++)
     {
-        struct location_t current_path[BOARD_SIZE];
-        int current_path_len = 0;
-        struct location_t next_position = dir_to_location(d, first_position);
-        if (location_is_valid(next_position) && !is_visited_position[next_position.x][next_position.y])
+        struct location_t next_position = dir_to_location(d, position);
+        if (location_is_valid(next_position) 
+            && !is_visited_position[next_position.x][next_position.y] 
+            && tile_can_open_bis(location_to_tile(position, game_state), d))
         {
-
-            if ((tile_is_empty(location_to_tile(next_position, game_state).tile)))
+            if (tile_is_empty(location_to_tile(next_position, game_state).tile))
             {
-                last_empty_location = next_position;
-                if (distance(last_empty_location, target_postion) < distance(*return_empty_location, target_postion))
+                int d = distance(next_position, target_position);
+                if (d < *global_distance)
                 {
-                    *return_empty_location = last_empty_location;
+                    *global_adj_empty_location = position;
+                    *global_distance = d;
+                    *global_path_length = path_length;
                 }
             }
             else if (tile_can_open_bis(location_to_tile(next_position, game_state), dir_opposite(d)))
             {
-                path[*path_length] = next_position;
-                *path_length++;
-                find_path(game_state, next_position, target_postion, return_empty_location, is_visited_position, path, path_length);
+                path_to_target(next_position, target_position, path_length+1, game_state, global_adj_empty_location, global_distance, global_path_length, is_visited_position);
             }
         }
     }

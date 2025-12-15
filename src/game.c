@@ -9,6 +9,8 @@ struct tile_bis_t location_to_tile(struct location_t l, struct game_state_t* gam
 
 void init_state(unsigned int game_seed, struct game_state_t* game_state)
 {
+  srand(game_seed);
+
   game_state->steps.r[STEP] = 4 * BOARD_SIZE / 3;
   
   for (int i = 0; i < BOARD_WIDTH; i++) {
@@ -21,7 +23,16 @@ void init_state(unsigned int game_seed, struct game_state_t* game_state)
 
   game_state->current_location = location(0, 0);
 
-  srand(game_seed);
+  for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
+    struct location_t rand_location = location(rand()%BOARD_WIDTH, rand()%BOARD_HEIGHT);
+    while (location_equal(rand_location, location(0,0)) || location_equal(rand_location, location(BOARD_WIDTH-1, BOARD_HEIGHT-1))) {
+      rand_location = location(rand()%BOARD_WIDTH, rand()%BOARD_HEIGHT);
+    }
+    game_state->target_locations[i] = rand_location;
+  }
+  for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
+    game_state->is_target_locations_visited[i] = 0;
+  } 
 }
 
 int exit_reached(struct game_state_t* game_state)
