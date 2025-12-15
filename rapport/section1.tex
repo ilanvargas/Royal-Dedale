@@ -5,20 +5,32 @@
 
 Commençant d'abord par définir le type enuméré $(enum)$ afin de gérer les différentes directions cardinales d'une manière simple et claire tout au long du project.
 
-Ensuite implémenter la fonction dir\_to\_string qui représente une direction par la chaîne de caractère qui lui est associée aussi que la fonction dir\_to\_short\_string qui représente une direction avec un caractère.
+Le module implémente également la fonction dir\_to\_string qui représente une direction par la chaîne de caractère qui lui est associée, ainsi que la fonction dir\_to\_short\_string qui renvoie la représentation d'une direction avec un caractère.
 
-Enfin la fonction dir\_opposite qui renvoie la direction opposée à celle fournie en entrée en manipulant la structure de contrôle 
+Enfin la fonction dir\_opposite qui permet d'obtenir la direction opposée à celle fournie en entrée.
 
 \subsubsection{locations}
 
-On définie la strucure position $(location\_t)$ par un couple $(x,y)$ désignant respectivement l'abscisse et l'ordonnée d'une position dans le manoir. Pour implémenter ensuite la fonction location qui permet de générer cette structure de position à partir du couple fourni.
+On définie la position par une structure $location\_t$ représentée par un couple de coordonnées (x,y), correspondant respectivement à l'abscisse et l'ordonnée d'une position dans le manoir. Une fonction location est fournie ainsi afin de générer cette structure de position à partir du couple de coordonnées fournies.
 
-Ensuite on implémente les fonctions nécessaires pour manipuler les positions dans le manoir afin de vérifier la validité d'une position dans le manoir, l'égalité entre deux positions et enfin si deux locations sont adjacentes.
+L'implémentation inclut les fonctions nécessaires pour manipuler les positions dans le manoir afin de vérifier la validité d'une position dans le manoir, tester l'égalité entre deux positions et enfin s'assurer si deux locations sont adjacentes.
 
-\subsubsection{resources}
+\subsubsection{resources}\label{sssec:resources}
 
+Cet interface permet de définir le type énuméré $(enum)$ qui représente l'ensemble des ressources dans le jeu dont le nombre est fixé à 'max\_resources' égale à 10, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section \ref{sssec:stashes}.
 
+L'implémentation inclut les fonctions de conversion qui facilitent la représentation des resources afin de valider les tests, à savoir resource\_to\_string pour le nom complet de la ressource et resource\_to\_short\_string pour une représentation minimale (généralement un caractère).
 
+\subsubsection{stashes}\label{sssec:stashes}
 
+Le module précédent nécessite alors la gestion de toutes les ressources dans des poches définies par une structure $stash\_t$ qui est un tableau dont la taille est celle des ressources, chaque case contient alors la quantité de la ressource correspondante à l'indice.
+
+Ce fichier regroupe l'ensemble des opérations sur les poches :
+\begin{itemize}
+    \item l'addition de deux poches
+    \item la soustraction d'une poche à une autre 
+    \item la vérification d'inclusion si une poche est contenue dans une autre 
+\end{itemize}
+Cette dernière fonction permettra effectivement de vérifier si le joueur possède les ressources nécessaires pour payer les actions réalisées dans le manoir.
 
 \subsection{Tests}
