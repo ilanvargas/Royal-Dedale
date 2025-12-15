@@ -41,6 +41,6 @@ int target_position_reached(struct game_state_t *game_state);
 
 /** Find the empty tile that can be open the closest to the closest target tile
  */
-void path_to_target(struct location_t position, struct location_t target_position, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, int *global_path_length, int *is_visited_position[]);
+void path_to_target(struct location_t position, struct location_t target_position, struct location_t* path_curr, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, struct location_t* global_path_curr, int *global_path_length, int *is_visited_position[]);
 
 #endif  // __DEDALE_TARGET_H__

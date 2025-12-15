@@ -63,9 +63,11 @@ struct location_t dir_to_location(enum dir_t d, struct location_t position)
     }
 }
 
-void path_to_target(struct location_t position, struct location_t target_position, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, int *global_path_length, int *is_visited_position[])
+void path_to_target(struct location_t position, struct location_t target_position, struct location_t* path_curr, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, struct location_t* global_path_curr, int *global_path_length, int *is_visited_position[])
 {
     is_visited_position[position.x][position.y] = 1;
+    path_length ++;
+    path_curr[path_length] = position;
 
     for (int d = 0; d < MAX_DIRS; d++)
     {
@@ -82,11 +84,25 @@ void path_to_target(struct location_t position, struct location_t target_positio
                     *global_adj_empty_location = position;
                     *global_distance = d;
                     *global_path_length = path_length;
+                    for (int i = 0; i < path_length; i++) {
+                       global_path_curr[i] = path_curr[i];
+                    }
                 }
             }
             else if (tile_can_open_bis(location_to_tile(next_position, game_state), dir_opposite(d)))
             {
-                path_to_target(next_position, target_position, path_length+1, game_state, global_adj_empty_location, global_distance, global_path_length, is_visited_position);
+                  path_to_target(
+                      next_position,
+                      target_position,
+                      path_curr,
+                      path_length,
+                      game_state,
+                      global_adj_empty_location,
+                      global_distance,
+                      global_path_curr,
+                      global_path_length,
+                      is_visited_position
+                  );
             }
         }
     }
