@@ -10,14 +10,40 @@
 \usepackage{url}
 
 \usepackage[margin=3cm,includefoot]{geometry}
-\usepackage{float} %controler les positions flottantes
-\usepackage[hidelinks]{hyperref} %cool clickable references
+\usepackage{float} % controler les positions flottantes
+\usepackage[hidelinks]{hyperref} % cool clickable references
 
 % éviter la division de mots et justifier les paragraphes
 \tolerance=1
 \emergencystretch=\maxdimen
 \hyphenpenalty=10000
 \hbadness=10000
+
+%
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{xcolor} % Nécessaire pour des couleurs
+
+% --- Définition du Style C ---
+\lstdefinestyle{MonStyleC}{
+    language=C,               % Langage : C
+    basicstyle=\small\ttfamily, % Police et taille
+    numbers=left,             % Numérotation des lignes à gauche
+    numberstyle=\tiny\color{gray}, % Style de la numérotation
+    commentstyle=\color{green!60!black}, % Couleur des commentaires
+    keywordstyle=\color{blue!90!black}\bfseries, % Couleur et gras des mots-clés
+    stringstyle=\color{red!70!black},    % Couleur des chaînes de caractères
+    showstringspaces=false,
+    breaklines=true,          % Permet de couper les lignes trop longues
+    frame=single,             % Ajoute un encadrement autour du code
+    frameround=tttt,
+    tabsize=4,
+    captionpos=b,             % Position de la légende (bottom)
+}
+
+\addto\captionsfrench{
+  \renewcommand{\lstlistingname}{Figure}
+}
 
 \begin{document}
 
@@ -41,7 +67,7 @@
 
 \section*{Introduction}
 
-\input{introduction.tex}
+\input{introduction.tex}\label{sec:introduction}
 
 \thispagestyle{empty}
 \addcontentsline{toc}{section}{\numberline{}Introduction}
@@ -59,23 +85,23 @@
 \input{architecture.tex}
 \addcontentsline{toc}{section}{\numberline{}Architecture du programme}
 
-\section{Fondation}
+\section{Fondation}\label{sec:1}
 
 \input{section1.tex}
 
-\section{Implémentation des tuiles}
+\section{Implémentation des tuiles}\label{sec:2}
 
 \input{tuile.tex}
 
-\section{Implémentation du jeu}
+\section{Implémentation du jeu}\label{sec:3}
 
 \input{section3.tex}
 
-\section{Limites et améliorations}
+\section{Limites et améliorations}\label{sec:4}
 
 \input{amelioration.tex}
 
-\section*{Conclusion}
+\section*{Conclusion}\label{sec:conclusion}
 
 \input{conclusion.tex}
 

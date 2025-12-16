@@ -23,6 +23,10 @@ tester: src/dir.o src/location.o src/resource.o src/stash.o src/tile.o test/main
 	@echo "Compile tests"
 	$(CC) $(CFLAGS) -o $@ $^
 
+helper: src/helper.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/tile_bis.o src/game.o src/tui.o src/target.o
+	@echo "Compile code"
+	$(CC) $(CFLAGS) -o $@ $^
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
