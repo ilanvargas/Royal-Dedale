@@ -25,8 +25,24 @@ void init_state(unsigned int game_seed, struct game_state_t* game_state)
 
   for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
     struct location_t rand_location = location(rand()%BOARD_WIDTH, rand()%BOARD_HEIGHT);
-    while (location_equal(rand_location, location(0,0)) || location_equal(rand_location, location(BOARD_WIDTH-1, BOARD_HEIGHT-1))) {
+    int is_choosed = 0;
+    for (int j = 0; j < i; j++) {
+      if (location_equal(rand_location, game_state->target_locations[j])) {
+        is_choosed = 1;
+        break;
+      }
+    }
+    while (location_equal(rand_location, location(0,0)) 
+        || location_equal(rand_location, location(BOARD_WIDTH-1, BOARD_HEIGHT-1))
+        || is_choosed) {
       rand_location = location(rand()%BOARD_WIDTH, rand()%BOARD_HEIGHT);
+      is_choosed = 0;
+      for (int j = 0; j < i; j++) {
+        if (location_equal(rand_location, game_state->target_locations[j])) {
+          is_choosed = 1;
+          break;
+        }
+      }
     }
     game_state->target_locations[i] = rand_location;
   }
