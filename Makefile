@@ -9,7 +9,7 @@ CFLAGS ?= -Wall -Wextra -g -I./src $(DEDALE_FLAGS)
 all: compile
 
 compile: project tester
-	@echo "Compile the code and the testsyo"
+	@echo "Compile the code and the tests"
 
 test:
 	@echo "Compile and run tests"
@@ -21,6 +21,10 @@ project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile
 
 tester: src/dir.o src/location.o src/resource.o src/stash.o src/tile.o test/main.o test/dir.o test/location.o test/resource.o test/stash.o test/tile.o
 	@echo "Compile tests"
+	$(CC) $(CFLAGS) -o $@ $^
+
+helper: src/helper.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/tile_bis.o src/game.o src/tui.o src/target.o
+	@echo "Compile code"
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
