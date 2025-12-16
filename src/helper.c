@@ -6,32 +6,24 @@
 
 unsigned int draft(enum dir_t d, struct tile_bis_t results[MAX_TILES])
 {
-    unsigned int i = 0;
-    struct tile_t* res[MAX_TILES];
-    unsigned int c = tile_draft(d, res);
-    unsigned int j = 0;
-    for(int k = 0; k < NUM_DRAFTS; k++)
-    {
-        while(i < MAX_TILES && j < c)
-        {
-            for (int r = 0; r < NB_ROT; r++)
-            {
-                if (tile_can_open(res[i], ROT_TO_DIR(d,r)))
-                {
-                    results[i].tile = res[j];
-                    results[i].rot = r;
-                }
-            }
-            j++;
-        }
+    struct tile_bis_t res[MAX_TILES];
+    unsigned int results_len = 0;
+    for (int i = 0; i < NUM_DRAFTS; i++) {
+      unsigned int c = tile_draft_bis(dir_opposite(d), INFINITE_STEP_STASH, res);
+      printf("dsfd %d", c);
+      for (unsigned int j = 0; j < c; j++) {
+	results[results_len] = res[j];
+	results_len ++;
+      }
     }
-    return i;
+    return results_len;
 }
 
 int main()
 {
     struct tile_bis_t results[MAX_TILES];
     unsigned int len = draft(NORTH, results);
+    printf("%d\n", len);
     for (unsigned int i = 0; i < len; i++)
         printf("[tile: %s ,rotation: %d]", tile_name(results[i].tile),results[i].rot);
     printf("\n");
