@@ -9,7 +9,7 @@ CFLAGS ?= -Wall -Wextra -g -I./src $(DEDALE_FLAGS)
 all: compile
 
 compile: project tester
-	@echo "Compile the code and the tests"
+	@echo "Compile the code and the testsyo"
 
 test:
 	@echo "Compile and run tests"
