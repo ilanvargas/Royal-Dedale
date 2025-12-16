@@ -40,9 +40,13 @@ int sort_target_locations(struct location_t* target_locations_sorted, struct gam
 */
 int target_location_reached(struct game_state_t *game_state);
 
-/** Find the empty tile that can be open the closest to the closest target tile
+/** The path (array of locations) to the target location or the nearest empty tile to the target location
+ *
+ * Returns the length of the path
+ *
+ * The path array must be allocated before calling this function and be able to contain at least BOARD_SIZE location_t
  */
-void path_to_target(struct location_t position, struct location_t target_position, struct location_t* path_curr, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, struct location_t* global_path_curr, int *global_path_length, int *is_visited_position[]);
+unsigned int path_to_target(struct game_state_t *game_state, struct location_t target_location, struct location_t *path);
 
 /** Print interface sorted target positions
  */

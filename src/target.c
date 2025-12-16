@@ -80,11 +80,19 @@ struct location_t dir_to_location(enum dir_t d, struct location_t position)
     }
 }
 
-void path_to_target(struct location_t position, struct location_t target_position, struct location_t* path_curr, int path_length, struct game_state_t* game_state, struct location_t *global_adj_empty_location, int *global_distance, struct location_t* global_path_curr, int *global_path_length, int *is_visited_position[])
+void path_to_target_rec(struct location_t position, 
+    struct location_t target_position, 
+    struct location_t* path_curr, 
+    int path_len, 
+    struct game_state_t* game_state, 
+    int *global_dist, 
+    struct location_t* global_path_curr, 
+    unsigned int *global_path_len, 
+    int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT])
 {
     is_visited_position[position.x][position.y] = 1;
-    path_length ++;
-    path_curr[path_length] = position;
+    path_curr[path_len] = position;
+    path_len++;
 
     for (int d = 0; d < MAX_DIRS; d++)
     {
@@ -95,34 +103,59 @@ void path_to_target(struct location_t position, struct location_t target_positio
         {
             if (tile_is_empty(location_to_tile(next_position, game_state).tile))
             {
+                path_curr[path_len] = next_position;
+                path_len++;
+
                 int d = distance(next_position, target_position);
-                if (d < *global_distance)
+                if (d < *global_dist)
                 {
-                    *global_adj_empty_location = position;
-                    *global_distance = d;
-                    *global_path_length = path_length;
-                    for (int i = 0; i < path_length; i++) {
+                    *global_dist = d;
+                    *global_path_len = path_len;
+                    for (int i = 0; i < path_len; i++) {
                        global_path_curr[i] = path_curr[i];
                     }
                 }
             }
             else if (tile_can_open_bis(location_to_tile(next_position, game_state), dir_opposite(d)))
             {
-                  path_to_target(
-                      next_position,
-                      target_position,
-                      path_curr,
-                      path_length,
-                      game_state,
-                      global_adj_empty_location,
-                      global_distance,
-                      global_path_curr,
-                      global_path_length,
-                      is_visited_position
-                  );
+                path_to_target_rec(next_position, 
+                  target_position, 
+                  path_curr, 
+                  path_len, 
+                  game_state, 
+                  global_dist, 
+                  global_path_curr, 
+                  global_path_len, 
+                  is_visited_position);
             }
         }
     }
+}
+
+unsigned int path_to_target(struct game_state_t *game_state, struct location_t target_location, struct location_t *path)
+{
+  struct location_t path_curr[BOARD_SIZE];
+  unsigned int path_len = 0;
+  int dist = BOARD_SIZE;
+
+  int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT];
+  for (int i = 0; i < BOARD_WIDTH; i++) {
+    for (int j = 0; j < BOARD_HEIGHT; j++) {
+      is_visited_position[i][j] = 0;
+    }
+  }
+
+  path_to_target_rec(game_state->current_location, 
+    target_location, 
+    path_curr, 
+    dist, 
+    game_state, 
+    &dist, 
+    path, 
+    &path_len, 
+    is_visited_position);
+
+  return path_len; 
 }
 
 void print_target_locations_sorted(struct location_t *target_locations_sorted, unsigned int num_target_locations)
