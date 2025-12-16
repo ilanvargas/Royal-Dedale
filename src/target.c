@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+
 #include "target.h"
 
 unsigned int distance(struct location_t a, struct location_t b)
@@ -11,16 +13,20 @@ unsigned int distance(struct location_t a, struct location_t b)
   return x_dist + y_dist;
 }
 
-void sort_target_positions(struct location_t* target_locations_sorted, struct game_state_t* game_state)
+int sort_target_locations(struct location_t* target_locations_sorted, struct game_state_t* game_state)
 {
+  int num_target_not_visited = 0;
   for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
     target_locations_sorted[i] = game_state->target_locations[i];
   }
-  int dists[3];
+  int dists[NUM_TARGET_LOCATIONS];
   for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
-    dists[i] = (game_state->is_target_locations_visited[i]) 
-      ? BOARD_WIDTH+BOARD_WIDTH
-      : distance(game_state->current_location, target_locations_sorted[i]);
+    if (game_state->is_target_locations_visited[i]) 
+      dists[i] = BOARD_WIDTH+BOARD_WIDTH;
+    else {
+      dists[i] = distance(game_state->current_location, target_locations_sorted[i]);
+      num_target_not_visited ++;
+    }
   }
   
   for (int i = 0; i < NUM_TARGET_LOCATIONS - 1; i++) {
@@ -29,18 +35,29 @@ void sort_target_positions(struct location_t* target_locations_sorted, struct ga
         struct location_t tmp = target_locations_sorted[j];
         target_locations_sorted[j] = target_locations_sorted[j + 1];
         target_locations_sorted[j + 1] = tmp;
+
+        int tmp_d = dists[j];
+        dists[j] = dists[j + 1];
+        dists[j + 1] = tmp_d;
       }
     }
   }
+  return num_target_not_visited;
 }
 
-int target_position_reached(struct game_state_t *game_state)
+int target_location_reached(struct game_state_t *game_state)
 {
   struct stash_t target_ressources[] = {TARGET_RESOURCE_1, TARGET_RESOURCE_2, TARGET_RESOURCE_3};
   struct stash_t ressources = game_state->steps;
   for (int i = 0; i < NUM_TARGET_LOCATIONS; i++) {
-    if (location_equal(game_state->current_location, game_state->target_locations[i]) && game_state->is_target_locations_visited[i]) {
+    if (location_equal(game_state->current_location, game_state->target_locations[i]) && !game_state->is_target_locations_visited[i]) {
       game_state->steps = stash_add(&ressources, &target_ressources[i]);
+
+      char buffer[MAX_STASH_STRING_LENGTH];
+      struct stash_t r = game_state->steps;
+      stash_to_string(&r, buffer);
+      printf("You have reached a target tile! Your ressources are now: %s\n", buffer);
+      game_state->is_target_locations_visited[i] = 1;
       return 1;
     }
   }
@@ -106,5 +123,14 @@ void path_to_target(struct location_t position, struct location_t target_positio
             }
         }
     }
+}
+
+void print_target_locations_sorted(struct location_t *target_locations_sorted, unsigned int num_target_locations)
+{
+  printf("The target tiles are on the positons: ");
+  for (unsigned int i = 0; i < num_target_locations; i++) {
+    printf("(%d,%d) ", target_locations_sorted[i].x, target_locations_sorted[i].y);
+  }
+  printf("(sorted by proximity)\n");
 }
 

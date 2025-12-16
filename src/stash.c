@@ -38,8 +38,8 @@ void int_to_str(unsigned int nb, char *buffer)
 void stash_to_string(const struct stash_t* stash, char* buffer)
 {
   int j = 0;
-  for (int i = 0; i < NUM_RESOURCES+1; i++) {
-    const char *resource_name = resource_to_short_string((enum resource_t)i);
+  for (int i = 1; i < NUM_RESOURCES+1; i++) {
+    const char *resource_name = resource_to_string((enum resource_t)i);
     while (*resource_name) {
       if (j == MAX_STASH_STRING_LENGTH-1) break;
       buffer[j++] = *resource_name++;
