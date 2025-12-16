@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     int num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
     while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     {
-      if (is_base_version) //base version game (includes interactive verision)
+      if (1) //base version game (includes interactive verision)
       {
           printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
           print_target_locations_sorted(target_locations_sorted, num_target_locations);
@@ -87,6 +87,10 @@ int main(int argc, char* argv[])
               move_player(selected_location, &game_state);
               target_location_reached(&game_state);
           }
+
+          struct location_t path[BOARD_SIZE];
+          path_to_target(target_locations_sorted[0], &game_state, path);
+
           num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
           current_turn++;
           tui_print(is_graphic);

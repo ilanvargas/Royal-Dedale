@@ -46,7 +46,7 @@ int target_location_reached(struct game_state_t *game_state);
  *
  * The path array must be allocated before calling this function and be able to contain at least BOARD_SIZE location_t
  */
-unsigned int path_to_target(struct game_state_t *game_state, struct location_t target_location, struct location_t *path);
+unsigned int path_to_target(struct location_t target_location, struct game_state_t *game_state, struct location_t *path);
 
 /** Print interface sorted target positions
  */

@@ -90,6 +90,7 @@ void path_to_target_rec(struct location_t position,
     unsigned int *global_path_len, 
     int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT])
 {
+  printf("rec (%d,%d) %d\n", position.x, position.y, path_len);
     is_visited_position[position.x][position.y] = 1;
     path_curr[path_len] = position;
     path_len++;
@@ -132,7 +133,7 @@ void path_to_target_rec(struct location_t position,
     }
 }
 
-unsigned int path_to_target(struct game_state_t *game_state, struct location_t target_location, struct location_t *path)
+unsigned int path_to_target(struct location_t target_location, struct game_state_t *game_state, struct location_t *path)
 {
   struct location_t path_curr[BOARD_SIZE];
   unsigned int path_len = 0;
@@ -154,6 +155,11 @@ unsigned int path_to_target(struct game_state_t *game_state, struct location_t t
     path, 
     &path_len, 
     is_visited_position);
+
+  printf("Path finder %d\n", path_len);
+  for (unsigned int i = 0; i < path_len; i++) {
+    printf("(%d, %d) \n", path[i].x, path[i].y);
+  }
 
   return path_len; 
 }
