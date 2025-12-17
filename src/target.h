@@ -5,7 +5,7 @@
 
 #define TARGET_RESOURCE_1 \
   (struct stash_t) {   \
-    .r = {[NUM_RESOURCES-2] = 1}  \
+    .r = {[NUM_RESOURCES] = 1}  \
   }
 #define TARGET_RESOURCE_2 \
   (struct stash_t) {   \
@@ -13,7 +13,7 @@
   }
 #define TARGET_RESOURCE_3 \
   (struct stash_t) {   \
-    .r = {[NUM_RESOURCES] = 1}  \
+    .r = {[NUM_RESOURCES-2] = 1}  \
   }
 
 /** Calculates the Manhattan distance between two locations 

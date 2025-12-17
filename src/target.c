@@ -28,6 +28,8 @@ int sort_target_locations(struct location_t* target_locations_sorted, struct gam
       num_target_not_visited ++;
     }
   }
+
+  if (!num_target_not_visited) return 0;
   
   for (int i = 0; i < NUM_TARGET_LOCATIONS - 1; i++) {
     for (int j = 0; j < NUM_TARGET_LOCATIONS - 1 - i; j++) {
@@ -56,7 +58,7 @@ int target_location_reached(struct game_state_t *game_state)
       char buffer[MAX_STASH_STRING_LENGTH];
       struct stash_t r = game_state->steps;
       stash_to_string(&r, buffer);
-      printf("You have reached a target tile! Your ressources are now: %s\n", buffer);
+      printf("You have reached a target tile! You won a %s. Your ressources are now: %s\n", resource_to_string(NUM_RESOURCES-i), buffer);
       game_state->is_target_locations_visited[i] = 1;
       return 1;
     }
@@ -83,17 +85,26 @@ struct location_t dir_to_location(enum dir_t d, struct location_t position)
 void path_to_target_rec(struct location_t position, 
     struct location_t target_position, 
     struct location_t* path_curr, 
-    int path_len, 
+    unsigned int path_len, 
     struct game_state_t* game_state, 
     int *global_dist, 
     struct location_t* global_path_curr, 
     unsigned int *global_path_len, 
     int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT])
 {
-  printf("rec (%d,%d) %d\n", position.x, position.y, path_len);
     is_visited_position[position.x][position.y] = 1;
     path_curr[path_len] = position;
     path_len++;
+
+    if (location_equal(position, target_position)) {
+      *global_dist = 0;
+      *global_path_len = path_len;
+      for (unsigned int i = 0; i < path_len; i++) {
+        global_path_curr[i] = path_curr[i];
+      }
+      is_visited_position[position.x][position.y] = 0;
+      return;
+    }
 
     for (int d = 0; d < MAX_DIRS; d++)
     {
@@ -106,16 +117,16 @@ void path_to_target_rec(struct location_t position,
             {
                 path_curr[path_len] = next_position;
                 path_len++;
-
-                int d = distance(next_position, target_position);
-                if (d < *global_dist)
+                int dist = distance(next_position, target_position);
+                if (dist <= *global_dist && path_len < *global_path_len)
                 {
-                    *global_dist = d;
+                    *global_dist = dist;
                     *global_path_len = path_len;
-                    for (int i = 0; i < path_len; i++) {
+                    for (unsigned int i = 0; i < path_len; i++) {
                        global_path_curr[i] = path_curr[i];
                     }
                 }
+                path_len--;
             }
             else if (tile_can_open_bis(location_to_tile(next_position, game_state), dir_opposite(d)))
             {
@@ -131,12 +142,13 @@ void path_to_target_rec(struct location_t position,
             }
         }
     }
+    is_visited_position[position.x][position.y] = 0;
 }
 
 unsigned int path_to_target(struct location_t target_location, struct game_state_t *game_state, struct location_t *path)
 {
   struct location_t path_curr[BOARD_SIZE];
-  unsigned int path_len = 0;
+  unsigned int path_len = BOARD_SIZE;
   int dist = BOARD_SIZE;
 
   int is_visited_position[BOARD_WIDTH][BOARD_HEIGHT];
@@ -149,23 +161,29 @@ unsigned int path_to_target(struct location_t target_location, struct game_state
   path_to_target_rec(game_state->current_location, 
     target_location, 
     path_curr, 
-    dist, 
+    0, 
     game_state, 
     &dist, 
     path, 
     &path_len, 
     is_visited_position);
 
-  printf("Path finder %d\n", path_len);
+  printf("Path finder len:%d target:(%d,%d)\n", path_len, target_location.x, target_location.y);
   for (unsigned int i = 0; i < path_len; i++) {
-    printf("(%d, %d) \n", path[i].x, path[i].y);
+    printf("(%d, %d) ", path[i].x, path[i].y);
   }
+  printf("\n");
 
   return path_len; 
 }
 
 void print_target_locations_sorted(struct location_t *target_locations_sorted, unsigned int num_target_locations)
 {
+  if (!num_target_locations) {
+    printf("The exit tile is on the location (%d, %d)\n", BOARD_WIDTH, BOARD_HEIGHT);
+    return;
+  }
+
   printf("The target tiles are on the positons: ");
   for (unsigned int i = 0; i < num_target_locations; i++) {
     printf("(%d,%d) ", target_locations_sorted[i].x, target_locations_sorted[i].y);
