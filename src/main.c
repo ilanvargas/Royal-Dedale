@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
             int num_available_tiles = tile_draft_bis(dir_opposite(d), game_state.steps, available_tiles);
             struct tile_bis_t selected_tile = select_tile(is_interactive, available_tiles, num_available_tiles);
             random_tile_rotation(is_interactive, selected_tile, d, &num_rotations);
-
             place_tile(selected_location, d, selected_tile, &game_state);
             tui_place_tile(is_graphic, selected_location, selected_tile);
         }

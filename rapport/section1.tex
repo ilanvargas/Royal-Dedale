@@ -17,7 +17,7 @@ L'implémentation inclut les fonctions nécessaires pour manipuler les positions
 
 \subsubsection{ressources}\label{sssec:resources}
 
-Cet interface permet de définir le type énuméré $(enum)$ qui représente l'ensemble des ressources dans le jeu dont le nombre est fixé à 'max\_resources' égale à 10, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section \ref{sssec:stashes}.
+Cet interface permet de définir le type énuméré $(enum)$ qui représente l'ensemble des ressources dans le jeu dont le nombre est fixé à 'max\_resources' égale à 10, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
 
 L'implémentation inclut les fonctions de conversion qui facilitent la représentation des resources afin de valider les tests, à savoir resource\_to\_string pour le nom complet de la ressource et resource\_to\_short\_string pour une représentation minimale (généralement un caractère).
 L'implémentation de ces deux fonctions est réalisée grâce à la structure 'switch' afin de gérer le cas de toutes les ressources, même l'ajout de nouveaux cas sans modifier la structure de la fonction si jamais pour les besoins, du jeu dans le futur, on est amené à ajouter d'autres ressources.
@@ -52,21 +52,21 @@ D'autre part, le test sur la fonction qui renvoie la direction inverse à celle 
     \captionsetup[lstlisting]{name=Figure}
     \begin{lstlisting}[
         style=MonStyleC,
-        caption={exemple des tests sur les ressources},
+        caption={Exemple des tests sur les ressources},
         label={tests_resource}
     ]
 TESTS ON resource.c
 Tests on resource_to_string 
-PASSED input:   0	 output: NOTHING
-PASSED input:   1	 output: STEP
-PASSED input:   5	 output: SILK
-PASSED input:   9	 output: OIL
-PASSED input:  10	 output: CRYSTAL
+PASSED  input:   0	 output: NOTHING
+PASSED  input:   1	 output: STEP
+PASSED  input:   5	 output: SILK
+PASSED  input:   9	 output: OIL
+PASSED  input:  10	 output: CRYSTAL
 Tests on resource_to_short_string 
-PASSED input:   0	 output: N
-PASSED input:   1	 output: St
-PASSED input:   4	 output: Gd
-PASSED input:  10	 output: C
+PASSED  input:   0	 output: N
+PASSED  input:   1	 output: St
+PASSED  input:   4	 output: Gd
+PASSED  input:  10	 output: C
 
     \end{lstlisting}
 \end{figure}
@@ -91,4 +91,4 @@ L’ensemble des fichiers du code source présentés dans cette section ne prés
 Le découpage du code en plusieurs fichiers, associé à la compilation séparée, facilite également le travail en équipe. Chaque module peut être développé, modifié ou amélioré indépendamment des autres, tout en respectant les interfaces définies par les fichiers d’en-tête.
 Cette organisation permet ainsi d’intégrer différentes implémentations d’un même module sans impacter le reste du programme.
 
-Ce découpage facilite justement l’écriture des autres fonctions du programme et contribue à la mise en place d’une boucle de jeu claire dans la section \ref{sec:3}.
+Ce découpage facilite justement l’écriture des autres fonctions du programme et contribue à la mise en place d’une boucle de jeu claire dans la section .

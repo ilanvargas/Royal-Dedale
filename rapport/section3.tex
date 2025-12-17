@@ -1,0 +1,69 @@
+
+
+\subsection{Boucle du jeu}\label{ssec:main}
+
+\subsubsection*{Implémentation}
+
+\begin{figure}[h]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        style=MonStyleC,
+        caption={Implémentation de la boucle du jeu},
+        label={gameloop}
+    ]
+while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
+{
+    printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
+    int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
+    if (current_turn == 1 || (num_possible_locations && decide_to_place_tile(is_iterative)))
+    {
+        printf("Place your tile\n");
+        struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
+        int num_available_tiles = generate_some_tiles(selected_location, available_tiles, &game_state);
+        struct tile_t* selected_tile = select_tile(is_interactive, available_tiles, num_available_tiles);
+        place_tile(selected_location, selected_tile, &game_state);
+        tui_place_tile(is_graphic, selected_location, selected_tile);
+    }
+    else
+    {
+        printf("Move the player\n");
+        int num_possible_locations = list_open_location(possible_locations, &game_state);
+        struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
+        tui_move_player(is_graphic, selected_location, &game_state);
+        move_player(selected_location, &game_state);
+    }
+    current_turn++;
+    tui_print(is_graphic);
+    is_player_won = exit_reached(&game_state);
+}
+
+    \end{lstlisting}
+\end{figure}
+
+\subsubsection*{Interprétation}
+
+La boucle du jeu consiste à vérifier, à chaque itération, que le joueur n'a pas dépassé le nombre de tours possibles, qu'il n'a pas gagné la partie et qu'il a toujours des ressources.
+Chaque tour du jeu consiste à avoir deux tableaux de positions adjacentes, un tableau pour les positions dont les tuiles sont encore vides et un autre tableau pour les tuiles qui sont déja ouvertes. Selon la décision du joueur, s'il choisit de placer un tuile, on prend une position valide parmi celles des tuiles vides et on la place. Sinon, le joueur est censé à ce déplacer, il suffit alors de choisir une position parmi celles des tuiles déja ouvertes et le joueur s'y déplace, l'ensemble des opérations réalisées pendant le jeu repose sur la structure $game\_state$
+définit dans la figure.
+
+
+\subsection{Exécution}
+
+\subsubsection{Le Makefile}
+
+\subsubsection{Paramètres d'exécution}
+
+L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bibliothèque getopt, cela permet pour un même exécutable de changer les paramètres essentiels suivants
+\begin{itemize}
+    \item initialiser la graine du générateur aléatoire     : -s
+    \item passer l'argument de la fonction init\_tiles      : -t
+    \item fixer le nombre maximum de tours de jeu possible  : -n
+\end{itemize}
+D'autres paramètres ont été envisagés afin de donner du sens au mot 'jeu'
+\begin{itemize}
+    \item rendre le jeu interactif afin de pouvoir jouer   : -i
+    \item permettre la visualisation graphique de manoir   : -g
+\end{itemize}
+
+\subsection{Visualisation graphique : TUI}
