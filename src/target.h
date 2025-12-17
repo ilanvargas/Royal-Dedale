@@ -46,10 +46,14 @@ int target_location_reached(struct game_state_t *game_state);
  *
  * The path array must be allocated before calling this function and be able to contain at least BOARD_SIZE location_t
  */
-unsigned int path_to_target(struct location_t target_location, struct game_state_t *game_state, struct location_t *path);
+unsigned int path_target_finder(struct location_t target_location, struct game_state_t *game_state, struct location_t *path);
 
 /** Print interface sorted target positions
  */
 void print_target_locations_sorted(struct location_t *target_locations_sorted, unsigned int num_target_locations);
+
+/** Print the path to target found by path_target_finder
+ */
+void print_path_target(struct location_t *path, unsigned int path_len, struct location_t target);
 
 #endif  // __DEDALE_TARGET_H__

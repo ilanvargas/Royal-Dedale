@@ -82,7 +82,7 @@ struct location_t dir_to_location(enum dir_t d, struct location_t position)
     }
 }
 
-void path_to_target_rec(struct location_t position, 
+void path_target_finder_rec(struct location_t position, 
     struct location_t target_position, 
     struct location_t* path_curr, 
     unsigned int path_len, 
@@ -130,7 +130,7 @@ void path_to_target_rec(struct location_t position,
             }
             else if (tile_can_open_bis(location_to_tile(next_position, game_state), dir_opposite(d)))
             {
-                path_to_target_rec(next_position, 
+                path_target_finder_rec(next_position, 
                   target_position, 
                   path_curr, 
                   path_len, 
@@ -145,7 +145,7 @@ void path_to_target_rec(struct location_t position,
     is_visited_position[position.x][position.y] = 0;
 }
 
-unsigned int path_to_target(struct location_t target_location, struct game_state_t *game_state, struct location_t *path)
+unsigned int path_target_finder(struct location_t target_location, struct game_state_t *game_state, struct location_t *path)
 {
   struct location_t path_curr[BOARD_SIZE];
   unsigned int path_len = BOARD_SIZE;
@@ -158,7 +158,7 @@ unsigned int path_to_target(struct location_t target_location, struct game_state
     }
   }
 
-  path_to_target_rec(game_state->current_location, 
+  path_target_finder_rec(game_state->current_location, 
     target_location, 
     path_curr, 
     0, 
@@ -168,19 +168,13 @@ unsigned int path_to_target(struct location_t target_location, struct game_state
     &path_len, 
     is_visited_position);
 
-  printf("Path finder len:%d target:(%d,%d)\n", path_len, target_location.x, target_location.y);
-  for (unsigned int i = 0; i < path_len; i++) {
-    printf("(%d, %d) ", path[i].x, path[i].y);
-  }
-  printf("\n");
-
   return path_len; 
 }
 
 void print_target_locations_sorted(struct location_t *target_locations_sorted, unsigned int num_target_locations)
 {
   if (!num_target_locations) {
-    printf("The exit tile is on the location (%d, %d)\n", BOARD_WIDTH, BOARD_HEIGHT);
+    printf("The exit tile is on the location (%d,%d)\n", BOARD_WIDTH-1, BOARD_HEIGHT-1);
     return;
   }
 
@@ -191,3 +185,11 @@ void print_target_locations_sorted(struct location_t *target_locations_sorted, u
   printf("(sorted by proximity)\n");
 }
 
+void print_path_target(struct location_t *path, unsigned int path_len, struct location_t target)
+{
+  printf("\e[0;33mThe shortest path to target (%d,%d), or empty tile the nearest to target, found was:\n", target.x, target.y);
+  for (unsigned int i = 0; i < path_len; i++) {
+    printf("(%d,%d)", path[i].x, path[i].y);
+  }
+  printf("\e[0m\n");
+}
