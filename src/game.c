@@ -226,11 +226,22 @@ int list_open_location(struct location_t* possible_locations, struct game_state_
 
 void move_player(struct location_t l, struct game_state_t* game_state)
 {
-  game_state->current_location = l;
+  struct stash_t resources = game_state->steps;
+  struct stash_t cost = tile_traversal_cost(location_to_tile(l, game_state).tile);
 
-  struct stash_t a = game_state->steps;
-  struct stash_t b = tile_traversal_cost(location_to_tile(l, game_state).tile);
-  game_state->steps = stash_sub(&a, &b);
+  struct stash_t exit_stash = {
+      .r = {
+          [NUM_RESOURCES] = 1,
+          [NUM_RESOURCES - 1] = 1,
+          [NUM_RESOURCES - 2] = 1
+      }
+  };
+  if (stash_contains(&cost, &exit_stash) && !stash_contains(&resources, &cost)) {
+    printf("\e[0;31mYou can't go there yet, go back where you came!\e[0m\n");
+    return;
+  }
+  game_state->steps = stash_sub(&resources, &cost);
+  game_state->current_location = l;
 }
 
 

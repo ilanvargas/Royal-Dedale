@@ -48,12 +48,12 @@ struct tile_t START_TILE  = {
 
 struct tile_t EXIT_TILE = {
   .name = "exit",
-  .traversal_cost = ONE_STEP_STASH,
+  .traversal_cost = FINAL_RESOURCE_STASH,
   .opening_cost = {
-    FINAL_RESOURCE_STASH,
-    FINAL_RESOURCE_STASH,
-    FINAL_RESOURCE_STASH,
-    FINAL_RESOURCE_STASH
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH
   },
   .weight = 0
 };

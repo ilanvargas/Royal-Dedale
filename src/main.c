@@ -163,9 +163,11 @@ int main(int argc, char* argv[])
     // ### End of the main loop ###
 
     if (!game_state.steps.r[STEP])
-        printf("No more resources :(\n");
-    if (is_player_won)
+        printf("No more steps. You lost :(\n");
+    else if (is_player_won)
         printf("Congratulations!!! You found the exit\n");
+    else if (current_turn > n)
+        printf("You took too long. You lost :(\n");
     else
         printf("You lost :(\n");
 

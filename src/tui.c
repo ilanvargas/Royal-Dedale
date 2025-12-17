@@ -93,6 +93,25 @@ void init_tui(int is_graphic)
     int py = Y_TUI(0) - CELL_HEIGHT / 2;
     board_tui[py][px] = 'o';
   }
+
+  int ex = BOARD_WIDTH  - 1;
+  int ey = BOARD_HEIGHT - 1;
+
+  tui_opened_horizontal(location(ex, ey));
+  tui_opened_horizontal(location(ex, ey + 1));
+  tui_opened_vertical(location(ex, ey));
+  tui_opened_vertical(location(ex + 1, ey));
+
+  int x1 = X_TUI(ex);
+  int y1 = Y_TUI(ey) - CELL_HEIGHT;
+
+  for(int i = 1; i < CELL_HEIGHT; i++){
+    for(int j = 1; j < CELL_WIDTH; j++){
+        board_tui[y1 + i][x1 + j] = ' ';
+    }
+  }
+
+  board_tui[Y_TUI(ey) - CELL_HEIGHT / 2][X_TUI(ex) + CELL_WIDTH / 2] = 'X';
 }
 
 void tui_place_tile(int is_graphic, struct location_t l, struct tile_bis_t tile)
