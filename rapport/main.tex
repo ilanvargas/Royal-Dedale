@@ -1,5 +1,5 @@
 
-\documentclass{article}
+\documentclass[12pt]{article}
    
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -10,21 +10,21 @@
 \usepackage{url}
 
 \usepackage[margin=3cm,includefoot]{geometry}
-\usepackage{float} % controler les positions flottantes
-\usepackage[hidelinks]{hyperref} % cool clickable references
+\usepackage{float} % Controler les positions flottantes
+\usepackage[hidelinks]{hyperref} % Refernces clickables
 
-% éviter la division de mots et justifier les paragraphes
+% Empêcher toutes les césures
 \tolerance=1
 \emergencystretch=\maxdimen
 \hyphenpenalty=10000
 \hbadness=10000
 
-%
+% --- Définition du Style C ---
+
 \usepackage{caption}
 \usepackage{listings}
 \usepackage{xcolor} % Nécessaire pour des couleurs
 
-% --- Définition du Style C ---
 \lstdefinestyle{MonStyleC}{
     language=C,               % Langage : C
     basicstyle=\small\ttfamily, % Police et taille
@@ -42,48 +42,45 @@
 }
 
 \addto\captionsfrench{
-  \renewcommand{\lstlistingname}{Figure}
+  \renewcommand{\lstlistingname}{Code}
 }
+
 
 \begin{document}
 
-\begin{titlepage}
-    \begin{center}
 
-        \includegraphics[width=7cm,height=2.5cm]{enseirb.png} \\
-        [1cm]
-        \begin{Huge}
-        \bfseries Rapport du project \\
-        [0.7cm]
-        \end{Huge}
-        \begin{Large}
-        \textsl{Groupe I1 P5 - Equipe n°8}\\
-        \textsc{Ilan Vargas \& Achraf Safi}\\
-        \end{Large}
+\begin{titlepage}
+    ENSEIRB-MATMECA \hfill 1\textsuperscript{ère} année Informatique
+
+    \vspace{2.5cm}
+    \begin{center}
+        \rule{\textwidth}{0.5pt}
+        \Huge \textbf{Projet Royal Dédale} \\
+        Rapport de projet
+        \rule{\textwidth}{0.5pt}
+
+        \normalsize \textit{Groupe I1 P5 - \'Equipe n°8} \\
+        Ilan Vargas \& Achraf Safi
+        \vspace{1cm}
+
+        \today
+        \vspace{1cm}
+
+        \includegraphics[width=7cm,height=2.5cm]{enseirb.png} 
     \end{center}
 \end{titlepage}
 
+\tableofcontents
 
 
 \section*{Introduction}
 
-\input{introduction.tex}\label{sec:introduction}
-
-\thispagestyle{empty}
-\addcontentsline{toc}{section}{\numberline{}Introduction}
-\cleardoublepage
-
-
-\tableofcontents
-
-\thispagestyle{empty}
-\cleardoublepage
-\setcounter{page}{1}
+\input{introduction.tex}
 
 \section*{Architecture du programme}
 
 \input{architecture.tex}
-\addcontentsline{toc}{section}{\numberline{}Architecture du programme}
+\addcontentsline{toc}{section}{\numberline{}Introduction \& Architecture}
 
 \section{Fondation}\label{sec:1}
 
@@ -101,10 +98,9 @@
 
 \input{amelioration.tex}
 
+
 \section*{Conclusion}\label{sec:conclusion}
 
 \input{conclusion.tex}
-
-\addcontentsline{toc}{section}{\numberline{}Conclusion}
 
 \end{document}

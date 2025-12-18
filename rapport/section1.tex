@@ -1,51 +1,61 @@
 
+Nous detaillons les "types", et leurs opérations, utilisé comme base de ce projet.
 
 \subsection{Code source}
 \subsubsection{directions}\label{sssec:directions}
 
-Commençant d'abord par définir le type enuméré $(enum)$ afin de gérer les différentes directions cardinales d'une manière simple et claire tout au long du project.
+On défini un type enuméré $dir\_t$ afin de gérer les différentes directions cardinales (nord, sud, west, oest) d'une manière simple et claire tout au long du project.
 
-Le module implémente également la fonction dir\_to\_string qui représente une direction par la chaîne de caractère qui lui est associée, ainsi que la fonction dir\_to\_short\_string qui renvoie la représentation d'une direction avec un caractère.
+Le module implémente les fonction \texttt{dir\_to\_string} qui représente une direction par la chaîne de caractère qui lui est associée, ainsi que la fonction \texttt{dir\_to\_short\_string} qui renvoie la représentation d'une direction par une petite chaîne de caractère.
 
-Enfin la fonction dir\_opposite qui permet d'obtenir la direction opposée à celle fournie en entrée.
+De plus, il implémente la fonction \texttt{dir\_opposite} qui permet d'obtenir la direction opposée à celle fournie en entrée.
 
 \subsubsection{positions}\label{sssec:locations}
 
-On définie la position par une structure $location\_t$ représentée par un couple de coordonnées (x,y), correspondant respectivement à l'abscisse et l'ordonnée d'une position dans le manoir. Une fonction location est fournie ainsi afin de générer cette structure de position à partir du couple de coordonnées fournies.
+On définie la position par une structure $location\_t$ contenant un couple de coordonnées $(x,y)$ correspondant respectivement à l'abscisse et l'ordonnée d'une position dans le manoir. Une fonction \texttt{location} est fournie ainsi afin de générer cette structure à partir du couple de coordonnées fournies.
 
-L'implémentation inclut les fonctions nécessaires pour manipuler les positions dans le manoir afin de vérifier la validité d'une position dans le manoir, tester l'égalité entre deux positions et enfin s'assurer si deux locations sont adjacentes. Il suffit de vérifier les conditions nécessaires sur les coordonnées des positions dans chacune de ces fonctions. 
+Le module inclut les fonctions nécessaires pour manipuler les positions dans le manoir: 
+\begin{itemize}
+    \item \texttt{location\_is\_valid}, verifie si une position est bien dans le manoir (dans les limites).
+    \item \texttt{location\_equal}, verifie si deux position $a$ et $b$ sont égales.
+    \item \texttt{location\_is\_adjacent}, pour une position $a$ verifie si la position $b$ est adjacente.
+\end{itemize}
+Les deux dernière renvoient faux si une des position n'est pas valide.
 
 \subsubsection{ressources}\label{sssec:resources}
 
-Cet interface permet de définir le type énuméré $(enum)$ qui représente l'ensemble des ressources dans le jeu dont le nombre est fixé à 'max\_resources' égale à 10, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
+Cet interface permet de définir le type énuméré $resource\_t$ qui représente l'ensemble des types de ressources dans le jeu dont le nombre est fixé à $max\_resources = 10$, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
 
-L'implémentation inclut les fonctions de conversion qui facilitent la représentation des resources afin de valider les tests, à savoir resource\_to\_string pour le nom complet de la ressource et resource\_to\_short\_string pour une représentation minimale (généralement un caractère).
-L'implémentation de ces deux fonctions est réalisée grâce à la structure 'switch' afin de gérer le cas de toutes les ressources, même l'ajout de nouveaux cas sans modifier la structure de la fonction si jamais pour les besoins, du jeu dans le futur, on est amené à ajouter d'autres ressources.
+L'implémentation inclut des fonctions qui permettent de représenter la ressource en chaine de caractère, soit \texttt{resource\_to\_string} pour le nom complet de la ressource et \texttt{resource\_to\_short\_string} pour une représentation minimale (généralement un caractère).
+
+L'implémentation de ces fonctions est réalisée grâce à la structure $switch-case$ afin de gérer le cas de toutes les ressources.
 
 \subsubsection{poches}\label{sssec:stashes}
 
-Le module précédent nécessite alors la gestion de toutes les ressources dans des poches définies par une structure $stash\_t$, qui est un tableau dont la taille est celle des ressources, chaque case contient alors la quantité de la ressource correspondante à l'indice du tableau.
+Après avoir défini les types de ressources via une énumération, nous implémentons maintenant le module $stash$ (poche) qui constitue le système gestion des ressources du joueur.
+
+On introduit la structure $stash\_t$, qui représente une poche de ressources. Il s'agit d'un tableau dont la taille correspond exactement au nombre de types de ressources en jeu où chaque case du tableau stocke la quantité de la ressource associer à son indice, selon $resource\_t$.
+Après avoir implémenter les ressources dans le module précédant, on implémente un module
 
 Ce fichier regroupe l'ensemble des opérations sur les poches :
 \begin{itemize}
-    \item l'addition de deux poches
-    \item la soustraction d'une poche à une autre 
-    \item la vérification d'inclusion si une poche est contenue dans une autre 
+    \item \texttt{stash\_add}, l'addition de deux poches $a$ et $b$: retourner une poche contenant pour chaque ressource l'addition du nombre de cette ressource dans $a$ et $b$
+    \item \texttt{stash\_sub},la soustraction d'une poche $a$ à une autre $b$, pour chaque ressource de $a$ on la soustrait à celle de $b$ (0 si la valeur est négative) 
+    \item \texttt{stash\_contains}, verifie si une poche $b$ est contenue dans une poche $a$ (pour toutes les ressources de $b$, ça quantiter est plus petite ou égale à celle de $a$; deux poches égales ce sontiennent)
 \end{itemize}
-Cette dernière fonction permettra effectivement de vérifier si le joueur possède les ressources nécessaires pour payer les actions réalisées dans le manoir.
+On a une fonction supplémentaire pour une représentation en chaine de caractère de la poche \texttt{stash\_to\_string}, utile pour une interface du jeu.
 
 \subsection{Tests et validation}
 
 Dans cette partie on s'intéressera à l'implémentation des tests et comment ils permettent de valider la correction des fonctions.
-Généralement, les fonctions du code source sont testées sur plusieurs entrées ce qui demande la création de deux tableaux, un tableau pour les entrées et un autre contenant les solutions attendues, pour ainsi comparer, à l'aide d'une boucle, la sortie à la solution.
+Généralement, les fonctions du code source sont testées sur plusieurs entrées ce qui demande la création de trois tableaux, un tableau pour les entrées, un pour les sorties et un autre contenant les solutions attendues, pour comparer la sortie à la solution.
 Un exemple de ces tests sera fourni dans ce qui suit.
 
 \subsubsection{Tests sur les directions et les ressources}
 
-Les tests sur ces deux modules servent à vérifier la sortie des deux fonctions de conversion des directions et ressources en leur nom complet puis abrégé, donc la validation des tests nécessite que la chaîne de caractère renvoyée soit la même que celle attendue, on utilisera alors la fonction strcmp() dans la bibliothèque <stdlib.h> qui retourne 0 si les deux chaînes de caractères entrées en arguments sont les mêmes.
+Les tests sur ces deux modules servent à vérifier la sortie des deux fonctions de conversion des directions et ressources en leurs noms sous forme de chaine de caractère, donc la validation des tests correspond à la verification de l'égalité entre la chaine de sortie et celle attendu.
 
-D'autre part, le test sur la fonction qui renvoie la direction inverse à celle fournie demeure simple grâce au type énuméré des directions, il suffit de vérifier l'égalité entre la sortie et la solution qui sont les deux des entiers.
-
+D'autre part, le test \texttt{dir\_oposite} demeure simple grâce au type énuméré des directions, il suffit de vérifier l'égalité entre la sortie et la solution autant que deux entiers.
 
 \begin{figure}[h]
     \centering
@@ -73,22 +83,20 @@ PASSED  input:  10	 output: C
 
 \subsubsection{Tests sur les positions}
 
-Afin de valider les tests sur les fonctions manipulant les positions du manoir, les coordonnées de chacune des positions sont modifiées indépendamment afin de couvrir les combinaisons pertinentes, notamment:
-\begin{itemize}
-    \item aux limites du manoir pour la validité d'une positions
-    \item autour d'une position pour l'adjacence entre deux positions
-    \item les positions adjacentes pour l'égalité de deux positions
-\end{itemize}
+Afin de valider les tests sur les fonctions manipulant les positions du manoir, appelons les fonction sur des positions differentes dans le but de tester tout les cas pertinents, notamment les postions dedans et dehors le manoire pour tester la validité de la position du manoir; des couples égaux adjacents ou pas pour les fonctions qui comparent deux positions 
 
 \subsubsection{Tests sur les poches}
 
 Avant de procéder aux tests, une fonction est implémentée afin de générer des poches dont les ressources sont des valeurs aléatoires inférieures à 10. Cette fonction permettera ensuite d'observer facilement les quantités de chaque ressource de la poche retournée en les comparant à celles des poches passées en argument, et ainsi de déduire si les opérations effectuées correspondent bien aux opérations élémentaires appliquées ressource par ressource.
 
+\subsubsection{Conclusion sur la validité}
+Même si nous ne pouvons pas tester toutes les combinaisons posibles pour chaque fonction, on deduit qu'on a tester assez de cas pertinents differents pour assumer les fonctions valide et poser notre programme dessu.
+
 \subsection*{Conclusion}
 \addcontentsline{toc}{subsection}{\numberline{}Conclusion}
 
 L’ensemble des fichiers du code source présentés dans cette section ne présente pas de difficultés particulières en termes d’implémentation ou de complexité mais ils sont toutefois essentiels, car ils permettent de définir et de structurer les données utilisées par la suite.
-Le découpage du code en plusieurs fichiers, associé à la compilation séparée, facilite également le travail en équipe. Chaque module peut être développé, modifié ou amélioré indépendamment des autres, tout en respectant les interfaces définies par les fichiers d’en-tête.
+Le découpage du code en plusieurs fichiers, associé à la compilation séparée, facilite le travail en équipe. Chaque module peut être développé, modifié ou amélioré indépendamment des autres, tout en respectant les interfaces définies par les fichiers d’en-tête.
 Cette organisation permet ainsi d’intégrer différentes implémentations d’un même module sans impacter le reste du programme.
 
-Ce découpage facilite justement l’écriture des autres fonctions du programme et contribue à la mise en place d’une boucle de jeu claire dans la section .
+Nous verrons maintenant comment passer à l'étape suivante l'implémentation des tuiles.
