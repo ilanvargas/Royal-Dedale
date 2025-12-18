@@ -15,7 +15,7 @@ test:
 	@echo "Compile and run tests"
 	./tester
 
-project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/tile_bis.o src/game.o src/tui.o src/target.o
+project: src/main.o src/dir.o src/location.o src/resource.o src/stash.o src/tile.o src/tile_bis.o src/game.o src/tui.o src/target.o src/equipement.o
 	@echo "Compile code"
 	$(CC) $(CFLAGS) -o $@ $^	
 

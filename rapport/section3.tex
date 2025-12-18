@@ -4,7 +4,7 @@
 
 \subsubsection*{Implémentation}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \captionsetup[lstlisting]{name=Figure}
     \begin{lstlisting}[
@@ -43,14 +43,45 @@ while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
 
 \subsubsection*{Interprétation}
 
-La boucle du jeu consiste à vérifier, à chaque itération, que le joueur n'a pas dépassé le nombre de tours possibles, qu'il n'a pas gagné la partie et qu'il a toujours des ressources.
-Chaque tour du jeu consiste à avoir deux tableaux de positions adjacentes, un tableau pour les positions dont les tuiles sont encore vides et un autre tableau pour les tuiles qui sont déja ouvertes. Selon la décision du joueur, s'il choisit de placer un tuile, on prend une position valide parmi celles des tuiles vides et on la place. Sinon, le joueur est censé à ce déplacer, il suffit alors de choisir une position parmi celles des tuiles déja ouvertes et le joueur s'y déplace, l'ensemble des opérations réalisées pendant le jeu repose sur la structure $game\_state$
-définit dans la figure.
+La boucle du jeu correspond au déroulement principal de la partie. À chaque itération, elle vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose toujours de ressources suffisantes pour continuer à jouer.
+Chaque tour repose sur l’identification des positions adjacentes à la position actuelle du joueur. Deux ensembles de positions sont distingués : les positions correspondant à des tuiles encore vides, et celles correspondant à des tuiles déjà ouvertes.
+Selon la décision du joueur, s'il choisit de placer un tuile, une position valide est sélectionnée parmi les positions des tuiles vides puis placée. Sinon, le joueur est censé de ce déplacer, une position est alors sélectionnée parmi celles des tuiles déja ouvertes et le joueur s'y déplace.
+L'ensemble des opérations réalisées pendant le jeu repose sur la structure $game\_state$ qui marque l'état du jeu, définit dans la figure suivante.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        style=MonStyleC,
+        caption={Implémentation de la boucle du jeu},
+        label={game_loop}
+    ]
+struct game_state_t {
+  struct stash_t steps;
+  struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
+  struct location_t current_location;
+};
+    \end{lstlisting}
+\end{figure}
 
 
 \subsection{Exécution}
 
 \subsubsection{Le Makefile}
+
+Un Makefile est un fichier utilisé par l'outil make pour automatiser la compilation du projet selon des règles. Une règle comporte trois champs principaux:
+
+\hspace{1cm} cible : dépendances
+
+\hspace{2.3cm} commandes\\
+L'évaluation d'une règle se fait récursivement:
+\begin{itemize}
+    \item les dépendances sont analysées : si une dépendance est la cible d'une autre règle, cette règle est à sont tour évaluée;
+    \item lorsque l'ensemble des dépendances a été analysé, et si la cible est plus ancienne que les dépendances, les commandes correspondant à la règle sont exécutées.
+\end{itemize}
+Afin d'éviter la répétition dans les règles, une définition des variables est également possible.
+Pour un projet C, on définit principalement \begin{scriptsize} CC \end{scriptsize} pour le compilateur utilisé et \begin{scriptsize} CFLAGS \end{scriptsize} afin de regrouper les options de compilation.
+Dans le cadre du projet on définit aussi \begin{scriptsize} DEDALE\_FLAGS \end{scriptsize} pour initialiser l'ensemble des paramètres du jeu lors de la compilation.
 
 \subsubsection{Paramètres d'exécution}
 
@@ -60,10 +91,57 @@ L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bi
     \item passer l'argument de la fonction init\_tiles      : -t
     \item fixer le nombre maximum de tours de jeu possible  : -n
 \end{itemize}
-D'autres paramètres ont été envisagés afin de donner du sens au mot 'jeu'
+D'autres paramètres ont été envisagés afin de donner du sens au 'jeu'
 \begin{itemize}
     \item rendre le jeu interactif afin de pouvoir jouer   : -i
-    \item permettre la visualisation graphique de manoir   : -g
+    \item permettre la visualisation graphique du manoir   : -g
 \end{itemize}
 
 \subsection{Visualisation graphique : TUI}
+
+Une des fonctionnalités intéressantes à ajouter au projet était la TUI (Text User Interface), cet outil permet la visualisation du jeu directement dans le terminal.
+Le manoir est affiché sous forme d'une grille textuelle constitué des cases qui sont représentées sous la forme d'un tableau de caractères, l'implémentation consiste alors d'initialiser le manoir rempli par les cases vides et de placer chaque tuile dans sa case tout en respectant ses directions d'ouverture avec une mise à jour au fur et à mesure de l'avancement du jeu. La TUI offre également une représentation de la position du joueur sur le plateau, mise à jour à chaque déplacement.
+
+Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente de son état courant, facilitant ainsi l’observation du déroulement de la partie et la validation du comportement du jeu lors des tests d'exécution. la figure ci-dessous illustre un exemple de la visualisation du manoir.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        caption={TUI : visualisation du manoir},
+        label={tui},
+        captionpos=b,
+        frame=single,
+        stringstyle=\color{red!70!black},
+        xleftmargin=0.29\textwidth,
+        xrightmargin=0.29\textwidth
+    ]
+~~~~~~~~~~+         +         +
+~~~~~~~~~~                     
+~~~~~~~~~~                     
+~~~~~~~~~~               o     
+~~~~~~~~~~                     
+~~~~~~~~~~+         +         +
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~+         +~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
++---------+         +~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
++         +         +~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
++         +         +~~~~~~~~~~
+
+    \end{lstlisting}
+\end{figure}

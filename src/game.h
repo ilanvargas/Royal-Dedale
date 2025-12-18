@@ -8,12 +8,15 @@
 
 #define NUM_TARGET_LOCATIONS 3
 
+#define NUM_EQUIPEMENTS 4
+
 /** The current state of the mansion & player
  */
 struct game_state_t {
   struct stash_t steps;
   struct tile_bis_t board[BOARD_WIDTH][BOARD_HEIGHT];
   struct location_t current_location;
+  int has_equipements[NUM_EQUIPEMENTS];
 
   struct location_t target_locations[NUM_TARGET_LOCATIONS];
   int is_target_locations_visited[NUM_TARGET_LOCATIONS];
