@@ -3,9 +3,9 @@
 #include <unistd.h>
 #include <getopt.h>
 
-#include "game.h"
+
 #include "tui.h"
-#include "target.h"
+#include "equipement.h"
 
 struct game_state_t game_state;
 
@@ -59,6 +59,10 @@ int main(int argc, char* argv[])
     int is_player_won = exit_reached(&game_state);
     int num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
 
+    for (int i = 0; i < NUM_EQUIPEMENTS; i++)
+    {
+      game_state.has_equipements[i] = 1;
+    }
     // ###---------------- Base version main loop (includes interactive version) ----------------###
 
     if (is_base_version) 
@@ -69,6 +73,7 @@ int main(int argc, char* argv[])
         printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
         print_target_locations_sorted(target_locations_sorted, num_target_locations);
 
+        struct stash_t initial_resources = game_state.steps;
         int num_possible_locations = list_empty_locations_with_finite_opening_cost(possible_locations, &game_state);
         if (current_turn == 1 || (num_possible_locations && decide_to_place_tile(is_interactive)))
         {
@@ -80,6 +85,12 @@ int main(int argc, char* argv[])
             struct tile_bis_t selected_tile = select_tile(is_interactive, available_tiles, num_available_tiles);
             random_tile_rotation(is_interactive, selected_tile, d, &num_rotations);
             place_tile(selected_location, d, selected_tile, &game_state);
+            can_gain_equipement(&game_state);
+            struct stash_t final_resources = game_state.steps;
+            struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources);
+            
+            on_tile_open(&game_state);
+            on_resource_gain(&game_state, gained_resources);
             tui_place_tile(is_graphic, selected_location, selected_tile);
         }
         else
@@ -89,7 +100,11 @@ int main(int argc, char* argv[])
             struct location_t selected_location = select_location(is_interactive, possible_locations, num_possible_locations);
             tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
-            target_location_reached(&game_state);
+            struct stash_t final_resources = game_state.steps;
+            struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources);
+            
+            on_move(&game_state, gained_resources);
+            on_resource_gain(&game_state, gained_resources);
         }
 
         num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
@@ -116,6 +131,7 @@ int main(int argc, char* argv[])
         
         unsigned int i = 1;
         while(i < path_to_target_len && !tile_is_empty(location_to_tile(path_to_target[i], &game_state).tile) && !is_game_over) {
+            struct stash_t initial_resources = game_state.steps;
             printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
             print_target_locations_sorted(target_locations_sorted, num_target_locations);
             print_path_target(path_to_target, path_to_target_len, target_location_near);
@@ -125,6 +141,10 @@ int main(int argc, char* argv[])
             tui_move_player(is_graphic, selected_location, &game_state);
             move_player(selected_location, &game_state);
             target_location_reached(&game_state);
+            struct stash_t final_resources = game_state.steps;
+            struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources);
+            on_move(&game_state, gained_resources);
+            on_resource_gain(&game_state, gained_resources);
             i++;
 
             current_turn++;
@@ -135,6 +155,7 @@ int main(int argc, char* argv[])
             if (current_turn > n || is_player_won || game_state.steps.r[STEP] <= 0) is_game_over = 1;
         }
         if (i < path_to_target_len && !is_game_over) {
+            struct stash_t initial_resources2 = game_state.steps;
             printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
             print_target_locations_sorted(target_locations_sorted, num_target_locations);
             print_path_target(path_to_target, path_to_target_len, target_location_near);
@@ -146,6 +167,12 @@ int main(int argc, char* argv[])
             struct tile_bis_t selected_tile = select_tile(0, available_tiles, num_available_tiles);
             random_tile_rotation(0, selected_tile, d, &num_rotations);
             place_tile(selected_location, d, selected_tile, &game_state);
+            target_location_reached(&game_state);
+            can_gain_equipement(&game_state);
+            struct stash_t final_resources = game_state.steps;
+            struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources2);
+            on_tile_open(&game_state);
+            on_resource_gain(&game_state, gained_resources);
             tui_place_tile(is_graphic, selected_location, selected_tile);
 
             current_turn++;
