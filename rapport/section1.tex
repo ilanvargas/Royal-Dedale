@@ -26,6 +26,8 @@ Les deux dernière renvoient faux si une des position n'est pas valide.
 
 Cet interface permet de définir le type énuméré $resource\_t$ qui représente l'ensemble des types de ressources dans le jeu dont le nombre est fixé à $max\_resources = 10$, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
 
+Entre les ressources differentes disponible, la plus notables sont les $steps(pas)$. Jusqu'à la version amélioré, c'est la seul ressource utilisé: pour chaque mouvement du joueur ou plaçage de tuile on consomme une $step$ et donc on a besoin d'avoir au minimum un $step$ pour faire une action pendant sont tour sinon on est coincé.
+
 L'implémentation inclut des fonctions qui permettent de représenter la ressource en chaine de caractère, soit \texttt{resource\_to\_string} pour le nom complet de la ressource et \texttt{resource\_to\_short\_string} pour une représentation minimale (généralement un caractère).
 
 L'implémentation de ces fonctions est réalisée grâce à la structure $switch-case$ afin de gérer le cas de toutes les ressources.
@@ -93,8 +95,7 @@ Avant de procéder aux tests, une fonction est implémentée afin de générer d
 \subsubsection{Conclusion sur la validité}
 Même si nous ne pouvons pas tester toutes les combinaisons posibles pour chaque fonction, on deduit qu'on a tester assez de cas pertinents differents pour assumer les fonctions valide et poser notre programme dessu.
 
-\subsection*{Conclusion}
-\addcontentsline{toc}{subsection}{\numberline{}Conclusion}
+\subsection{Conclusion}
 
 L’ensemble des fichiers du code source présentés dans cette section ne présente pas de difficultés particulières en termes d’implémentation ou de complexité mais ils sont toutefois essentiels, car ils permettent de définir et de structurer les données utilisées par la suite.
 Le découpage du code en plusieurs fichiers, associé à la compilation séparée, facilite le travail en équipe. Chaque module peut être développé, modifié ou amélioré indépendamment des autres, tout en respectant les interfaces définies par les fichiers d’en-tête.

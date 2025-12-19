@@ -1,8 +1,35 @@
 
+\'A présent on a le code pour crée le jeu
+
+\subsection{Manoir et joueur}
+
+On définit le manoir et le joueur par une structure qui permet de mémoriser l'état du jeu en tout moment.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        style=MonStyleC,
+        caption={Structure du jeu},
+        label={game_state}
+    ]
+struct game_state_t {
+  struct stash_t steps;
+  struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
+  struct location_t current_location;
+};
+    \end{lstlisting}
+\end{figure}
+
+On garde dans cette structure les ressources du joueur dans la poche \texttt{steps} et sa position dans le manoir \texttt{current\_location}.
+
+Le manoir lui est une rectagle de taille $(BOARD\_WIDTH, BOARD\_HEIGHT)$ composé de tuiles. On stocke le type de tuile de chaque position dans la matrice \texttt{board}.
+
+Avant de commencer la boucle de jeu, nous créerons une instance de cette structure appellé \texttt{game\_state}. Elle permettra de définir l'état de notre jeu et sera le seul appel de cette structure.
 
 \subsection{Boucle du jeu}\label{ssec:main}
 
-\subsubsection*{Implémentation}
+Après avoir définit l'état de notre jeu \texttt{game\_state} on peut passer à la boucle de jeu, c'est-à-dire le déroulement de la partie.
 
 \begin{figure}[H]
     \centering
@@ -12,6 +39,11 @@
         caption={Implémentation de la boucle du jeu},
         label={gameloop}
     ]
+init_tiles(t);
+init_tiles_bis(t);
+init_state(s, &game_state);
+init_tui(is_graphic);
+
 while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
 {
     printf("\e[1mTurn number %d out of %d\e[0m\n", current_turn, n);
@@ -41,60 +73,54 @@ while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     \end{lstlisting}
 \end{figure}
 
-\subsubsection*{Interprétation}
+Avant de rentrée dans la boucle on initialise tout nos modules. En particulier on initialise \texttt{game\_state} c'est-à-dire: on définit la position du joueur en $(0,0)$; on pose toutes les tuiles du manoire comme vide sauf les tuiles en $(0,0)$ la tuile de départ et (BOARD\_WIDTH-1, BOARD\_HEIGHT-1) la tuile d'arrivé; on définit les ressources du joueur comme ayant $4*4*\frac{BOARD\_SIZE}{3}$.
 
-La boucle du jeu correspond au déroulement principal de la partie. À chaque itération, elle vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose toujours de ressources suffisantes pour continuer à jouer.
-Chaque tour repose sur l’identification des positions adjacentes à la position actuelle du joueur. Deux ensembles de positions sont distingués : les positions correspondant à des tuiles encore vides, et celles correspondant à des tuiles déjà ouvertes.
-Selon la décision du joueur, s'il choisit de placer un tuile, une position valide est sélectionnée parmi les positions des tuiles vides puis placée. Sinon, le joueur est censé de ce déplacer, une position est alors sélectionnée parmi celles des tuiles déja ouvertes et le joueur s'y déplace.
-L'ensemble des opérations réalisées pendant le jeu repose sur la structure $game\_state$ qui marque l'état du jeu, définit dans la figure suivante.
+Dans la boucle, à chaque itération, on vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose de ressources suffisantes pour continuer à jouer (c'est-à-dire au moins un $step$ pour faire une action). Sinon la partie est terminer, le joueur à gagné s'il a atteint la tuile d'arrivé sinon perdu. \\
+\\
 
-\begin{figure}[H]
-    \centering
-    \captionsetup[lstlisting]{name=Figure}
-    \begin{lstlisting}[
-        style=MonStyleC,
-        caption={Implémentation de la boucle du jeu},
-        label={game_loop}
-    ]
-struct game_state_t {
-  struct stash_t steps;
-  struct tile_t* board[BOARD_WIDTH][BOARD_HEIGHT];
-  struct location_t current_location;
-};
-    \end{lstlisting}
-\end{figure}
+Pour chaque tour, \texttt{list\_empty\_locations\_with\_finite\_opening\_cost} cherche et stocke dans un buffer les localisation vide ouvrables depuis la position du joeur (adjacente et ouverte dans la direction opposé du joueur). Si il a trouver au moins une on donne au joueur la possibilité de placer une tuile dans une de ces position ou bouger, sinon on l'oblige a bouger. Le joueur est obligé de placer le premier tour.
 
+\textbf{Si le joueur place}
+
+\textbf{Si le joueur bouge}
+
+\vspace{1em}
+Chaque "choix" peut se faire de manière aléatoire uo le joueur (derrière l'écran) peut faire les choix avec le mode itérative (expliqué plus bas).
+\\
+On remarque que de nombreuses fonctions de la boucle principale nécessitent l’accès à l’état courant du jeu pour fonctionner correctement. Pour cette raison, l’adresse de la structure \texttt{game\_state} est passée en paramètre à ces fonctions, ce qui leur permet d’accéder directement à l’ensemble des informations nécessaires.
+
+Cette approche améliore la lisibilité et la maintenabilité du code : au lieu de transmettre séparément le manoir, la position du joueur ou ses ressources, l’intégralité de l’état du jeu est centralisée dans une seule structure.
+
+De plus, le passage par adresse permet aux fonctions de modifier directement l’état du jeu et d’accéder aux données sans surcoût inutile. En particulier, la matrice board n’est pas recopiée à chaque appel de fonction ; elle est simplement lue ou modifiée via \texttt{game\_state}, ce qui évite des opérations coûteuses et des complexités supplémentaires.
 
 \subsection{Exécution}
 
 \subsubsection{Le Makefile}
 
-Un Makefile est un fichier utilisé par l'outil make pour automatiser la compilation du projet selon des règles. Une règle comporte trois champs principaux:
+Un $Makefile$ est un fichier utilisé par la commande $make$ pour automatiser la compilation du projet selon des règles. 
 
-\hspace{1cm} cible : dépendances
-
-\hspace{2.3cm} commandes\\
-L'évaluation d'une règle se fait récursivement:
+Notre make file à pour règles:
 \begin{itemize}
-    \item les dépendances sont analysées : si une dépendance est la cible d'une autre règle, cette règle est à sont tour évaluée;
-    \item lorsque l'ensemble des dépendances a été analysé, et si la cible est plus ancienne que les dépendances, les commandes correspondant à la règle sont exécutées.
+    \item \texttt{\%.o: \%.c} : règle générique qui compile chaque fichier source de .c à .o.
+    \item \texttt{tester: }\textit{fichier sources .o} : crée un exécutable qui capable d'exécuter les tests du projet.
+    \item \texttt{project: }\textit{fichier sources .o} : crée le fichier de jeu exécutable.
+    \item \texttt{test: } : exécute le exécutable de test $tester$
+    \item \texttt{compile: project tester} : crée l'exécutable de jeu et de test
+    \item \texttt{all: } : règle compile
 \end{itemize}
-Afin d'éviter la répétition dans les règles, une définition des variables est également possible.
-Pour un projet C, on définit principalement \begin{scriptsize} CC \end{scriptsize} pour le compilateur utilisé et \begin{scriptsize} CFLAGS \end{scriptsize} afin de regrouper les options de compilation.
-Dans le cadre du projet on définit aussi \begin{scriptsize} DEDALE\_FLAGS \end{scriptsize} pour initialiser l'ensemble des paramètres du jeu lors de la compilation.
 
 \subsubsection{Paramètres d'exécution}
 
-L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bibliothèque getopt, cela permet pour un même exécutable de changer les paramètres essentiels suivants
+L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bibliothèque $getopt$, cela permet pour un même exécutable de changer les paramètres essentiels suivants:
 \begin{itemize}
-    \item initialiser la graine du générateur aléatoire     : -s
-    \item passer l'argument de la fonction init\_tiles      : -t
-    \item fixer le nombre maximum de tours de jeu possible  : -n
+    \item rendre le jeu interactif afin de pouvoir joueur: \textbf{-i}.
+    \item graine aléatoire pour prendre des décision à la place du joueur: \textbf{-s}.
+    \item graine aléatoire \texttt{tile\_draft}: \textbf{-t}.
+    \item fixer le nombre maximum de tours de jeu possible: \textbf{-n}.
 \end{itemize}
-D'autres paramètres ont été envisagés afin de donner du sens au 'jeu'
+Une autre fonctionalité à été mise en place pour une meilleur expériance de jeu:
 \begin{itemize}
-    \item rendre le jeu interactif afin de pouvoir jouer   : -i
-    \item permettre la visualisation graphique du manoir   : -g
+    \item visualisation graphique tui du manoir: \textbf{-g}
 \end{itemize}
 
 \subsection{Visualisation graphique : TUI}
