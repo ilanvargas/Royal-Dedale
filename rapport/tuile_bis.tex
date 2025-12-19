@@ -1,17 +1,16 @@
 
+Dans la version de base, l’implémentation des tuiles impliquait beaucoup de redondance et complexité.
 
-La version de base sur l'implémentation des tuiles consiste à définir chaque tuile en considérant son unique sens de rotation, donc pour un même type de tuile il est nécéssaire de définir quatres tuiles, ce qui aboutit à une duplication du code.\\
-Cet achievement propose d'implémenter les tuiles de façon à permettre leur rotation dans les directions cardinales, mais la contrainte imposée par le projet ne permet pas la modification du fichier tile.h et donc la définition d'un autre fichier tile\_bis.h est nécessaire.
+Nous proposons une nouvelle approche associant à chaque type de tuile une rotation. Pour cela, nous définissons la structure \texttt{tile\_bis\_t}, contenant un pointeur vers une tuile et sa rotation, représentée par un type énuméré.  
 
-On définit d'abord la structure $tile\_bis\_t$ qui prend comme champs un pointeur vers une tuile ainsi qui sa rotation, cette dernière est définie par le type énuméré $enum$.\\
-On est amené donc à considérer en même temps la direction et la rotation d'une tuile lors de l'implémentation des nouvelles fonctions, cela est défini par \begin{scriptsize}ROT\_TO\_DIR(d, r)
-\end{scriptsize} qui convertit un couple (direction,rotation) en une direction par la formule \begin{scriptsize} (d + r) \% NB\_ROT\end{scriptsize}.
+Lors de l’utilisation de ces tuiles, direction et rotation sont prises en compte simultanément grâce à \texttt{ROT\_TO\_DIR(d,r)}, qui convertit le couple (direction, rotation) en direction effective via la formule $(d + r) \% \text{NB\_DIRS}$.  
 
-Pour enfin définir les fonctions de cette nouvelle structure de tuile
-\begin{itemize}
-    \item \texttt{tile\_opening\_cost\_bis} pour le coût d'ouverture d'une tuile dans une direction donnée
-    \item \texttt{tile\_can\_open\_bis} pour le test d'ouverture d'une tuile tuile dans une direction donnée
-    \item \texttt{tile\_draft\_bis} pour la sélection des tuiles aléatoires à placer
-\end{itemize}
+Cette structure est exploitée sur les nouvelles fonctions implémentés dans un nouveau fichier \texttt{tile\_bis.c} pour des questions d'extensibilité.
 
-Cette nouvelle implémentation permet également de réduire les changements nécessaires à aporter sur la boucle du jeu en remplaçant juste les fonctions de version de base sur les tuiles avec ces nouvelles fonctions afin servir le même but.
+\texttt{tile\_opening\_cost\_bis} et \texttt{tile\_can\_open\_bis} qui sont des adaptation des fonctions $tile$ ses la structure \texttt{tile\_bis\_t} en prenant en compte la rotation.
+
+\texttt{tile\_draft\_bis} retourne des $tile_bis$ selon la direction et les ressources du joueur, en combinant tuiles déjà compatibles et tuiles aléatoires éventuellement pivotées pour satisfaire l'ouverture.
+
+Finalement on introduit la fonction \texttt{random\_tile\_rotation}, qui permet au joueur de faire une rotation aléatoire compatible de la tuile choisie.
+
+Dans l'implémentation du jeu on définit à présent le manoire comme une matrice de pointeur de $tile_bis$ et utilisons uniquement les variantes de $tile_bis$ des fonctions modifiées. De nos tuiles implémenter cette méthode permet de passer de 10 tuiles à 6 tuiles implémentés statiquement.

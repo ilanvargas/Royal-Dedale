@@ -3,16 +3,16 @@
 
 La gestion des tuiles est assurée par le module \texttt{tile}, dont l’interface est définie dans le fichier \texttt{tile.h}. Ce module repose sur une structure abstraite \texttt{tile\_t}, dont la définition interne est volontairement masquée au reste du programme. Cette abstraction permet de découpler l’utilisation des tuiles de leur implémentation concrète, et garantit que les autres modules du jeu ne dépendent que de l’interface publique.
 
-Grâce à ce choix, il est possible de modifier l’implémentation des tuiles dans \texttt{tile.c} (ajout de nouvelles tuiles, modification des coûts d'ouverture et de traversage) sans nécessiter de changements dans le reste du code, tant que les fonctions exposées par \texttt{tile.h} conservent le même comportement.
+Grâce à ce choix, il est possible de modifier l’implémentation des tuiles dans \texttt{tile.c} (ajout de nouvelles tuiles, modification des coûts d'ouverture et de traverser) sans nécessiter de changements dans le reste du code, tant que les fonctions exposées par \texttt{tile.h} conservent le même comportement.
 
 \subsection{Structure interne d’une tuile}
 
 Dans le fichier \texttt{tile.c}, la structure \texttt{tile\_t} est définie par plusieurs attributs caractérisant une tuile du jeu :
 \begin{itemize}
   \item un $nom$, pour identifier la tuile
-  \item un $coût de traversée$ sous forme de poche, payé à chaque passage du joueur sur la tuile
-  \item un tableau de $coûts d’ouverture$ sous forme de poches, indexé par direction, indiquant si la tuile peut être ouverte pour chaque direction et le coût
-  \item un $poids$, utilisé lors de la génération aléatoire des tuiles.
+  \item un $coût de traversée$ poche, payé à chaque passage du joueur sur la tuile
+  \item un tableau de $coûts d’ouverture$ de poches, indexé par direction, indiquant si la tuile peut être ouverte pour chaque direction et le coût
+  \item un $poids$, influence probabilité d’être généré.
 \end{itemize}
 
 Cette représentation permet de décrire de manière uniforme l’ensemble des tuiles du jeu.
@@ -21,30 +21,26 @@ Cette représentation permet de décrire de manière uniforme l’ensemble des t
 
 Les différentes tuiles du jeu sont définies comme des instances statiques de \texttt{tile\_t} dans le fichier \texttt{tile.c}. Cette approche évite toute allocation dynamique inutile et garantit que les caractéristiques des tuiles sont centralisées en un seul endroit.
 
-On définit, dans notre versoin, les tuiles spéciales: tuile vide \texttt{EMPTY\_TILE}, tuile de départ \texttt{START\_TILE} et tuile d'arrivée \texttt{EXIT\_TILE}. Puis les tuiles a placé pendant la partie:
+On définit, dans notre version, les tuiles spéciales: tuile vide \texttt{EMPTY\_TILE}, tuile de départ \texttt{START\_TILE} et tuile d'arrivée \texttt{EXIT\_TILE}. Puis les tuiles à placé pendant la partie:
 \begin{itemize}
   \item \texttt{CLOISTER\_TILE}, s'ouvre dans toutes les directions, a un poid égale à 2 (plus de chance d'être généré)
-  \item \texttt{EW\_CORRIDOR\_TILE \& NS\_CORRIDOR\_TILE}, des couloir c'est-à-dire ouverte selon deux direction opposé.Il y en a deux car une pour ouverte selon la direction nord-sud et l'autre est-ouest faisant ainsi toutes les rotations de couloires
-  \item les tuiles térraces, ouverte à peine selon une direction. On impémente une une tuile par direction
+  \item \texttt{EW\_CORRIDOR\_TILE \& NS\_CORRIDOR\_TILE}, tuiles couloirs, une par orientations
+  \item Quatre tuiles terraces, on implémente une une tuile par direction
 \end{itemize}
-Pour l'instant tout coût d'ouverture ou traversage est égale à 1 $step(pas)$ pour cela il faut avoir au moins 1 $step$ pour pouvoir jouer. Si une tuile n'est pas ouverte selon une direction, le coût d'ouverture de tel direction pour la tuile est une poche contenant UINT\_MAX c'est-à-dire l'entier maximal en C. 
+Pour l'instant, tout coût d'ouverture ou de traversage est égal à 1 $step(pas)$. Si une tuile n'est pas ouverte selon une direction, le coût d'ouverture de telle direction pour la tuile est une poche contenant UINT\_MAX c'est-à-dire l'entier maximal en C. 
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=4cm]{projDedaleCloister.png}
-\end{figure}
-
-\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.45\textwidth}
     \centering
-    \captionsetup[lstlisting]{name=Figure}
-    \begin{lstlisting}[
-        style=MonStyleC,
-        caption={Exemple d'implémentation d'un cloister},
-        label={game_state}
-    ]
+    \includegraphics[width=\linewidth]{projDedaleCloister.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.5\textwidth}
+\begin{lstlisting}[style=MonStyleC]
 struct tile_t CLOISTER_TILE = {
   .name = "cloister",
-    .traversal_cost = ONE_STEP_STASH, //poche contenant un pas
+  .traversal_cost = ONE_STEP_STASH,
   .opening_cost = {
     ONE_STEP_STASH,
     ONE_STEP_STASH,
@@ -53,7 +49,10 @@ struct tile_t CLOISTER_TILE = {
   },
   .weight = 2
 };
-    \end{lstlisting}
+\end{lstlisting}
+  \end{minipage}
+  \caption{Exemple d'implémentation d'un cloister}
+  \label{fig:cloister}
 \end{figure}
 
 \subsection{Représentation du plateau de jeu}
@@ -66,60 +65,54 @@ Le plateau de jeu est représenté par une matrice de pointeurs vers des structu
   \item il permet de comparer des tuiles via leurs adresses
 \end{itemize}
 
-On vera ça plus en détaille dans la section suivante.
+On verra ça plus en détail dans la section suivante.
 
 \subsection{Opérations sur les tuiles}
 
 Les différentes tuiles du jeu sont regroupées dans un tableau de pointeurs $p\_tiles$ vers les implémentations statique. Cette organisation facilite l'implémentation des opérations.
 
-Les structures étant implémentées de manière statique et manipulées uniquement via des pointeurs, elles ne sont pas accesibles en dehors \texttt{tile.c}. Les interactions avec les tuiles (lecture des coûts, vérification des ouvertures, génération, etc.) sont donc réalisées à l’aide de fonctions dédiées, définies dans l’interface du module.
+Les structures étant implémentées de manière statique et manipulées uniquement via des pointeurs, elles ne sont pas accessibles en dehors \texttt{tile.c}. Les interactions avec les tuiles (lecture des coûts, vérification des ouvertures, génération, etc.) sont donc réalisées à l’aide de fonctions dédiées, définies dans l’interface du module.
 
-Nous presentons les opérations faites sur les tuiles avec pour entrée un pointeur pointant sur une tuile statique de \texttt{tile.c}.
+Nous présentons les opérations faites sur les tuiles avec pour entrée un pointeur pointant sur une tuile statique de \texttt{tile.c}.
 
-\subsubsection*{tile\_name}
-Cette fonction retourne une chaîne de caractères correspondant au nom de la tuile pointée par le pointeur passé en paramètre.
+\begin{itemize}
+  \item \texttt{tile\_name} : retourne une chaîne de caractères correspondant au nom de la tuile pointée par le pointeur passé en paramètre.
 
-\subsubsection*{tile\_traversal\_cost \& tile\_opening\_cost}
-Retourne une poche correspondant au coût de traversé, ou d'ouverture selon une direction respectivement, d'une tuile pointée par le pointeur passé en paramètre.
+  \item \texttt{tile\_traversal\_cost} et \texttt{tile\_opening\_cost} : retournent la poche correspondant respectivement au coût de traversée ou au coût d’ouverture d’une tuile selon une direction donnée.
 
-\subsubsection*{tile\_generate\_empty, tile\_generate\_start \& tile\_generate\_exit}
-Ces fonctions retournent le pointeur vers la tuile vide, de la tuile de départ et de la tuile de sortie, respectivement. On utilisera ces pointeurs pour construire le manoir.
+  \item \texttt{tile\_generate\_empty}, \texttt{tile\_generate\_start} et \texttt{tile\_generate\_exit} : retournent des pointeurs vers la tuile vide, la tuile de départ et la tuile de sortie, utilisés pour construire le manoir.
 
-\subsubsection*{tile\_generate\_by\_name}
-Retourne le pointeur vers la tuile de nom passé en paramètre sous forme de chaine de caractère. \\
+  \item \texttt{tile\_generate\_by\_name} : retourne un pointeur vers la tuile dont le nom correspond à la chaîne de caractères passée en paramètre, en parcourant le tableau \texttt{p\_tiles}.
+
+  \item \texttt{tile\_is\_empty} : vérifie si le pointeur fourni désigne la tuile vide.
+
+  \item \texttt{tile\_can\_open} : vérifie si une tuile peut être ouverte dans une direction donnée, en testant si le coût d’ouverture associé possède un nombre de \textit{steps} strictement inférieur à \texttt{UINT\_MAX}.
+\end{itemize}
+
+\hspace{0.1em}
+
+La fonction plus complexe est \textbf{tile\_draft}: 
+
+Pour une direction en paramètre on retourne au maximum \begin{scriptsize}NUM\_TILES\_PER\_TURN\end{scriptsize} pointeur de tuile, avec un buffer, choisis de manière aléatoire pouvant être ouvert dans la direction en paramètre.
+
+Avant de faire ça on appel au début du jeu une fonction \texttt{init\_tile} qui initialise la graine aléatoire et initialise une matrice statique $p\_tiles\_direction$. Cette matrice contient quatre tableaux indexés selon les directions cardinales, chaque tableau contient toutes les pointeur de tuiles pouvant être ouvert sa direction associée. \texttt{p\_tiles\_direction[NORD]} est le tableau de pointeur de toutes les tuiles qui sont ouvertes au nord.
+
+On place la tuile $weight$ fois dans son tableau.\\
 \\
-Pour cela, pour chaque pointeur de $p\_tiles$ on verifie si le nom de la tuile associée est égal à celui passé en paramètre. Si oui, on retourne le pointeur.
+Dans la fonction \texttt{tile\_draft} on répète \begin{scriptsize}NUM\_TILES\_PER\_TURN\end{scriptsize} fois:
 
-\subsubsection*{tile\_is\_empty}
-Verifie si le pointeur d'entrée pointe vers la tuile vide, c'est-à-dire si la tuile en entrée est la tuile vide.
-
-\subsubsection*{tile\_can\_open}
-Verifie si la tuile tuile passé en paramètre autant que pointeur peut être ouverte selon une direction passsé en paramètre également. \\
+On choisit un pointeur de tuile aléatoirement dans le tableau $p\_tiles\_direction$ correspondant à la direction passé en paramètre. Si elle a déjà été choisie, c'est-à-dire déjà présente dans le buffer, alors on ne la remet pas, sinon ou la place dans le buffer. \\
 \\
-Pour ca on verifie si le coût d'ouverture de la tuile selon la direction est une poche avec pour nombre de steps inférieur à $U\_INT\_MAX$
+En terme de complexité:
 
-\subsubsection*{tile\_draft}
-
-Pour une direction en paramètre on retourne au maximum NUM\_TILES\_PER\_TURN pointeur de tuile, avec un buffer, choisis de manière aléatoire pouvant être ouvert dans la direction en paramètre. \\
-\\
-Avant de faire ça on appel au début du jeu une fonction \texttt{init\_tile} qui initialise la graine aléatoire pour pouvoir utiliser l'aléatoire pour selectionnner les tuile choisis et puis initialise une matrice statique $p\_tiles\_direction$. Cette matrice contient quatre tableaux, une par direction cardinale, et chaque tableau contient toutes les pointeur de tuiles pouvant être ouvert selon la direction associée à l'indice du tableau dans la matrice.
-
-\texttt{p\_tiles\_direction[NORD]} est le tableau de pointeur de toutes les tuiles qui sont ouverte au nord. \\
-\\
-Dans la fonction \texttt{tile\_draft} on répète NUM\_TILES\_PER\_TURN fois:
-
-On choisi un pointeur de tuile aléatoirement dans le tableau $p\_tiles\_direction$ correspondant à la direction passé en paramètre. Si elle a déjà été choisi, c'est-à-dire déjà présente dans le buffer, alors on ne la remet pas, sinon ou la place dans le buffer. \\
-\\
-Celle-ci est la fonction la plus compléxe du module.
-
-En temps, on verifie à chaque fois si la tuile n'a pas été répéter, ce qui engendre une compléxité de 
+En temps, on vérifie à chaque fois si la tuile n'a pas été répétée, ce qui engendre une complexité de 
 \begin{equation}
   \Theta(1+2+...+N) = \Theta(\frac{N(N-1)}{2}) = \Theta(N^{2}) 
 \end{equation}
-Avec N = NUM\_TILES\_PER\_TURN. Le processus pour verifier si une tuile est répété est une boucle dans une boucle.
+Avec \begin{scriptsize}N=NUM\_TILES\_PER\_TURN\end{scriptsize}. Le processus pour vérifier les doublons est une boucle dans une boucle.
 
-On améliore la compléxité en temps ne choisisant pas une tuile aléatoirement entre toutes les tuile jusqu'à qu'elle s'ouvre dans la bonne direction. Plustôt, o choisit parmis les tuiles ouvrable selon tel direction, ce qui entraine, néanmoins, un coût spacial liée aux quatre tableaux statiques $p\_tiles\_direction$.
-On a pas besoin de beaucoup s'en inquiéter ici car NUM\_TILES\_PER\_TURN=3 et on a 7 types de tuiles ce qui ne sont des chiffres relativement petits et donc une compléxité manageable.\\
+On améliore la complexité en ne choisissant pas une tuile aléatoirement entre toutes les tuiles jusqu'à qu'elle s'ouvre dans la bonne direction mais si parmi $p\_tiles\_direction$ associée. Néanmoins cela engendre la complexité spatiale liée aux quatres tableaux.
+
+On a pas besoin de beaucoup s'en inquiéter ici car NUM\_TILES\_PER\_TURN=3 et on a 7 types de tuiles ce qui ne sont des chiffres relativement petits et donc une complexité manageable. Mais on conclut que la complexité de ce module est liée au nombres de tuiles implémentées\\
 \\
-On remarque que la quantité de tuiles choisi par la fonction est variable, pour cela on retourner le nombre de tuile choisies.
-
+On remarque que la quantité de tuiles choisie par la fonction est variable, pour cela on retourne le nombre de tuiles choisies.

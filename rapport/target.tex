@@ -1,29 +1,29 @@
 
-Nous introduisons le concepte de $target\_tiles$(tuile objective). \`A présent pour rentrer dans la tuile d'arrivé, et gagner la partie, on a besoin des ressources \begin{scriptsize}NUM\_RESOURCES-2, NUM\_RESOURCES-1 et NUM\_RESOURCES\end{scriptsize}; pour les \begin{scriptsize}NUM\_RESOURCES=4\end{scriptsize} cela correspond a 1 or, 1 gem et 1 clé. Ces ressources sont repartie dans le manoir sur les $target\_tiles$.
+Nous introduisons le concept de $target\_tiles$(tuile objective). \`A présent pour rentrer dans la tuile d'arrivé, et gagner la partie, on a besoin des ressources \begin{scriptsize}NUM\_RESOURCES-2, NUM\_RESOURCES-1 et NUM\_RESOURCES\end{scriptsize}; pour  \begin{scriptsize}NUM\_RESOURCES=4\end{scriptsize} cela correspond a 1 or, 1 gem et 1 clé. Ces ressources sont réparties dans le manoir sur les $target\_tiles$.
 
-Chaque $target\_tile$ est associer à une unique "target ressource". Ainsi, pour gagner, il faut passé par tous les $target\_tiles$.
+Chaque $target\_tile$ est associée à une unique "target ressource". Ainsi, pour gagner, il faut passer par tous les $target\_tiles$.
 
 \subsubsection{Changement en game\_state}
 
-Pour garder en mémoire les $target\_tiles$, on ajoute dans \texttt{game\_state} un tableau de localisation de longeur 3 représentant les $target\_tiles$: \texttt{target\_locations}. Chaque index du tableau est associée une $target ressource$: \texttt{target\_locations[0]} est la position où est situé l'or, \texttt{target\_locations[1]} la gem et \texttt{target\_locations[2]} la clé.  
+Pour garder en mémoire les $target\_tiles$, on ajoute dans \texttt{game\_state} un tableau de localisation représentant les $target\_tiles$: \texttt{target\_locations}. Chaque index du tableau est associée une $target ressource$: \texttt{target\_locations[0]} est la position où est situé l'or, \texttt{target\_locations[1]} la gem et \texttt{target\_locations[2]} la clé.  
 
-On ajoute également \texttt{is\_target\_locations\_visited} tableau de booléens de longueur 3 qui indique, pour chaque index, si sont $target\_tile$ associée à été visité ou pas.
+On ajoute également \texttt{is\_target\_locations\_visited} tableau de booléens de qui indique, pour chaque index, si sont $target\_tile$ associée à été visité ou pas.
 
-\subsubsection{Modification de la boucle pour accomoder target\_tiles}
+\subsubsection{Modification de la boucle pour les \texttt{target\_tiles}}
 
-On additionne un fichier dans le projet \texttt{target.c} où on additionnne des fonction necessaire pour manipuler les $targe\_tiles$.
+Un fichier \texttt{target.c} a été ajouté pour gérer les \texttt{target\_tiles}.  
 
-Dans la nouvelle boucle de jeu, à chaque tour, nous affichons les positions des \texttt{target\_tiles} triées par proximité avec le joueur. Pour cela, nous utilisons un \textit{bubble sort} sur les \texttt{target\_locations}, en comparant leurs distances de Manhattan par rapport à la position actuelle du joueur, via la fonction \texttt{sort\_target\_locations}. Le résultat est un tableau des positions cibles où les emplacements déjà visités sont placés à la fin. Nous affichons ensuite uniquement les positions non visitées, dans l’ordre de proximité.
+Dans la boucle de jeu, à chaque tour, les positions des \texttt{target\_tiles} sont triées par proximité au joueur à l'aide d'un \textit{bubble sort} sur leurs distances de Manhattan via \texttt{sort\_target\_locations}. Les emplacements déjà visités sont placés à la fin, et seules les positions non visitées sont affichées.  
 
-\'Egalement, chaque fois que nous bougeons le joueur, nous verifions si il a avancé sur un $target\_tile$ et, si c'est le cas, ajoute au ressources du joueur la ressource associée au $target\_tile$. Cela via \texttt{target\_location\_reached}.
+De plus, lorsqu’un joueur se déplace sur un \texttt{target\_tile}, les ressources correspondantes lui sont attribuées via \texttt{target\_location\_reached} qui vérifie si c’est le cas et update ses ressources.
 
 \subsection{Ajouter une inteliligence au joueur}
 
-Un problème jusqu'à présent est que, dans le mode non-itératif, le joueur fait des actions totalement aléatoire, ce qui résulte en des mauvaises parties dont la chance de gagné semble infime.
+Un problème du mode non-itératif est que le joueur effectue des actions totalement aléatoires, conduisant souvent à des parties perdues.  
 
-Une solution est de crée un chemin qui approche le joueur à son objectif.
+La solution est de créer un chemin qui approche le joueur de son objectif et le suivre.
 
-Maintenant nous definisons \texttt{target\_location\_near} égale à localisation de $target\_tile$ plus proche non visité ou la tuile d'arrivé si elles ont été toutes visitées. On construit un chemin du joueur à \texttt{target\_location\_near} avec la fonction \texttt{path\_target\_finder}.
+Nous définissons \texttt{target\_location\_near} comme la position du \texttt{target\_tile} non visité le plus proche, ou la tuile de sortie si toutes ont été visitées. Un chemin vers cette position est alors calculé à l'aide de \texttt{path\_target\_finder}.
 
 \subsubsection{path\_target\_finder}
 
@@ -56,25 +56,24 @@ Pour chaque direction possible, la fonction vérifie que la position suivante es
 
 À la fin de l’exploration d’une position, celle-ci est dé-marquée, ce qui permet son utilisation dans d’autres chemins possibles.
 
-\subsubsection{Compléxité}
+\subsubsection{Complexité}
 
-La fonction \texttt{path\_target\_finder} repose sur une exploration récursive en profondeur du plateau de jeu. Dans le pire des cas, l’algorithmes visite l'ensemble des positions du manoir, chacune étant explorée au plus une fois grâce à la matrice \texttt{is\_visited\_position}.Dans ce cas la complexité temporelle serait \begin{scriptsize}O(BOARD\_SIZE)\end{scriptsize}
+Cependant, en pratique, l’algorithme peut explorer plusieurs chemins partiels avant de converger vers une solution, ce qui rapproche son comportement d’un parcours exhaustif des chemins possibles. Le coût est donc exponentiel mais acceptable avec les contraintes du manoir.
 
-Cependant, en pratique, l’algorithme peut explorer plusieurs chemins partiels avant de converger vers une solution, ce qui rapproche son comportement d’un parcours exhaustif des chemins possibles. Le coût est donc exponentielle mais acceptable avec les contraintes du manoir.
+Cependant, en pratique, l’algorithme peut explorer plusieurs chemins partiels avant de converger vers une solution, ce qui rapproche son comportement d’un parcours exhaustif des chemins possibles. Le coût est donc exponentiel mais acceptable avec les contraintes du manoir.
 
-La complexité spatiale est dominée par la matrice \texttt{is\_visited\_position} et les tableaux de chemins, de taille proportionnelle au nombre de positions du plateau, soit une complexité spatiale en \begin{scriptsize}O(BOARD\_SIZE)\end{scriptsize}.
+La complexité spatiale est dominée par la matrice \texttt{is\_visited\_position} donc \begin{scriptsize}O(BOARD\_SIZE)\end{scriptsize}.
 
-\subsubsection{Accomodation des changements dans la boucle de jeu}
+\subsubsection{Accommodation des changements dans la boucle de jeu}
 
-Après le processus, nous avons un chemin \texttt{path}. Il ammène vers la localisation de la tuile objective ou une tuile vide qui approche le joueur de l'objectif.
+Après le processus, nous avons un chemin \texttt{path}. Il amène vers la localisation de la tuile objective ou une tuile vide qui approche le joueur de l'objectif.
 
 Dans la boucle de jeu en crée le chemin puis déplaçons le joueur au long du chemin jusqu'à atteindre \texttt{target\_location\_near} ou une tuile vide.
 
-Si on a atteind \texttt{target\_location\_near} on recommence le processus
+Si on a atteint \texttt{target\_location\_near} on recommence le processus
 
-Sinon, on est dvant une tuile vide. On place une tuile et recommenceons le processus.
+Sinon, on est devant une tuile vide. On place une tuile et recommençons le processus.
 
-La limitation de cette fonctoin est que nous n'avons pas de controle sur le type de tuile placé. Il est possible que le joueur s'enferme en plaçant des terrace par exemple. S'il il n'existe pas de chemins vers un objectif alors on active une condition pour finir le jeu en une perte.
+La limitation de cette fonction est que nous n'avons pas de contrôle sur le type de tuile placée. Il est possible que le joueur s'enferme en plaçant des terraces par exemple. S' il n'existe pas de chemins vers un objectif alors on fini le jeu et perdons.
 
-On approfondira la boucle dans la section sur celle-ci à la fin.
-
+La boucle est affichée dans les annexes.

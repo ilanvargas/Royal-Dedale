@@ -1,9 +1,9 @@
 
-\'A présent on a le code pour crée le jeu.
+\`A présent on a le code pour crée le jeu.
 
 \subsection{Manoir et joueur}
 
-On définit le manoir et le joueur par une structure qui permet de mémoriser l'état du jeu en tout moment.
+On définit le une structure qui permet de mémoriser l'état du jeu en tout moment.
 
 \begin{figure}[H]
     \centering
@@ -23,13 +23,13 @@ struct game_state_t {
 
 On garde dans cette structure les ressources du joueur dans la poche \texttt{steps} et sa position dans le manoir \texttt{current\_location}.
 
-Le manoir lui est une rectagle de taille (BOARD\_WIDTH, BOARD\_HEIGHT) composé de d'adresses de tuiles comme abordé dans la sectoin précédante. On stocke le type de tuile de chaque position dans la matrice \texttt{board}.
+Le manoir lui est un rectangle de taille (BOARD\_WIDTH, BOARD\_HEIGHT) composé d'adresses de tuiles comme abordé dans la section précédente. On stocke le type de tuile de chaque position dans la matrice \texttt{board}.
 
-Avant de commencer la boucle de jeu, nous créerons une instance de cette structure appellé \texttt{game\_state}. Elle permettra de définir l'état de notre jeu et sera le seul appel de cette structure.
+Avant de commencer la boucle de jeu, nous créerons une instance de cette structure appelée \texttt{game\_state}. Elle permettra de définir l'état de notre jeu et sera le seul appel de cette structure.
 
 \subsection{Boucle du jeu}\label{ssec:main}
 
-Après avoir définit l'état de notre jeu \texttt{game\_state} on peut passer à la boucle de jeu, c'est-à-dire le déroulement de la partie.
+Après avoir défini l'état de notre jeu \texttt{game\_state} on peut passer à la boucle de jeu, c'est-à-dire le déroulement de la partie.
 
 \begin{figure}[H]
     \centering
@@ -73,34 +73,33 @@ while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     \end{lstlisting}
 \end{figure}
 
-Analyson le code du code \ref{gameloop}
+Analysons le code du code \ref{gameloop}
 
-Avant de rentrée dans la boucle on initialise tout nos modules. En particulier on initialise \texttt{game\_state} c'est-à-dire: on définit la position du joueur en $(0,0)$; on pose toutes les tuiles du manoire comme vide sauf les tuiles en $(0,0)$ la tuile de départ et (BOARD\_WIDTH-1, BOARD\_HEIGHT-1) la tuile d'arrivé; on définit les ressources du joueur comme ayant $4*4*\frac{BOARD\_SIZE}{3}$.
+Avant de rentrer dans la boucle on initialise tous nos modules. En particulier on initialise \texttt{game\_state} c’est-à-dire: on positionne le joueur en $(0,0)$; on pose toutes les tuiles du manoire comme vide sauf les tuiles en $(0,0)$ la tuile de départ et \begin{scriptsize}(BOARD\_WIDTH-1, BOARD\_HEIGHT-1)\end{scriptsize} la tuile d'arrivé; on définit les ressources du joueur comme ayant $4*\frac{BOARD\_SIZE}{3}$ steps.
 
-Dans la boucle, à chaque itération, on vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose de ressources suffisantes pour continuer à jouer (c'est-à-dire au moins un $step$ pour faire une action). Sinon la partie est terminer, le joueur à gagné s'il a atteint la tuile d'arrivé sinon perdu. \\
+Dans la boucle, à chaque itération, on vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose de ressources suffisantes pour continuer à jouer ($step>0$). Sinon la partie est terminée, le joueur à gagné s'il a atteint la tuile d'arrivée sinon perdu. 
 
-
-Pour chaque tour, \texttt{list\_empty\_locations\_with\_finite\_opening\_cost} cherche et stocke dans un buffer les localisation vide ouvrables depuis la position du joeur (adjacente et ouverte dans la direction opposé du joueur). Si il a trouver au moins une on donne au joueur la possibilité de placer une tuile dans une de ces position ou bouger, sinon on l'oblige a bouger. Le joueur est obligé de placer le premier tour.
-
+Pour chaque tour, \texttt{list\_empty\_locations\_with\_finite\_opening\_cost} cherche et stocke, dans un buffer, les localisation vide ouvrables depuis la position du joueur (adjacente et ouverte depuis la tuile du joueur). Si il en trouve au moins une, on donne au joueur la possibilité de placer une tuile dans une de ces positions ou bouger, sinon on l'oblige à bouger. Le joueur est obligé de placer le premier tour.\\
+\\
 \textbf{Si le joueur place}
 \begin{enumerate}
     \item Le joueur choisit une des tuile vides disponibles
     \item \texttt{tile\_draft} génère des tuiles compatibles à être placé à la place de la tuile vide dans \texttt{generate\_some\_tiles}
     \item Le joueur choisit une de ces tuile
-    \item On remplace la tuile vide par la tuile choisit dans \texttt{game\_state}. On fait le joueur payer les coûts associés.
+    \item On remplace la tuile vide par la tuile choisie dans \texttt{game\_state}. Le joueur paie les coûts associés.
 \end{enumerate} 
-Dans le jeu, on manipule des positions $location$ alors que les fonctions du module tile travaillent avec des directions. Pour faire le lien, nous avons créé la fonction \texttt{location\_to\_dir} dans \texttt{generate\_some\_tiles}. Cette fonction prend la position actuelle du joueur et une position adjacente, et retourne la direction correspondante en comparant la position donnée avec les positions situées au nord, au sud, à l’est et à l’ouest du joueur à l’aide d’une structure $switch-case$.
-
+Dans le jeu, on manipule des positions $location$ alors que les fonctions du module $tile$ travaillent avec des directions. Pour faire le lien, nous avons créé la fonction \texttt{location\_to\_dir}. Cette fonction prend la position actuelle du joueur et une position adjacente et retourne la direction de la dernière en comparant la position donnée avec les positions situées au nord, au sud, à l’est et à l’ouest du joueur à l’aide d’une structure $switch-case$.\\
+\\
 \textbf{Si le joueur bouge}
 \begin{enumerate}
-    \item On liste toutes les listes dont le joueur peut bouger, c'est-à-dire la tile du joueur et la tuile listée sont ouvertes uen vers l'autre et adjacentes
-    \item Le joueur séléctionne une de ces tuiles
+    \item On liste toutes les listes dont le joueur peut bouger, c'est-à-dire la tile du joueur et la tuile listée sont ouvertes une vers l'autre et adjacentes
+    \item Le joueur sélectionne une de ces tuiles
     \item On bouge le joueur, update \texttt{game\_state} et faisons payer le joueur les coûts associées.
 \end{enumerate} 
 
 
 \vspace{0.9em}
-Chaque "choix" peut se faire de manière aléatoire uo le joueur (derrière l'écran) peut faire les choix avec le mode itérative (expliqué plus bas).
+Chaque "choix" peut se faire de manière aléatoire ou le joueur (derrière l'écran) peut faire les choix avec le mode itératif (expliqué plus bas).
 \\
 On remarque que de nombreuses fonctions de la boucle principale nécessitent l’accès à l’état courant du jeu pour fonctionner correctement. Pour cette raison, l’adresse de la structure \texttt{game\_state} est passée en paramètre à ces fonctions, ce qui leur permet d’accéder directement à l’ensemble des informations nécessaires.
 
@@ -129,21 +128,16 @@ Notre make file à pour règles:
 L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bibliothèque $getopt$, cela permet pour un même exécutable de changer les paramètres essentiels suivants:
 \begin{itemize}
     \item rendre le jeu interactif afin de pouvoir joueur: \textbf{-i}.
-    \item graine aléatoire pour prendre les décision à la place du joueur (mode non interatif): \textbf{-s}.
+    \item graine aléatoire pour prendre les décision à la place du joueur (mode non interactif): \textbf{-s}.
     \item graine aléatoire \texttt{tile\_draft}: \textbf{-t}.
     \item fixer le nombre maximum de tours de jeu possible: \textbf{-n}.
 \end{itemize}
-Une autre fonctionalité à été mise en place pour une meilleur expériance de jeu:
+Une autre fonctionnalité à été mise en place pour une meilleur expérience de jeu:
 \begin{itemize}
     \item visualisation graphique tui du manoir: \textbf{-g}
 \end{itemize}
 
 \subsection{Visualisation graphique : TUI}
-
-Une des fonctionnalités intéressantes à ajouter au projet était la TUI (Text User Interface), cet outil permet la visualisation du jeu directement dans le terminal.
-Le manoir est affiché sous forme d'une grille textuelle constitué des cases qui sont représentées sous la forme d'un tableau de caractères, l'implémentation consiste alors d'initialiser le manoir rempli par les cases vides et de placer chaque tuile dans sa case tout en respectant ses directions d'ouverture avec une mise à jour au fur et à mesure de l'avancement du jeu. La TUI offre également une représentation de la position du joueur sur le plateau, mise à jour à chaque déplacement.
-
-Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente de son état courant, facilitant ainsi l’observation du déroulement de la partie et la validation du comportement du jeu lors des tests d'exécution. la figure ci-dessous illustre un exemple de la visualisation du manoir.
 
 \begin{figure}[H]
     \centering
@@ -186,4 +180,11 @@ Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente 
 
     \end{lstlisting}
 \end{figure}
+
+Une des fonctionnalités intéressantes à ajouter au projet était la TUI (Text User Interface), cet outil permet la visualisation du jeu directement dans le terminal.
+Le manoir est affiché sous forme d'une grille textuelle constitué des cases qui sont représentées sous la forme d'un tableau de caractères, l'implémentation consiste alors d'initialiser le manoir rempli par les cases vides et de placer chaque tuile dans sa case tout en respectant ses directions d'ouverture avec une mise à jour au fur et à mesure de l'avancement du jeu. La TUI offre également une représentation de la position du joueur sur le plateau, mise à jour à chaque déplacement.
+
+Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente de son état courant, facilitant ainsi l’observation du déroulement de la partie et la validation du comportement du jeu lors des tests d'exécution. La figure ci-dessous illustre un exemple de la visualisation du manoir.
+
+
 
