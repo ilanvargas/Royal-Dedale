@@ -23,6 +23,8 @@ paramètres possibles :
 
 ####-g : visualiser la représentation graphique du jeu
 
+####-q : initialiser la graine du générateur des équipements
+
 ### Tests : make test ( Après la compilation !! )
 
 ### Auteurs : Achraf Safi & Ilan Vargas
