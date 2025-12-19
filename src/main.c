@@ -59,10 +59,6 @@ int main(int argc, char* argv[])
     int is_player_won = exit_reached(&game_state);
     int num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
 
-    for (int i = 0; i < NUM_EQUIPEMENTS; i++)
-    {
-      game_state.has_equipements[i] = 1;
-    }
     // ###---------------- Base version main loop (includes interactive version) ----------------###
 
     if (is_base_version) 
