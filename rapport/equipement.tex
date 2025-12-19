@@ -1,0 +1,13 @@
+
+Cet achievement permet d'implémenter des équipements afin de permettre au joueur de modifier l'état du jeu, de façon à ce qu'il ait de différentes ressources selon l'équipement qu'il possède.
+
+Les équipements fonctionnels sont définit par le type énuméré $enum$, il en existe quatre :
+\begin{itemize}
+    \item la pelle: le joueur gagne, avec une probabilité \begin{scriptsize} 1 / BOARD\_SIZE \end{scriptsize}, une ressource aléatoire 
+    \item le porte-monnaie: à chaque fois que le joueur gagne une ressource \begin{scriptsize}GOLD\end{scriptsize}, il gagne un \begin{scriptsize} GOLD \end{scriptsize} supplémentaire
+    \item les chaussures de course: le joueur a une chance sur trois de se rembourser un\begin{scriptsize} STEP \end{scriptsize} pour chaque déplacement réalisé
+    \item les chaupelles de monnaie: le joueur gagne un \begin{scriptsize}STEP\end{scriptsize} à déplacement, ouvrement d'une tuile ou gain de ressources
+\end{itemize}
+
+Cet achievement repose sur l'implémentation d'une fonction $can\_gain\_equipement$ avec laquelle le joueur a une chance sur \begin{scriptsize}BOARD\_SIZE
+\end{scriptsize} pour gagner un équipement aléatoire à chaque ouverture d'une tuile, ainsi que les fonctions $on\_move$, $on\_tile\_open$ et $on\_resource\_gain$ qui permettent d'appliquer les équipements que le joueur possède. Puis insérer chacune de ses fonctions dans la boucle du jeu aux instants dédiés. une fonction qui permet l'initialisation la graine du générateur aléatoire et une fonction de conversion d'un équipement en une chaîne de caractères pour informer le joueur s'il a gagné un équipement.

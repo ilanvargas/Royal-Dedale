@@ -1,0 +1,17 @@
+
+
+La version de base sur l'implémentation des tuiles consiste à définir chaque tuile en considérant son unique sens de rotation, donc pour un même type de tuile il est nécéssaire de définir quatres tuiles, ce qui aboutit à une duplication du code.\\
+Cet achievement propose d'implémenter les tuiles de façon à permettre leur rotation dans les directions cardinales, mais la contrainte imposée par le projet ne permet pas la modification du fichier tile.h et donc la définition d'un autre fichier tile\_bis.h est nécessaire.
+
+On définit d'abord la structure $tile\_bis\_t$ qui prend comme champs un pointeur vers une tuile ainsi qui sa rotation, cette dernière est définie par le type énuméré $enum$.\\
+On est amené donc à considérer en même temps la direction et la rotation d'une tuile lors de l'implémentation des nouvelles fonctions, cela est défini par \begin{scriptsize}ROT\_TO\_DIR(d, r)
+\end{scriptsize} qui convertit un couple (direction,rotation) en une direction par la formule \begin{scriptsize} (d + r) \% NB\_ROT\end{scriptsize}.
+
+Pour enfin définir les fonctions de cette nouvelle structure de tuile
+\begin{itemize}
+    \item $tile\_opening\_cost\_bis$ pour le coût d'ouverture d'une tuile dans une direction donnée
+    \item $tile\_can\_open\_bis$ pour le test d'ouverture d'une tuile tuile dans une direction donnée
+    \item $tile\_draft\_bis$ pour la sélection des tuiles aléatoires à placer
+\end{itemize}
+
+Cette nouvelle implémentation permet également de réduire les changements nécessaires à aporter sur la boucle du jeu en remplaçant juste les fonctions de version de base sur les tuiles avec ces nouvelles fonctions pour servir le même but.
