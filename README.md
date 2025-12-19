@@ -11,12 +11,16 @@
 ### Compilation : make
 
 ### Exécution : ./project
-  paramètres possibles :
+####paramètres possibles :
 
 #####-s <entier> : pour initialiser la graine du générateur aléatoire
+
 #####-t <entier> : argument de la fonction init_tiles
+
 #####-n <entier> : nombre maximum de tours de jeu possibles
+
 #####-i : version interactive pour pouvoir jouer
+
 #####-g : visualiser la représentation graphique du jeu
 
 ### Tests : make test ( Après la compilation !! )
