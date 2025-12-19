@@ -145,4 +145,45 @@ Le manoir est affiché sous forme d'une grille textuelle constitué des cases qu
 
 Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente de son état courant, facilitant ainsi l’observation du déroulement de la partie et la validation du comportement du jeu lors des tests d'exécution. la figure ci-dessous illustre un exemple de la visualisation du manoir.
 
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        caption={TUI : visualisation du manoir},
+        label={tui},
+        captionpos=b,
+        frame=single,
+        stringstyle=\color{red!70!black},
+        xleftmargin=0.25\textwidth,
+        xrightmargin=0.25\textwidth
+    ]
+~~~~~~~~~~+         +         +
+~~~~~~~~~~                     
+~~~~~~~~~~                     
+~~~~~~~~~~               o     
+~~~~~~~~~~                     
+~~~~~~~~~~+         +         +
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~           ~~~~~~~~~~
+~~~~~~~~~~+         +~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
+~~~~~~~~~~|         |~~~~~~~~~~
++---------+         +~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
+|         |         |~~~~~~~~~~
++         +         +~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
+                     ~~~~~~~~~~
++         +         +~~~~~~~~~~
+
+    \end{lstlisting}
+\end{figure}
 

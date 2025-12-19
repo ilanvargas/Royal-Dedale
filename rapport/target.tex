@@ -1,18 +1,2 @@
-Nous faisons une ammélioration en terme de jouabilité.
 
-Nous introduisons le concepte de $target_tiles(tuile objective)$. \'A présent pour rentrer dans la tuile d'arrivé et gagner la partie, on a besoin des ressources NUM\_RESOURCES-2, NUM\_RESOURCES-1 et NUM\_RESOURCES, pour les NUM\_RESOURCES=4 cela correspond a 1 $or$, 1 $gem$ et 1 $clé$. Ces ressources sont repartie dans le manoir dans les $target\_tile$.
-
-Chaque $target\_tile$ est associer à une unique "target ressource" et donc pour gagner if faut passé par tous les $target\_tiles$.
-
-\subsubsection{Changement en game\_state}
-
-Pour garder en mémoire les $target\_tiles$ on ajoute dans \texttt{game\_state} un tableau de localisation de longeur 3 représentant les $target\_tiles$: \texttt{target\_locations}. Chaque position du tableau est associée à la ressource de sont indexe: \texttt{target\_locations[0]} est la position où est situé l'or, \texttt{target\_locations[1]} la gem et \texttt{target\_locations[2]} la clé.  
-
-On ajoute également \texttt{is\_target\_locations\_visited} tableau de booléens de longueur 3 qui indique, pour chaque index, si sont $target\_tile$ associée à été visité ou pas.
-
-\subsubsection{Fonctions associée aux target\_tiles}
-
-On additionne un fichier dans le projet \texttt{target.c} où on additionnne des fonction necessaire pour manipuler les $targe\_tiles$
-
-Dans la nouvelle boucle de jeu, à chaque tour on affiche les localisation des $target\_tiles$ ordonné de proximité au joueur. Pour cela on fait un \textit{bubble sort} selon les distances de Manhattan des \texttt{target\_locations} avec la fonction \texttt{sort\_target\_locations}. On obtient un tableau de tar
 
