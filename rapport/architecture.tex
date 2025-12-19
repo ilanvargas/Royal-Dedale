@@ -1,18 +1,18 @@
 
-Nous détaillerons l'architecture du programme C de notre version de initiale de \textit{Royal Dédale}
+Nous détaillerons l'architecture du programme C de notre version initiale de \textit{Royal Dédale}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=9cm]{architecture_v0.png}
-	\caption{Architecture de la version initiale de notre projet}
+	\caption{Architecture de la version initiale du projet}
 	\label{architecture_v0}
 \end{figure}
 
 La figure \ref{architecture_v0} présente les différents modules de notre programme ainsi que leurs interdépendances. Chaque flèche indique qu’un module dépend de celui dont elle part, ainsi que de l’ensemble des modules dont ce dernier dépend. Nous pouvons regrouper ces modules en trois ensembles distincts.
 \begin{itemize}
-  \item La \textbf{fondation}. Où on implémente les "types" (structures et énumérations) fondamentaux pour notre programme: $localisation$, $direction (dir)$, $ressource$ et $stash (poche)$; et leurs opération associées. Ces conceptes servent de base à laquelle s'appuient les modules suivants.
-  \item L'\textbf{implémentation des tuiles}. Avec les modules précédents nous créons les tuiles et leurs opérations. C'est de ça qui est composé le manoire implémenter par la suite et une mécanique fondamentale de la partie. 
-  \item  L'\textbf{implémentation du jeu}. C'est là que nous créons le manoir, les fonctions pour le manipuler, des fonctions pour l'afficher en forme d'interface textuelle et combinons tout ça dans une boucle qui nous permettra de jouer le jeu. Dans cette étape nous combinons tout notre code précédent pour créer finalement le jeu.
+  \item La \textbf{fondation}. Où on implémente les "types" (structures et énumérations) fondamentaux pour notre programme: $localisation$, $direction (dir)$, $resource$ et $stash (poche)$; et leurs fonctions associées. Ces conceptes servent de base à laquelle s'appuient les modules suivants.
+  \item L'\textbf{implémentation des tuiles}. Avec les modules précédents nous créons les tuiles et leurs opérations. C'est la composition du manoir implémenté par la suite qui une mécanique fondamentale de la partie. 
+  \item  L'\textbf{implémentation du jeu}. C'est là que nous créons le manoir, les fonctions pour le manipuler, des fonctions pour l'afficher en forme d'interface textuelle pour combiner tout ça dans une boucle qui nous permettra de jouer le jeu. Dans cette étape nous combinons tout notre code précédent pour créer finalement le jeu.
 \end{itemize}
 
 \vspace{1em}
-Cet architecture donne un jeu fonctionnel mais basique en termes d’optimalité ou jouabilité, nous verrons les limites et les améliorations proposées sur ce programme. Mais avant ça, nous commençons par détailler la fondation de cette architecture.
+Cette architecture donne un jeu fonctionnel mais basique en termes d’optimalité ou de jouabilité, nous verrons les limites et les améliorations proposées sur ce programme. Mais avant ça, nous commençons par détailler la fondation de cette architecture.
