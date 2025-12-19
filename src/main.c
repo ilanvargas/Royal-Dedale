@@ -167,7 +167,6 @@ int main(int argc, char* argv[])
             struct tile_bis_t selected_tile = select_tile(0, available_tiles, num_available_tiles);
             random_tile_rotation(0, selected_tile, d, &num_rotations);
             place_tile(selected_location, d, selected_tile, &game_state);
-            target_location_reached(&game_state);
             can_gain_equipement(&game_state);
             struct stash_t final_resources = game_state.steps;
             struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources2);
