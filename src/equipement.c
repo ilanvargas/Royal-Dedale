@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void init_equipement(unsigned int equipement_seed)
+{
+    srand(equipement_seed);
+}
 
 const char* equipement_to_string(enum equipement_t equipement)
 {
@@ -101,14 +105,14 @@ void on_resource_gain(struct game_state_t* game_state, const struct stash_t gain
     }
 }
 
-void on_move(struct game_state_t *game_state, const struct stash_t gained_resources)
+void on_move(struct game_state_t *game_state)
 {
     if (game_state->has_equipements[SNEAKERS])
     {
         float probability = 1 / 3;
         float random = (float) rand() / RAND_MAX;
 
-        if (random < probability && gained_resources.r[STEP])
+        if (random < probability)
         {
             game_state->steps.r[STEP] += 1;
             printf("Your sneakers gave you a refund step for your hard training ! stay fit ;)\n");

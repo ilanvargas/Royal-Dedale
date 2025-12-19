@@ -14,12 +14,13 @@ int main(int argc, char* argv[])
     unsigned int s = 0;
     unsigned int t = 0;
     unsigned int n = 100;
+    unsigned int equipement_seed = 1;
     int is_interactive = 0;
     int is_graphic = 0;
     int is_base_version = 0;
 
     int opt;
-    while ((opt = getopt(argc, argv, "s:t:n:igb")) != -1)
+    while ((opt = getopt(argc, argv, "s:t:n:q:igb")) != -1)
     {
       switch (opt)
       {
@@ -31,6 +32,9 @@ int main(int argc, char* argv[])
           break;
         case 'n':
           n = atoi(optarg);
+          break;
+        case 'q':
+          equipement_seed = atoi(optarg);
           break;
         case 'i':
           is_interactive = 1;
@@ -47,6 +51,7 @@ int main(int argc, char* argv[])
     init_tiles(t);
     init_tiles_bis(t);
     init_state(s, &game_state);
+    init_equipement(equipement_seed);
     init_tui(is_graphic);
 
     unsigned int current_turn = 1;
@@ -99,7 +104,7 @@ int main(int argc, char* argv[])
             struct stash_t final_resources = game_state.steps;
             struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources);
             
-            on_move(&game_state, gained_resources);
+            on_move(&game_state);
             on_resource_gain(&game_state, gained_resources);
         }
 
@@ -144,7 +149,7 @@ int main(int argc, char* argv[])
             target_location_reached(&game_state);
             struct stash_t final_resources = game_state.steps;
             struct stash_t gained_resources = stash_sub(&final_resources, &initial_resources);
-            on_move(&game_state, gained_resources);
+            on_move(&game_state);
             on_resource_gain(&game_state, gained_resources);
             i++;
 
