@@ -1,5 +1,5 @@
 
-\'A présent on a le code pour crée le jeu
+\'A présent on a le code pour crée le jeu.
 
 \subsection{Manoir et joueur}
 
@@ -23,7 +23,7 @@ struct game_state_t {
 
 On garde dans cette structure les ressources du joueur dans la poche \texttt{steps} et sa position dans le manoir \texttt{current\_location}.
 
-Le manoir lui est une rectagle de taille $(BOARD\_WIDTH, BOARD\_HEIGHT)$ composé de tuiles. On stocke le type de tuile de chaque position dans la matrice \texttt{board}.
+Le manoir lui est une rectagle de taille (BOARD\_WIDTH, BOARD\_HEIGHT) composé de d'adresses de tuiles comme abordé dans la sectoin précédante. On stocke le type de tuile de chaque position dans la matrice \texttt{board}.
 
 Avant de commencer la boucle de jeu, nous créerons une instance de cette structure appellé \texttt{game\_state}. Elle permettra de définir l'état de notre jeu et sera le seul appel de cette structure.
 
@@ -73,6 +73,8 @@ while (current_turn <= n && !is_player_won && game_state.steps.r[STEP] > 0)
     \end{lstlisting}
 \end{figure}
 
+Analyson le code du code \ref{gameloop}
+
 Avant de rentrée dans la boucle on initialise tout nos modules. En particulier on initialise \texttt{game\_state} c'est-à-dire: on définit la position du joueur en $(0,0)$; on pose toutes les tuiles du manoire comme vide sauf les tuiles en $(0,0)$ la tuile de départ et (BOARD\_WIDTH-1, BOARD\_HEIGHT-1) la tuile d'arrivé; on définit les ressources du joueur comme ayant $4*4*\frac{BOARD\_SIZE}{3}$.
 
 Dans la boucle, à chaque itération, on vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose de ressources suffisantes pour continuer à jouer (c'est-à-dire au moins un $step$ pour faire une action). Sinon la partie est terminer, le joueur à gagné s'il a atteint la tuile d'arrivé sinon perdu. \\
@@ -84,7 +86,7 @@ Pour chaque tour, \texttt{list\_empty\_locations\_with\_finite\_opening\_cost} c
 
 \textbf{Si le joueur bouge}
 
-\vspace{1em}
+\vspace{0.5em}
 Chaque "choix" peut se faire de manière aléatoire uo le joueur (derrière l'écran) peut faire les choix avec le mode itérative (expliqué plus bas).
 \\
 On remarque que de nombreuses fonctions de la boucle principale nécessitent l’accès à l’état courant du jeu pour fonctionner correctement. Pour cette raison, l’adresse de la structure \texttt{game\_state} est passée en paramètre à ces fonctions, ce qui leur permet d’accéder directement à l’ensemble des informations nécessaires.
@@ -101,12 +103,12 @@ Un $Makefile$ est un fichier utilisé par la commande $make$ pour automatiser la
 
 Notre make file à pour règles:
 \begin{itemize}
-    \item \texttt{\%.o: \%.c} : règle générique qui compile chaque fichier source de .c à .o.
-    \item \texttt{tester: }\textit{fichier sources .o} : crée un exécutable qui capable d'exécuter les tests du projet.
-    \item \texttt{project: }\textit{fichier sources .o} : crée le fichier de jeu exécutable.
-    \item \texttt{test: } : exécute le exécutable de test $tester$
-    \item \texttt{compile: project tester} : crée l'exécutable de jeu et de test
-    \item \texttt{all: } : règle compile
+    \item \texttt{\%.o: \%.c}, règle générique qui compile chaque fichier source en fichier objet.
+    \item \texttt{tester: }\textit{fichier objet}, crée un exécutable capable d'exécuter les tests du projet
+    \item \texttt{project: }\textit{fichier objet}, crée le fichier de jeu exécutable à partir des fichier source compilé en objet grâce à la première règle
+    \item \texttt{test: }, exécute le exécutable test $tester$
+    \item \texttt{compile: project tester}, crée l'exécutable de jeu et de test
+    \item \texttt{all: }, règle compile
 \end{itemize}
 
 \subsubsection{Paramètres d'exécution}
@@ -114,7 +116,7 @@ Notre make file à pour règles:
 L'analyse de la ligne de commande pendant l'exécution se fait au moyen de la bibliothèque $getopt$, cela permet pour un même exécutable de changer les paramètres essentiels suivants:
 \begin{itemize}
     \item rendre le jeu interactif afin de pouvoir joueur: \textbf{-i}.
-    \item graine aléatoire pour prendre des décision à la place du joueur: \textbf{-s}.
+    \item graine aléatoire pour prendre les décision à la place du joueur (mode non interatif): \textbf{-s}.
     \item graine aléatoire \texttt{tile\_draft}: \textbf{-t}.
     \item fixer le nombre maximum de tours de jeu possible: \textbf{-n}.
 \end{itemize}

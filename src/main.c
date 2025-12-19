@@ -128,6 +128,11 @@ int main(int argc, char* argv[])
     {
         struct location_t target_location_near = (num_target_locations > 0) ? target_locations_sorted[0] : location(BOARD_WIDTH-1, BOARD_HEIGHT-1);
         unsigned int path_to_target_len = path_target_finder(target_location_near, &game_state, path_to_target);
+        if (path_to_target_len >= BOARD_SIZE) { // the path has been blocked by unopening tiles
+            printf("You have blocked yourself, you cannot reach your next objective. The game is unwinable\n");
+            target_location_near = game_state.current_location;
+            is_game_over = 1;
+        }
         
         unsigned int i = 1;
         while(i < path_to_target_len && !tile_is_empty(location_to_tile(path_to_target[i], &game_state).tile) && !is_game_over) {
