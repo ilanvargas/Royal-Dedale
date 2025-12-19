@@ -44,19 +44,25 @@ Ces variables sont ensuite passées par adresse à la fonction récursive et jou
 
 La fonction \texttt{path\_target\_finder\_rec} réalise une exploration en profondeur du plateau à partir de la position courante. À chaque appel, la position est ajoutée au chemin en cours et marquée comme visitée.\\
 \\
-\textbf{Cas de bas}
+\textbf{Cas de bas}:
 Si la position courante correspond à la localisation objectif, le chemin courant est enregistré comme solution optimale. Si la longueur du chemin dépasse la taille maximale du plateau, l’exploration est interrompue. \\
 \\
-\textbf{Recursion}
+\textbf{Recursion}:
 Pour chaque direction possible, la fonction vérifie que la position suivante est valide, non visitée et accessible selon les règles d’ouverture des tuiles. Deux cas sont alors distingués :
 \begin{itemize}
-  \item si la tuile suivante est vide, le chemin est évalué à l’aide de la distance de Manhattan à l’objectif et peut améliorer la meilleure solution courante ;
-  \item si la tuile suivante est ouverte dans la direction opposée, la fonction s’appelle récursivement afin de poursuivre l’exploration.
+  \item si la tuile suivante est vide, le chemin est évalué à l’aide de la distance de Manhattan à l’objectif et peut améliorer la meilleure solution courante
+  \item si la tuile suivante est ouverte dans la direction opposée, la fonction s’appelle récursivement afin de poursuivre l’exploration
 \end{itemize}
 
 À la fin de l’exploration d’une position, celle-ci est dé-marquée, ce qui permet son utilisation dans d’autres chemins possibles.
 
 \subsubsection{Compléxité}
+
+La fonction \texttt{path\_target\_finder} repose sur une exploration récursive en profondeur du plateau de jeu. Dans le pire des cas, l’algorithmes visite l'ensemble des positions du manoir, chacune étant explorée au plus une fois grâce à la matrice \texttt{is\_visited\_position}.Dans ce cas la complexité temporelle serait \begin{scriptsize}O(BOARD\_SIZE)\end{scriptsize}
+
+Cependant, en pratique, l’algorithme peut explorer plusieurs chemins partiels avant de converger vers une solution, ce qui rapproche son comportement d’un parcours exhaustif des chemins possibles. Le coût est donc exponentielle mais acceptable avec les contraintes du manoir.
+
+La complexité spatiale est dominée par la matrice \texttt{is\_visited\_position} et les tableaux de chemins, de taille proportionnelle au nombre de positions du plateau, soit une complexité spatiale en \begin{scriptsize}O(BOARD\_SIZE)\end{scriptsize}.
 
 \subsubsection{Accomodation des changements dans la boucle de jeu}
 
@@ -67,6 +73,8 @@ Dans la boucle de jeu en crée le chemin puis déplaçons le joueur au long du c
 Si on a atteind \texttt{target\_location\_near} on recommence le processus
 
 Sinon, on est dvant une tuile vide. On place une tuile et recommenceons le processus.
+
+La limitation de cette fonctoin est que nous n'avons pas de controle sur le type de tuile placé. Il est possible que le joueur s'enferme en plaçant des terrace par exemple. S'il il n'existe pas de chemins vers un objectif alors on active une condition pour finir le jeu en une perte.
 
 On approfondira la boucle dans la section sur celle-ci à la fin.
 
