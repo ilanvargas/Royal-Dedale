@@ -1,51 +1,42 @@
 
-Nous detaillons les "types", et leurs opérations, utilisé comme base de ce projet.
+Nous détaillons maintenant les "types" et leurs opérations, utilisés comme base de ce projet.
 
 \subsection{Code source}
 \subsubsection{directions}\label{sssec:directions}
 
-On défini un type enuméré $dir\_t$ afin de gérer les différentes directions cardinales (nord, sud, west, oest) d'une manière simple et claire tout au long du project.
+On définit un type énuméré $dir\_t$ afin de gérer les différentes directions cardinales (nord, sud, west, est) d'une manière simple et claire tout au long du projet.
 
-Le module implémente les fonction \texttt{dir\_to\_string} qui représente une direction par la chaîne de caractère qui lui est associée, ainsi que la fonction \texttt{dir\_to\_short\_string} qui renvoie la représentation d'une direction par une petite chaîne de caractère.
-
-De plus, il implémente la fonction \texttt{dir\_opposite} qui permet d'obtenir la direction opposée à celle fournie en entrée.
+Le module implémente les fonctions \texttt{dir\_to\_string} \texttt{dir\_to\_short\_string} qui renvoie la représentation d'une direction en chaîne de caractères. De plus, il implémente la fonction \texttt{dir\_opposite} qui permet d'obtenir la direction opposée à celle fournie en entrée.
 
 \subsubsection{positions}\label{sssec:locations}
 
-On définie la position par une structure $location\_t$ contenant un couple de coordonnées $(x,y)$ correspondant respectivement à l'abscisse et l'ordonnée d'une position dans le manoir. Une fonction \texttt{location} est fournie ainsi afin de générer cette structure à partir du couple de coordonnées fournies.
+On définit la position par une structure $location\_t$ contenant un couple de coordonnées $(x,y)$ correspondant respectivement à l'abscisse et l'ordonnée d'une position dans le manoir. Une fonction \texttt{location} est fournie afin de générer cette structure à partir du couple de coordonnées fournies.
 
-Le module inclut les fonctions nécessaires pour manipuler les positions dans le manoir: 
-\begin{itemize}
-    \item \texttt{location\_is\_valid}, verifie si une position est bien dans le manoir (dans les limites).
-    \item \texttt{location\_equal}, verifie si deux position $a$ et $b$ sont égales.
-    \item \texttt{location\_is\_adjacent}, pour une position $a$ verifie si la position $b$ est adjacente.
-\end{itemize}
-Les deux dernière renvoient faux si une des position n'est pas valide.
+Le module inclut les fonctions nécessaires pour manipuler les positions dans le manoir: \texttt{location\_is\_valid} verifie si une position est bien dans le manoir (dans les limites), \texttt{location\_equal} verifie si deux position $a$ et $b$ sont égales et \texttt{location\_is\_adjacent}, pour une position $a$, vérifie si la position $b$ est adjacente.
 
-\subsubsection{ressources}\label{sssec:resources}
+Les deux dernières renvoient faux si une des positions n'est pas valide.
 
-Cet interface permet de définir le type énuméré $resource\_t$ qui représente l'ensemble des types de ressources dans le jeu dont le nombre est fixé à $max\_resources = 10$, cette implémentation simplifie parsuite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
+\subsubsection{resources}\label{sssec:resources}
 
-Entre les ressources differentes disponible, la plus notables sont les $steps(pas)$. Jusqu'à la version amélioré, c'est la seul ressource utilisé: pour chaque mouvement du joueur ou plaçage de tuile on consomme une $step$ et donc on a besoin d'avoir au minimum un $step$ pour faire une action pendant sont tour sinon on est coincé.
+On définit le type énuméré $resource\_t$ qui représente l'ensemble des types de ressources dans le jeu dont le nombre est fixé à \begin{scriptsize}MAX\_RESOURCES = 10\end{scriptsize}, cette implémentation simplifiée par suite le stockage et la manipulation des ressources du joueur dans une poche, décrite dans la section suivante.
 
-L'implémentation inclut des fonctions qui permettent de représenter la ressource en chaine de caractère, soit \texttt{resource\_to\_string} pour le nom complet de la ressource et \texttt{resource\_to\_short\_string} pour une représentation minimale (généralement un caractère).
+Parmi les ressources différentes disponibles, la plus notable sont les $steps(pas)$. Jusqu'à la version améliorée, pour chaque mouvement ou plaçage de tuile on consomme une $step$ et donc on a besoin d'avoir au minimum un $step$ pour faire une action pendant son tour sinon on est coincé.
 
-L'implémentation de ces fonctions est réalisée grâce à la structure $switch-case$ afin de gérer le cas de toutes les ressources.
+L'implémentation inclut des fonctions qui permettent de représenter la ressource en chaîne de caractère, soit \texttt{resource\_to\_string} et \texttt{resource\_to\_short\_string}.
 
 \subsubsection{poches}\label{sssec:stashes}
 
-Après avoir défini les types de ressources via une énumération, nous implémentons maintenant le module $stash$ (poche) qui constitue le système gestion des ressources du joueur.
+Après avoir défini les types de ressources, nous implémentons maintenant le module $stash$ (poche) qui constitue le système de gestion des ressources du joueur.
 
-On introduit la structure $stash\_t$, qui représente une poche de ressources. Il s'agit d'un tableau dont la taille correspond exactement au nombre de types de ressources en jeu où chaque case du tableau stocke la quantité de la ressource associer à son indice, selon $resource\_t$.
-Après avoir implémenter les ressources dans le module précédant, on implémente un module
+La structure $stash\_t$, représente une poche de ressources. Il s'agit d'un tableau dont la taille correspond exactement au nombre de types de ressources en jeu où chaque case du tableau correspond à la quantité de la ressource associée à son indice, selon $resource\_t$.
 
 Ce fichier regroupe l'ensemble des opérations sur les poches :
 \begin{itemize}
-    \item \texttt{stash\_add}, l'addition de deux poches $a$ et $b$: retourner une poche contenant pour chaque ressource l'addition du nombre de cette ressource dans $a$ et $b$
-    \item \texttt{stash\_sub},la soustraction d'une poche $a$ à une autre $b$, pour chaque ressource de $a$ on la soustrait à celle de $b$ (0 si la valeur est négative) 
-    \item \texttt{stash\_contains}, verifie si une poche $b$ est contenue dans une poche $a$ (pour toutes les ressources de $b$, ça quantiter est plus petite ou égale à celle de $a$; deux poches égales ce sontiennent)
+    \item \texttt{stash\_add}, l'addition de deux poches $a$ et $b$.
+    \item \texttt{stash\_sub},la soustraction d'une poche $a$ à une autre $b$ (une ressource est égal à 0 si celle de $a$ est supérieur à $b$)
+    \item \texttt{stash\_contains}, verifie si une poche $b$ est contenue dans une poche $a$ (pour toutes les ressources de $b$, sa quantité est plus petite ou égale à celle de $a$; deux poches égales ce contiennent)
+    \item \texttt{stash\_to\_string}, représentation en chaîne de caractère
 \end{itemize}
-On a une fonction supplémentaire pour une représentation en chaine de caractère de la poche \texttt{stash\_to\_string}, utile pour une interface du jeu.
 
 \subsection{Tests et validation}
 
@@ -56,49 +47,44 @@ Un exemple de ces tests sera fourni dans ce qui suit.
 
 \subsubsection{Tests sur les directions et les ressources}
 
-Les tests sur ces deux modules servent à vérifier la sortie des deux fonctions de conversion des directions et ressources en leurs noms sous forme de chaine de caractère, donc la validation des tests correspond à la verification de l'égalité entre la chaine de sortie et celle attendu.
-
-D'autre part, le test \texttt{dir\_oposite} demeure simple grâce au type énuméré des directions, il suffit de vérifier l'égalité entre la sortie et la solution autant que deux entiers.
-
 \begin{figure}[H]
     \centering
     \captionsetup[lstlisting]{name=Figure}
     \begin{lstlisting}[
         style=MonStyleC,
-        caption={Exemple des tests sur les ressources},
+        caption={Exemple des tests sur les resource\_to\_string},
         label={tests_resource}
     ]
 TESTS ON resource.c
 Tests on resource_to_string 
-PASSED  input:   0	 output: NOTHING
-PASSED  input:   1	 output: STEP
-PASSED  input:   5	 output: SILK
-PASSED  input:   9	 output: OIL
-PASSED  input:  10	 output: CRYSTAL
-Tests on resource_to_short_string 
-PASSED  input:   0	 output: N
-PASSED  input:   1	 output: St
-PASSED  input:   4	 output: Gd
-PASSED  input:  10	 output: C
-
+PASSED  input:   0     output: NOTHING
+PASSED  input:   1     output: STEP
+PASSED  input:   5     output: SILK
+PASSED  input:   9     output: OIL
+PASSED  input:  10     output: CRYSTAL
     \end{lstlisting}
 \end{figure}
 
+Les tests sur ces deux modules servent à vérifier la sortie des fonctions de représentation des “types” en chaîne de caractère, on compare les chaînes de sortie et celle attendue.
+
+D'autre part, le test \texttt{dir\_oposite} demeure simple grâce au type énuméré des directions, il suffit de vérifier l'égalité entre la sortie et la solution autant que deux entiers.
+
 \subsubsection{Tests sur les positions}
 
-Afin de valider les tests sur les fonctions manipulant les positions du manoir, appelons les fonction sur des positions differentes dans le but de tester tout les cas pertinents, notamment les postions dedans et dehors le manoire pour tester la validité de la position du manoir; des couples égaux adjacents ou pas pour les fonctions qui comparent deux positions 
+Afin de valider les tests sur les fonctions manipulant les positions du manoir, appelons les fonction sur des positions différentes dans le but de tester tous les cas pertinents, notamment les positions dedans et dehors le manoire pour tester la validité de la position du manoir; des couples égaux adjacents ou pas pour les fonctions qui comparent deux positions.
 
 \subsubsection{Tests sur les poches}
 
-Avant de procéder aux tests, une fonction est implémentée afin de générer des poches dont les ressources sont des valeurs aléatoires inférieures à 10. Cette fonction permettera ensuite d'observer facilement les quantités de chaque ressource de la poche retournée en les comparant à celles des poches passées en argument, et ainsi de déduire si les opérations effectuées correspondent bien aux opérations élémentaires appliquées ressource par ressource.
+Avant de procéder aux tests, une fonction est implémentée afin de générer des poches dont les ressources sont des valeurs aléatoires inférieures à 10. Cette fonction permettra ensuite d'observer facilement les quantités de chaque ressource de la poche retournée en les comparant à celles des poches passées en argument, et ainsi de déduire si les opérations effectuées sont bien valides.
 
 \subsubsection{Conclusion sur la validité}
-Même si nous ne pouvons pas tester toutes les combinaisons posibles pour chaque fonction, on deduit qu'on a tester assez de cas pertinents differents pour assumer les fonctions valide et poser notre programme dessu.
+Même si nous ne pouvons pas tester toutes les combinaisons possibles pour chaque fonction, on déduit qu'on a testé assez de cas pertinents différents pour assumer les fonctions valide et poser notre programme dessus.
 
 \subsection{Conclusion}
 
 L’ensemble des fichiers du code source présentés dans cette section ne présente pas de difficultés particulières en termes d’implémentation ou de complexité mais ils sont toutefois essentiels, car ils permettent de définir et de structurer les données utilisées par la suite.
 Le découpage du code en plusieurs fichiers, associé à la compilation séparée, facilite le travail en équipe. Chaque module peut être développé, modifié ou amélioré indépendamment des autres, tout en respectant les interfaces définies par les fichiers d’en-tête.
+
 Cette organisation permet ainsi d’intégrer différentes implémentations d’un même module sans impacter le reste du programme.
 
 Nous verrons maintenant comment passer à l'étape suivante l'implémentation des tuiles.
