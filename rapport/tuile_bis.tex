@@ -3,14 +3,14 @@ Dans la version de base, l’implémentation des tuiles impliquait beaucoup de r
 
 Nous proposons une nouvelle approche associant à chaque type de tuile une rotation. Pour cela, nous définissons la structure \texttt{tile\_bis\_t}, contenant un pointeur vers une tuile et sa rotation, représentée par un type énuméré.  
 
-Lors de l’utilisation de ces tuiles, direction et rotation sont prises en compte simultanément grâce à \texttt{ROT\_TO\_DIR(d,r)}, qui convertit le couple (direction, rotation) en direction effective via la formule $(d + r) \% \text{NB\_DIRS}$.  
+Lors de l’utilisation de ces tuiles, direction et rotation sont prises en compte simultanément grâce à \texttt{ROT\_TO\_DIR(d,r)}, qui convertit le couple (direction, rotation) en direction effective via la formule \texttt{(d + r) \% MAX\_DIRS}.  
 
-Cette structure est exploitée sur les nouvelles fonctions implémentés dans un nouveau fichier \texttt{tile\_bis.c} pour des questions d'extensibilité.
+Cette structure est exploitée sur les nouvelles fonctions implémentées dans un nouveau fichier \texttt{tile\_bis.c} pour des questions d'extensibilité.
 
-\texttt{tile\_opening\_cost\_bis} et \texttt{tile\_can\_open\_bis} qui sont des adaptation des fonctions $tile$ ses la structure \texttt{tile\_bis\_t} en prenant en compte la rotation.
+\texttt{tile\_opening\_cost\_bis} et \texttt{tile\_can\_open\_bis} qui sont des adaptations des fonctions $tile$ sont la structure \texttt{tile\_bis\_t} en tenant compte de la rotation.
 
-\texttt{tile\_draft\_bis} retourne des $tile_bis$ selon la direction et les ressources du joueur, en combinant tuiles déjà compatibles et tuiles aléatoires éventuellement pivotées pour satisfaire l'ouverture.
+\texttt{tile\_draft\_bis} retourne des $tile\_bis$ selon la direction et les ressources du joueur, en combinant tuiles déjà compatibles et tuiles aléatoires éventuellement pivotées pour satisfaire l'ouverture.
 
 Finalement on introduit la fonction \texttt{random\_tile\_rotation}, qui permet au joueur de faire une rotation aléatoire compatible de la tuile choisie.
 
-Dans l'implémentation du jeu on définit à présent le manoire comme une matrice de pointeur de $tile_bis$ et utilisons uniquement les variantes de $tile_bis$ des fonctions modifiées. De nos tuiles implémenter cette méthode permet de passer de 10 tuiles à 6 tuiles implémentés statiquement.
+Dans l'implémentation du jeu on définit à présent le manoir comme une matrice de $tile\_bis$ qui utilisent uniquement les variantes de $tile\_bis$ des fonctions modifiées. De nos tuiles implémentées cette méthode permet de passer de 10 tuiles à 6 tuiles implémentées statiquement.

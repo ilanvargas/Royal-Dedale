@@ -1,23 +1,23 @@
 
-Nous introduisons le concept de $target\_tiles$(tuile objective). \`A présent pour rentrer dans la tuile d'arrivé, et gagner la partie, on a besoin des ressources \begin{scriptsize}NUM\_RESOURCES-2, NUM\_RESOURCES-1 et NUM\_RESOURCES\end{scriptsize}; pour  \begin{scriptsize}NUM\_RESOURCES=4\end{scriptsize} cela correspond a 1 or, 1 gem et 1 clé. Ces ressources sont réparties dans le manoir sur les $target\_tiles$.
+Nous introduisons le concept de $target\_tiles$(tuile objective). \`A présent pour rentrer dans la tuile d'arrivé et gagner la partie, on a besoin des ressources \begin{scriptsize}NUM\_RESOURCES-2, NUM\_RESOURCES-1 et NUM\_RESOURCES\end{scriptsize}; pour  \begin{scriptsize}NUM\_RESOURCES=4\end{scriptsize} cela correspond a 1 or, 1 gem et 1 clé. Ces ressources sont réparties dans le manoir sur les $target\_tiles$.
 
 Chaque $target\_tile$ est associée à une unique "target ressource". Ainsi, pour gagner, il faut passer par tous les $target\_tiles$.
 
 \subsubsection{Changement en game\_state}
 
-Pour garder en mémoire les $target\_tiles$, on ajoute dans \texttt{game\_state} un tableau de localisation représentant les $target\_tiles$: \texttt{target\_locations}. Chaque index du tableau est associée une $target ressource$: \texttt{target\_locations[0]} est la position où est situé l'or, \texttt{target\_locations[1]} la gem et \texttt{target\_locations[2]} la clé.  
+Pour garder en mémoire les $target\_tiles$, on ajoute dans \texttt{game\_state} un tableau de localisation représentant les $target\_tiles$: \texttt{target\_locations}. Chaque indice du tableau est associée une $target\_ressource$: \texttt{target\_locations[0]} est la position où est situé l'or, \texttt{target\_locations[1]} pour la gem et \texttt{target\_locations[2]} pour la clé.  
 
-On ajoute également \texttt{is\_target\_locations\_visited} tableau de booléens de qui indique, pour chaque index, si sont $target\_tile$ associée à été visité ou pas.
+On ajoute également \texttt{is\_target\_locations\_visited} tableau de booléens de qui indique, pour chaque indice, si son $target\_tile$ associée à été visité ou pas.
 
 \subsubsection{Modification de la boucle pour les \texttt{target\_tiles}}
 
 Un fichier \texttt{target.c} a été ajouté pour gérer les \texttt{target\_tiles}.  
 
-Dans la boucle de jeu, à chaque tour, les positions des \texttt{target\_tiles} sont triées par proximité au joueur à l'aide d'un \textit{bubble sort} sur leurs distances de Manhattan via \texttt{sort\_target\_locations}. Les emplacements déjà visités sont placés à la fin, et seules les positions non visitées sont affichées.  
+Dans la boucle de jeu, à chaque tour, les positions des \texttt{target\_tiles} sont triées par proximité au joueur à l'aide d'un tri à bulles sur leurs distances de Manhattan à travers \texttt{sort\_target\_locations}. Les emplacements déjà visités sont placés à la fin, et seules les positions non visitées sont affichées.  
 
-De plus, lorsqu’un joueur se déplace sur un \texttt{target\_tile}, les ressources correspondantes lui sont attribuées via \texttt{target\_location\_reached} qui vérifie si c’est le cas et update ses ressources.
+De plus, lorsqu’un joueur se déplace sur un \texttt{target\_tile}, les ressources correspondantes lui sont attribuées grâce à \texttt{target\_location\_reached} qui vérifie si c’est le cas puis met à jour ses ressources.
 
-\subsection{Ajouter une inteliligence au joueur}
+\subsection{Ajouter une intelligence au joueur}
 
 Un problème du mode non-itératif est que le joueur effectue des actions totalement aléatoires, conduisant souvent à des parties perdues.  
 
@@ -27,9 +27,9 @@ Nous définissons \texttt{target\_location\_near} comme la position du \texttt{t
 
 \subsubsection{path\_target\_finder}
 
-La fonction \texttt{path\_target\_finder} prend en paramètre la localisation objectif, la position actuelle du joueur contenue dans \texttt{game\_state}, ainsi qu’un buffer \texttt{path}, tableau de localisations destiné à stocker le chemin calculé.
+La fonction \texttt{path\_target\_finder} prend en paramètres la localisation objective, la position actuelle du joueur contenue dans \texttt{game\_state}, ainsi qu’un buffer \texttt{path} qui est un tableau de localisations destiné à stocker le chemin calculé.
 
-L’objectif de cette fonction est d’atteindre la localisation cible ou, à défaut, une tuile vide la plus proche possible de celle-ci, en empruntant un chemin de longueur minimale. Cette approche permet d’approcher progressivement le joueur de son objectif en minimisant le nombre de tuiles à poser. Pour cela, la fonction s’appuie sur une fonction récursive, \texttt{path\_target\_finder\_rec}, chargée d’explorer les chemins possibles.
+L’objectif de cette fonction est d’atteindre la localisation cible ou, à défaut, une tuile vide la plus proche possible de celle-ci, en empruntant un chemin de longueur minimale. Cette approche permet d’approcher progressivement le joueur de son objectif en minimisant le nombre de tuiles à poser. Pour cela, la fonction s’appuie sur une méthode récursive, \texttt{path\_target\_finder\_rec}, afin d’explorer les chemins possibles.
 
 Avant de lancer la recherche récursive, les structures suivantes sont initialisées :
 \begin{itemize}
