@@ -96,6 +96,10 @@ void path_target_finder_rec(struct location_t position,
     path_curr[path_len] = position;
     path_len++;
 
+    // case where we didn't find a way to target
+    if (path_len >= BOARD_SIZE) return;
+
+    // case where rec position is the taget
     if (location_equal(position, target_position)) {
       *global_dist = 0;
       *global_path_len = path_len;
@@ -106,6 +110,7 @@ void path_target_finder_rec(struct location_t position,
       return;
     }
 
+    // recursion
     for (int d = 0; d < MAX_DIRS; d++)
     {
         struct location_t next_position = dir_to_location(d, position);
