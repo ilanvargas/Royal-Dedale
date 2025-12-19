@@ -1,0 +1,54 @@
+Après les modification, nous avons des nouveaux modules et une nouvelle architecture. Voici la nouvelle architecture et boucle avec les modifications explicités dans la section précédante.
+
+Pour la nouvelle architecture, nous remarquons que $game$ n'est plus un dépendant directe de la boucle et qu'il y a des modules intermédiaires pour accomoder les achivements. Et $tile$ n'est plus un dépendant directe de $game$ mais passe par l'intermédiaire $tile\_bis$ pour ajouter les rotations.
+
+On remarque que la boucle à été complètement restructuré pour afin de pouvoir suivre le chemin de \texttt{path\_find}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{architecture_v3.png}
+	\caption{Architecture après modifications}
+	\label{fig:architecture_v0}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        style=MonStyleC,
+        caption={Nouvelle boucle après modifications},
+        label={nouvelle_boucle}
+    ]
+
+  while(!is_game_over)
+    {
+        struct location_t target_location_near = (num_target_locations > 0) ? target_locations_sorted[0] : location(BOARD_WIDTH-1, BOARD_HEIGHT-1);
+        unsigned int path_to_target_len = path_target_finder(target_location_near, &game_state, path_to_target);
+        if (path_to_target_len >= BOARD_SIZE) { // the path has been blocked by unopening tiles
+            printf("You have blocked yourself, you cannot reach your next objective. The game is unwinable\n");
+            target_location_near = game_state.current_location;
+            is_game_over = 1;
+        }
+        
+        unsigned int i = 1;
+        while(i < path_to_target_len && !tile_is_empty(location_to_tile(path_to_target[i], &game_state).tile) && !is_game_over) {
+            ... on bouge le joueur, meme logique que la version de base ...
+            //On ajoute les fonctions liees aux achivements
+            target_location_reached(&game_state);
+            on_resource_gain(&game_state, gained_resources);
+
+            if (current_turn > n || is_player_won || game_state.steps.r[STEP] <= 0) is_game_over = 1;
+        }
+        if (i < path_to_target_len && !is_game_over) {
+            ... On place une tuile, meme logique que la version de base ...
+            //On ajoute les fonctions liees aux achivements
+            on_resource_gain(&game_state, gained_resources);
+        }
+        if (current_turn > n || is_player_won || game_state.steps.r[STEP] <= 0) is_game_over = 1;
+        
+        num_target_locations = sort_target_locations(target_locations_sorted, &game_state);
+    }
+
+    }
+    \end{lstlisting}
+\end{figure}
