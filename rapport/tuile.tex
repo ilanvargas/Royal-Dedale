@@ -29,14 +29,41 @@ On définit, dans notre versoin, les tuiles spéciales: tuile vide \texttt{EMPTY
 \end{itemize}
 Pour l'instant tout coût d'ouverture ou traversage est égale à 1 $step(pas)$ pour cela il faut avoir au moins 1 $step$ pour pouvoir jouer. Si une tuile n'est pas ouverte selon une direction, le coût d'ouverture de tel direction pour la tuile est une poche contenant UINT\_MAX c'est-à-dire l'entier maximal en C. 
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=4cm]{projDedaleCloister.png}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \captionsetup[lstlisting]{name=Figure}
+    \begin{lstlisting}[
+        style=MonStyleC,
+        caption={Exemple d'implémentation d'un cloister},
+        label={game_state}
+    ]
+struct tile_t CLOISTER_TILE = {
+  .name = "cloister",
+    .traversal_cost = ONE_STEP_STASH, //poche contenant un pas
+  .opening_cost = {
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH,
+    ONE_STEP_STASH
+  },
+  .weight = 2
+};
+    \end{lstlisting}
+\end{figure}
+
 \subsection{Représentation du plateau de jeu}
 
 Le plateau de jeu est représenté par une matrice de pointeurs vers des structures \texttt{tile\_t}. Chaque case du plateau référence donc une tuile existante, sans en contenir une copie. Ce choix présente plusieurs avantages :
 \begin{itemize}
-\item il évite la duplication de structures potentiellement volumineuses 
-\item il réduit la consommation mémoire 
-\item il simplifie les opérations de lecture et de modification des tuiles 
-\item il permet de comparer des tuiles via leurs adresses
+  \item il évite la duplication de structures potentiellement volumineuses 
+  \item il réduit la consommation mémoire 
+  \item il simplifie les opérations de lecture et de modification des tuiles 
+  \item il permet de comparer des tuiles via leurs adresses
 \end{itemize}
 
 On vera ça plus en détaille dans la section suivante.

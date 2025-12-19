@@ -78,15 +78,28 @@ Analyson le code du code \ref{gameloop}
 Avant de rentrée dans la boucle on initialise tout nos modules. En particulier on initialise \texttt{game\_state} c'est-à-dire: on définit la position du joueur en $(0,0)$; on pose toutes les tuiles du manoire comme vide sauf les tuiles en $(0,0)$ la tuile de départ et (BOARD\_WIDTH-1, BOARD\_HEIGHT-1) la tuile d'arrivé; on définit les ressources du joueur comme ayant $4*4*\frac{BOARD\_SIZE}{3}$.
 
 Dans la boucle, à chaque itération, on vérifie que le nombre maximal de tours n’a pas été dépassé, que le joueur n’a pas encore gagné la partie et qu’il dispose de ressources suffisantes pour continuer à jouer (c'est-à-dire au moins un $step$ pour faire une action). Sinon la partie est terminer, le joueur à gagné s'il a atteint la tuile d'arrivé sinon perdu. \\
-\\
+
 
 Pour chaque tour, \texttt{list\_empty\_locations\_with\_finite\_opening\_cost} cherche et stocke dans un buffer les localisation vide ouvrables depuis la position du joeur (adjacente et ouverte dans la direction opposé du joueur). Si il a trouver au moins une on donne au joueur la possibilité de placer une tuile dans une de ces position ou bouger, sinon on l'oblige a bouger. Le joueur est obligé de placer le premier tour.
 
 \textbf{Si le joueur place}
+\begin{enumerate}
+    \item Le joueur choisit une des tuile vides disponibles
+    \item \texttt{tile\_draft} génère des tuiles compatibles à être placé à la place de la tuile vide dans \texttt{generate\_some\_tiles}
+    \item Le joueur choisit une de ces tuile
+    \item On remplace la tuile vide par la tuile choisit dans \texttt{game\_state}. On fait le joueur payer les coûts associés.
+\end{enumerate} 
+Dans le jeu, on manipule des positions $location$ alors que les fonctions du module tile travaillent avec des directions. Pour faire le lien, nous avons créé la fonction \texttt{location\_to\_dir} dans \texttt{generate\_some\_tiles}. Cette fonction prend la position actuelle du joueur et une position adjacente, et retourne la direction correspondante en comparant la position donnée avec les positions situées au nord, au sud, à l’est et à l’ouest du joueur à l’aide d’une structure $switch-case$.
 
 \textbf{Si le joueur bouge}
+\begin{enumerate}
+    \item On liste toutes les listes dont le joueur peut bouger, c'est-à-dire la tile du joueur et la tuile listée sont ouvertes uen vers l'autre et adjacentes
+    \item Le joueur séléctionne une de ces tuiles
+    \item On bouge le joueur, update \texttt{game\_state} et faisons payer le joueur les coûts associées.
+\end{enumerate} 
 
-\vspace{0.5em}
+
+\vspace{0.9em}
 Chaque "choix" peut se faire de manière aléatoire uo le joueur (derrière l'écran) peut faire les choix avec le mode itérative (expliqué plus bas).
 \\
 On remarque que de nombreuses fonctions de la boucle principale nécessitent l’accès à l’état courant du jeu pour fonctionner correctement. Pour cette raison, l’adresse de la structure \texttt{game\_state} est passée en paramètre à ces fonctions, ce qui leur permet d’accéder directement à l’ensemble des informations nécessaires.
@@ -132,44 +145,4 @@ Le manoir est affiché sous forme d'une grille textuelle constitué des cases qu
 
 Cette interface ne gère pas la logique du jeu, mais fournit une vue cohérente de son état courant, facilitant ainsi l’observation du déroulement de la partie et la validation du comportement du jeu lors des tests d'exécution. la figure ci-dessous illustre un exemple de la visualisation du manoir.
 
-\begin{figure}[H]
-    \centering
-    \captionsetup[lstlisting]{name=Figure}
-    \begin{lstlisting}[
-        caption={TUI : visualisation du manoir},
-        label={tui},
-        captionpos=b,
-        frame=single,
-        stringstyle=\color{red!70!black},
-        xleftmargin=0.29\textwidth,
-        xrightmargin=0.29\textwidth
-    ]
-~~~~~~~~~~+         +         +
-~~~~~~~~~~                     
-~~~~~~~~~~                     
-~~~~~~~~~~               o     
-~~~~~~~~~~                     
-~~~~~~~~~~+         +         +
-~~~~~~~~~~           ~~~~~~~~~~
-~~~~~~~~~~           ~~~~~~~~~~
-~~~~~~~~~~           ~~~~~~~~~~
-~~~~~~~~~~           ~~~~~~~~~~
-~~~~~~~~~~+         +~~~~~~~~~~
-~~~~~~~~~~|         |~~~~~~~~~~
-~~~~~~~~~~|         |~~~~~~~~~~
-~~~~~~~~~~|         |~~~~~~~~~~
-~~~~~~~~~~|         |~~~~~~~~~~
-+---------+         +~~~~~~~~~~
-|         |         |~~~~~~~~~~
-|         |         |~~~~~~~~~~
-|         |         |~~~~~~~~~~
-|         |         |~~~~~~~~~~
-+         +         +~~~~~~~~~~
-                     ~~~~~~~~~~
-                     ~~~~~~~~~~
-                     ~~~~~~~~~~
-                     ~~~~~~~~~~
-+         +         +~~~~~~~~~~
 
-    \end{lstlisting}
-\end{figure}
