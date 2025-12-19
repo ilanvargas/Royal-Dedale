@@ -13,6 +13,9 @@ enum equipement_t {
 
 };
 
+/** initialise the equipements' seed */
+void init_equipement(unsigned int equipement_seed);
+
 /** returns the string representation for an equipement */
 const char* equipement_to_string(enum equipement_t equipement);
 
@@ -31,6 +34,6 @@ int player_gained_resources(const struct stash_t gained_resources);
 void on_resource_gain(struct game_state_t* game_state, const struct stash_t gained_resources);
 
 /** checking if the player has the equipements that can be applied after moving and applying them */
-void on_move(struct game_state_t *game_state, const struct stash_t gained_resources);
+void on_move(struct game_state_t *game_state);
 
 #endif  // __DEDALE_EQUIPEMENT_H__
